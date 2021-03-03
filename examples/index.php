@@ -1,6 +1,8 @@
 <?php
 
-require __DIR__.'/vendor/autoload.php';
+declare(strict_types=1);
+
+require __DIR__.'/../vendor/autoload.php';
 
 use RFBP\Pipe;
 use RFBP\Client;
@@ -8,23 +10,29 @@ use RFBP\Supervisor;
 
 $addOne = static function ($struct) {
     $struct['number']++;
-    printf("Add one : %d\n", $struct['number']);
+    printf("Add one %d", $struct['number']);
 
     yield $struct;
+
+    return $struct;
 };
 
 $multbyTwo = static function($struct) {
     $struct['number'] *= 2;
-    printf("Mult by two : %d\n", $struct['number']);
+    printf("Mult by two %d", $struct['number']);
 
     yield $struct;
+
+    return $struct;
 };
 
 $minusThree = static function ($struct) {
     $struct['number'] -= 3;
-    printf("Minus three : %d\n", $struct['number']);
+    printf("Minus three %d", $struct['number']);
 
     yield $struct;
+
+    return $struct;
 };
 
 $pipes = [
