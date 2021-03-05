@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "php": "^8.0"
+        "php": "^8.0",
+        "amphp/amp": "^2.5"
     },
     "autoload": {
         "psr-4": {

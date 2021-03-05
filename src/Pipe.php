@@ -22,10 +22,10 @@ class Pipe
             $this->ipJobs[$ip['id']] = $job($ip['struct']);
         }
 
-        print_r([
+        /*print_r([
             'pipe_id' => $this->id,
             $this->ipJobs,
-        ]);
+        ]);*/
         $job = $this->ipJobs[$ip['id']];
         if($job instanceof \Generator) {
             $job->next();
