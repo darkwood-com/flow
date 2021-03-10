@@ -6,7 +6,7 @@ Look at the slides of this project for more information about this concept : [Sp
 
 ## Installation
 
-Minimal PHP version to use *php-railway-flow-based-programming* is 8.0.  
+Minimal PHP version to use _PHP Railway Flow Based Programming_ is 8.0.  
 The recommended way to install it through [Composer](http://getcomposer.org/) and execute `composer install`.
 
 ## Usage
@@ -49,4 +49,4 @@ Messagin approach with East oriented code from [Frédéric Hardy](https://twitte
 
 ## License
 
-*PHP Railway Flow Based Programming* is released under the MIT License.
+_PHP Railway Flow Based Programming_ is released under the MIT License.
