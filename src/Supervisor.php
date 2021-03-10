@@ -12,7 +12,12 @@ class Supervisor
 
     protected $ips;
 
-    public function __construct(private ReceiverInterface $producer, private SenderInterface $consumer, private $pipes, private $error) {
+    public function __construct(
+        private ReceiverInterface $producer,
+        private SenderInterface $consumer,
+        private $pipes,
+        private $error
+    ) {
         $this->ips = [];
     }
 

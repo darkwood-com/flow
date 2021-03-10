@@ -8,11 +8,14 @@ class Pipe
     private $id;
     private $ipJobs = [];
 
-    public function __construct(private \Closure $job, private int $scale) {
+    public function __construct(
+        private \Closure $job,
+        private int $scale
+    ) {
         $this->id = self::$pipeId++;
     }
 
-    public function run(&$ip) {
+    public function run(IP $ip) {
         if(!isset($this->ipJobs[$ip['id']])) {
             $this->ipJobs[$ip['id']] = null;
         }
