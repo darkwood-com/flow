@@ -3,6 +3,8 @@
 namespace RFBP;
 
 use Amp\Loop;
+use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
+use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 
 class Supervisor
 {
@@ -10,14 +12,14 @@ class Supervisor
 
     protected $ips;
 
-    public function __construct(private $producer, private $consumer, private $pipes, private $error) {
+    public function __construct(private ReceiverInterface $producer, private SenderInterface $consumer, private $pipes, private $error) {
         $this->ips = [];
     }
 
     public function start() {
         Loop::run(function() {
             Loop::repeat(1000, function() {
-                foreach ($this->producer->getDatas() as $struct) {
+                /*foreach ($this->producer->getDatas() as $struct) {
                     $this->ips[] = [
                         'id' => self::$ipId++,
                         'pipeIndex' => 0,
@@ -36,7 +38,7 @@ class Supervisor
                         unset($this->ips[$ipIndex]);
                     }
                     //print_r($ip);
-                }
+                }*/
 
                 echo "******* Tick *******\n";
             });
