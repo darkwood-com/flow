@@ -12,8 +12,8 @@ The recommended way to install it through [Composer](http://getcomposer.org/) an
 ## Usage
 
 A working script is available in the bundled `examples` directory
-- start server : `php examples/server.php`
-- start client(s) : `php examples/client.php`
+- Start server : `php examples/server.php`
+- Start client(s) : `php examples/client.php`
 
 Messaging is based on [Redis](https://redis.io), you can install [Docker](https://www.docker.com) and execute docker-compose up -d to get Redis working.
 
@@ -44,8 +44,8 @@ Coroutines in PHP :
 - Générateurs et Programmation Asynchrone: Mode d’emploi - [Benoit Viguier](https://twitter.com/b_viguier) - Forum PHP 2018 : [https://www.youtube.com/watch?v=7TvIIt4c8uY](https://www.youtube.com/watch?v=7TvIIt4c8uY)
 
 Messagin approach with East oriented code from [Frédéric Hardy](https://twitter.com/mageekguy) :
-- article : [http://blog.est.voyage/phpTour2015](http://blog.est.voyage/phpTour2015)
-- sources : [https://github.com/estvoyage/phpTour2015](https://github.com/estvoyage/phpTour2015)
+- Article : [http://blog.est.voyage/phpTour2015](http://blog.est.voyage/phpTour2015)
+- Source code : [https://github.com/estvoyage/phpTour2015](https://github.com/estvoyage/phpTour2015)
 
 ## License
 
