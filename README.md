@@ -1,4 +1,4 @@
-# php-railway-flow-based-programming
+# PHP Railway Flow Based Programming
 
 Railway Flow Based Programming implementation in PHP
 
