@@ -19,17 +19,22 @@ class IP
         private object $data // Information Packet data representing any object
     ) {
         $this->id = self::$ipId++;
+        $this->pipeIndex = 0;
     }
 
     public function getId(): int {
         return $this->id;
     }
 
-    public function getPipeIndex(): int {
+    public function getCurrentPipe(): int {
         return $this->pipeIndex;
     }
 
+    public function nextPipe(): void {
+        $this->pipeIndex++;
+    }
+
     public function getData(): object {
-        $this->data;
+        return $this->data;
     }
 }

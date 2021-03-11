@@ -2,10 +2,13 @@
 
 namespace RFBP;
 
+use Amp\Coroutine;
+
 class Pipe
 {
-    static int $pipeId = 0;
-    private $id;
+    private static int $pipeId = 0;
+
+    private int $id; // internal pipe unique identifier
     private $ipJobs = [];
 
     public function __construct(
@@ -15,31 +18,21 @@ class Pipe
         $this->id = self::$pipeId++;
     }
 
-    public function run(IP $ip) {
-        if(!isset($this->ipJobs[$ip['id']])) {
-            $this->ipJobs[$ip['id']] = null;
+    public function run(IP $ip): void {
+        // does the pipe can scale ?
+        if (count($this->ipJobs) >= $this->scale) {
+            return;
         }
 
-        if (count($this->ipJobs) <= $this->scale) {
+        // create an new job instance with IP data if not exist
+        if(!isset($this->ipJobs[$ip->getId()])) {
             $job = $this->job;
-            $this->ipJobs[$ip['id']] = $job($ip['struct']);
+            $this->ipJobs[$ip->getId()] = $job($ip->getData());
+            $promise = new Coroutine($this->ipJobs[$ip->getId()]);
+            $promise->onResolve(function() use ($ip) {
+                $ip->nextPipe();
+                unset($this->ipJobs[$ip->getId()]);
+            });
         }
-
-        /*print_r([
-            'pipe_id' => $this->id,
-            $this->ipJobs,
-        ]);*/
-        $job = $this->ipJobs[$ip['id']];
-        if($job instanceof \Generator) {
-            $job->next();
-
-            if($job->valid() === false) {
-                $ip['struct'] = $job->getReturn();
-                unset($this->ipJobs[$ip['id']]);
-                return true;
-            }
-        }
-
-        return false;
     }
 }

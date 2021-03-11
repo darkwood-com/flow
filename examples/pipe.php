@@ -8,16 +8,16 @@ use Amp\Loop;
 use RFBP\Pipe;
 use RFBP\IP;
 
-$job = static function (object $data) {
-    printf("Calculating number %d\n", $data['number']);
+$job1 = static function (object $data) {
+    printf("* #%d : Calculating %d\n", $data['id'], $data['number']);
 
-    // simulating calculating heavy operation from 1 to 9 seconds
-    $delay = random_int ( 1, 9 ) * 1000;
+    // simulating calculating some "light" operation from 10 to 90 milliseconds
+    $delay = random_int(1, 9) * 10;
     yield new \Amp\Delayed($delay);
     $result = $data['number'];
-    $result *= $result;
+    $result += $result;
 
-    printf("Result for number %d is %d and took %d seconds\n", $data['number'], $result, $delay/1000);
+    printf("* #%d : Result for %d is %d and took %d milliseconds\n", $data['id'], $data['number'], $result, $delay);
 
     $data['number'] = $result;
 
@@ -25,16 +25,57 @@ $job = static function (object $data) {
 };
 
 
-$pipe = new Pipe($job, 2);
+$job2 = static function (object $data) {
+    printf("** #%d : Calculating %d\n", $data['id'], $data['number']);
 
+    // simulating calculating some "heavy" operation from 10 to 90 milliseconds
+    $delay = random_int(1, 9) * 100;
+    yield new \Amp\Delayed($delay);
+    $result = $data['number'];
+    $result *= $result;
+
+    printf("** #%d : Result for %d is %d and took %d milliseconds\n", $data['id'], $data['number'], $result, $delay);
+
+    $data['number'] = $result;
+
+    return $data;
+};
+
+$pipes = [
+    new Pipe($job1, 2),
+    new Pipe($job2, 4),
+];
+
+/** @var Array<IP> $ips */
+$ips = [];
 for($i = 1; $i < 10; $i++) {
-    /*$ip = new IP(new ArrayObject(['number' => $i]));
-    $pipe->run($ip);*/
-    \Amp\asyncCall($job);
+    $ip = new IP(new ArrayObject(['id' => $i, 'number' => $i]));
+    $ips[$ip->getId()] = $ip;
 }
 
-Loop::run();
+Loop::run(static function() use ($pipes, $ips) {
+    Loop::repeat(1, static function() use ($pipes, $ips) {
+        foreach ($ips as $ip) {
+            // IP need to be processed by the pipe 1
+            if($ip->getCurrentPipe() === 0) {
+                $pipes[0]->run($ip);
+            }
 
-/*Loop::repeat(1000, static function() use ($pipe) {
-    //$pipe->run();
-});*/
+            // IP need to be processed by the pipe 2
+            if($ip->getCurrentPipe() === 1) {
+                $pipes[1]->run($ip);
+            }
+
+            // does IP were processed by the pipe ?
+            if($ip->getCurrentPipe() === 2) {
+                unset($ips[$ip->getId()]);
+            }
+        }
+
+        if(empty($ips)) {
+            Loop::stop();
+        }
+
+        //echo "*** tick ***\n";
+    });
+});
