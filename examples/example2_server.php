@@ -4,55 +4,56 @@ declare(strict_types=1);
 
 require __DIR__.'/../vendor/autoload.php';
 
-use RFBP\Pipe;
+use RFBP\Rail;
 use RFBP\Supervisor;
+use Amp\Delayed;
 use Symfony\Component\Messenger\Bridge\Redis\Transport\Connection;
 use Symfony\Component\Messenger\Bridge\Redis\Transport\RedisTransport;
 
-$addOne = static function ($struct) {
+$addOneJob = static function ($struct): \Generator {
     $struct['number']++;
     printf("Client %d : Add one %d\n", $struct['client'], $struct['number']);
 
-    yield \Amp\delay(1000);
+    yield new Delayed(1000);
 
     return $struct;
 };
 
-$multbyTwo = static function($struct) {
+$multbyTwoJob = static function($struct): \Generator {
     $struct['number'] *= 2;
     printf("Client %d : Mult by two %d\n", $struct['client'], $struct['number']);
 
-    yield \Amp\delay(2000);
+    yield new Delayed(2000);
 
     return $struct;
 };
 
-$minusThree = static function ($struct) {
+$minusThreeJob = static function ($struct): \Generator {
     $struct['number'] -= 3;
     printf("Client %d : Minus three %d\n", $struct['client'], $struct['number']);
 
-    yield \Amp\delay(1000);
+    yield new Delayed(1000);
 
     return $struct;
 };
 
-$pipes = [
-    new Pipe($addOne, 1),
-    new Pipe($multbyTwo, 3),
-    new Pipe($minusThree, 2),
+$rails = [
+    new Rail($addOneJob, 1),
+    new Rail($multbyTwoJob, 3),
+    new Rail($minusThreeJob, 2),
 ];
 
 $transport = new RedisTransport(Connection::fromDsn('redis://localhost:6379'));
 
-class ErrorPipe {
+class ErrorRail {
 
 }
-$error = new ErrorPipe();
+$error = new ErrorRail();
 
 $supervisor = new Supervisor(
     $transport,
     $transport,
-    $pipes,
+    $rails,
     $error
 );
 

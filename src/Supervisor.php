@@ -8,35 +8,35 @@ use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 
 class Supervisor
 {
-    static int $ipId = 0;
-
+    /** @var array<IP> */
     protected $ips;
 
     public function __construct(
         private ReceiverInterface $producer,
         private SenderInterface $consumer,
-        private $pipes,
-        private $error
+        /** @var array<Rail> */
+        private $rails,
+        private ?Rail $error = null
     ) {
         $this->ips = [];
     }
 
     public function start() {
         Loop::run(function() {
-            Loop::repeat(1000, function() {
+            Loop::repeat(1, function() {
                 /*foreach ($this->producer->getDatas() as $struct) {
                     $this->ips[] = [
                         'id' => self::$ipId++,
-                        'pipeIndex' => 0,
+                        'railIndex' => 0,
                         'struct' => $struct,
                     ];
                 }
 
                 foreach ($this->ips as $ipIndex => $ip) {
-                    if($ip['pipeIndex'] < count($this->pipes)) {
-                        if($this->pipes[$ip['pipeIndex']]->run($ip))
+                    if($ip['railIndex'] < count($this->rails)) {
+                        if($this->rails[$ip['railIndex']]->run($ip))
                         {
-                            $this->ips[$ipIndex]['pipeIndex']++;
+                            $this->ips[$ipIndex]['railIndex']++;
                         }
                     } else {
                         $this->consumer->receive($ip['struct']);
