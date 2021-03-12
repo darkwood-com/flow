@@ -12,7 +12,8 @@
     "require": {
         "php": "^8.0",
         "amphp/amp": "^2.5",
-        "symfony/messenger": "^5.2"
+        "symfony/messenger": "^5.2",
+        "symfony/redis-messenger": "^5.2"
     },
     "autoload": {
         "psr-4": {
