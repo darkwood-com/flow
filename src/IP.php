@@ -12,7 +12,6 @@ class IP
 {
     private string $id; // internal IP unique identifier
 
-    private string $state; // internal state for supervisor : 'process'|'error'|'done'
     private int $railIndex; // internal state for supervisor
 
     public function __construct(
@@ -20,7 +19,6 @@ class IP
     ) {
         $this->id = uniqid('ip_', true);
 
-        $this->state = 'process';
         $this->railIndex = 0;
     }
 
@@ -34,14 +32,6 @@ class IP
 
     public function nextRail(): void {
         $this->railIndex++;
-    }
-
-    public function errorRail(): void {
-        $this->state = 'error';
-    }
-
-    public function done(): void {
-        $this->state = 'done';
     }
 
     public function getData(): object {

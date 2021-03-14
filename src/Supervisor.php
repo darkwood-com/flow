@@ -5,24 +5,11 @@ namespace RFBP;
 use Amp\Loop;
 use RFBP\Transport\FromTransportIdStamp;
 use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
-use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
-use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\Exception\RejectRedeliveredMessageException;
-use Symfony\Component\Messenger\MessageBus;
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
-use Symfony\Component\Messenger\Middleware\SendMessageMiddleware;
-use Symfony\Component\Messenger\Stamp\ConsumedByWorkerStamp;
-use Symfony\Component\Messenger\Stamp\ReceivedStamp;
-use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 
 class Supervisor
 {
-    private MessageBusInterface $bus;
-
     /** @var array<Envelope> */
     protected $envelopes;
 
@@ -33,16 +20,12 @@ class Supervisor
         private $rails,
         private ?Rail $error = null
     ) {
-        /*$this->bus = new MessageBus([
-            new HandleMessageMiddleware(),
-            new SendMessageMiddleware()
-        ]);**/
         $this->envelopes = [];
     }
 
     public function start() {
         Loop::run(function() {
-            Loop::repeat(1, function() {
+            Loop::repeat(1, callback: function() {
                 $envelopes = $this->producer->get();
                 foreach ($envelopes as $envelope) {
                     $ip = $envelope->getMessage();
@@ -62,18 +45,6 @@ class Supervisor
                         $this->consumer->send(Envelope::wrap($ip, [$envelope->last(FromTransportIdStamp::class)]));
                     }
                 }
-
-                /*foreach ($envelopes as $envelope) {
-                    $this->envelopes[] = $envelope;
-                }
-
-                foreach ($this->envelopes as $envelope) {
-                    try {
-                        $this->bus->dispatch($envelope->with(new ReceivedStamp('supervisor')));
-                    } catch (\Throwable $throwable) {
-
-                    }
-                }*/
 
                 //echo "******* Tick *******\n";
             });

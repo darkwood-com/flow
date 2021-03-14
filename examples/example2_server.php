@@ -9,9 +9,6 @@ use RFBP\Supervisor;
 use RFBP\Transport\DoctrineIpTransport;
 use Amp\Delayed;
 use Doctrine\DBAL\DriverManager;
-use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport;
-use Symfony\Component\Messenger\Bridge\Doctrine\Transport\Connection;
-use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
 
 $addOneJob = static function (object $data): \Generator {
     $data['number']++;
@@ -28,8 +25,8 @@ $multbyTwoJob = static function(object $data): \Generator {
     $data['number'] *= 2;
     printf("Client %s : Mult by two %d\n", $data['client'], $data['number']);
 
-    // simulating calculating some "heavy" operation from 2 to 3 seconds
-    $delay = random_int(2, 3) * 1000;
+    // simulating calculating some "heavy" operation from 4 to 6 seconds
+    $delay = random_int(4, 6) * 1000;
     yield new Delayed($delay);
 
     return $data;
@@ -58,15 +55,7 @@ $rails = [
 
 $error = new Rail($errorJob, 2);
 
-//$producer = new RedisTransport(Connection::fromDsn('redis://localhost:6379/supervisor-messages'));
-//$consumer = new RedisTransport(Connection::fromDsn('redis://localhost:6379/client-messages'));
-
 $connection = DriverManager::getConnection(['url' => 'mysql://root:root@127.0.0.1:3306/rfbp?serverVersion=5.7']);
-$serializer = new PhpSerializer();
-
-//$producer = new DoctrineTransport(new Connection(Connection::buildConfiguration('doctrine://default?table_name=supervisor_messages'), $connection), $serializer);
-//$consumer = new DoctrineTransport(new Connection(Connection::buildConfiguration('doctrine://default?table_name=client_messages'), $connection), $serializer);
-
 $transport = new DoctrineIpTransport($connection);
 
 $supervisor = new Supervisor(

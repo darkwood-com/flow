@@ -9,7 +9,7 @@ final class FromTransportIdStamp implements StampInterface
     private $id;
 
     /**
-     * @param mixed $id some "identifier" of the message in a transport
+     * @param mixed $id some "identifier" of the transport name
      */
     public function __construct($id)
     {
