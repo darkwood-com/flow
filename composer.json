@@ -13,7 +13,10 @@
         "php": "^8.0",
         "amphp/amp": "^2.5",
         "symfony/messenger": "^5.2",
-        "symfony/redis-messenger": "^5.2"
+        "symfony/redis-messenger": "^5.2",
+        "symfony/amqp-messenger": "^5.2",
+        "symfony/doctrine-messenger": "^5.2",
+        "symfony/orm-pack": "^2.1"
     },
     "autoload": {
         "psr-4": {

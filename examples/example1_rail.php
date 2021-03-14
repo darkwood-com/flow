@@ -29,7 +29,7 @@ $job1 = static function (object $data): \Generator {
 $job2 = static function (object $data): \Generator {
     printf(".* #%d : Calculating number %d\n", $data['id'], $data['number']);
 
-    // simulating calculating some "heavy" operation from 10 to 90 milliseconds
+    // simulating calculating some "heavy" operation from 100 to 900 milliseconds
     $delay = random_int(1, 9) * 100;
     yield new Delayed($delay);
     $result = $data['number'];
@@ -49,7 +49,7 @@ $rails = [
 
 /** @var array<IP> $ips */
 $ips = [];
-for($i = 1; $i < 10; $i++) {
+for($i = 1; $i < 5; $i++) {
     $ip = new IP(new ArrayObject(['id' => $i, 'number' => $i]));
     $ips[$ip->getId()] = $ip;
 }

@@ -3,6 +3,7 @@
 namespace RFBP;
 
 use Amp\Loop;
+use RFBP\Transport\FromTransportIdStamp;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 use Symfony\Component\Messenger\Event\WorkerMessageHandledEvent;
@@ -14,6 +15,7 @@ use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
 use Symfony\Component\Messenger\Middleware\SendMessageMiddleware;
 use Symfony\Component\Messenger\Stamp\ConsumedByWorkerStamp;
 use Symfony\Component\Messenger\Stamp\ReceivedStamp;
+use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 
@@ -21,8 +23,8 @@ class Supervisor
 {
     private MessageBusInterface $bus;
 
-    /** @var array<IP> */
-    protected $ips;
+    /** @var array<Envelope> */
+    protected $envelopes;
 
     public function __construct(
         private ReceiverInterface $producer,
@@ -35,7 +37,7 @@ class Supervisor
             new HandleMessageMiddleware(),
             new SendMessageMiddleware()
         ]);**/
-        $this->ips = [];
+        $this->envelopes = [];
     }
 
     public function start() {
@@ -43,16 +45,21 @@ class Supervisor
             Loop::repeat(1, function() {
                 $envelopes = $this->producer->get();
                 foreach ($envelopes as $envelope) {
-                    $this->ips[] = $envelope->getMessage();
-                    $this->producer->ack($envelope);
+                    $ip = $envelope->getMessage();
+                    if(!isset($this->envelopes[$ip->getId()])) {
+                        $this->envelopes[$ip->getId()] = $envelope;
+                    }
                 }
 
-                foreach ($this->ips as $ip) {
+                foreach ($this->envelopes as $envelope) {
+                    /** @var IP $ip */
+                    $ip = $envelope->getMessage();
                     if($ip->getCurrentRail() < count($this->rails)) {
                         $this->rails[$ip->getCurrentRail()]->run($ip);
                     } else {
-                        $this->consumer->send(new Envelope($ip));
-                        unset($this->ips[$ip->getId()]);
+                        unset($this->envelopes[$ip->getId()]);
+                        $this->producer->ack($envelope);
+                        $this->consumer->send(Envelope::wrap($ip, [$envelope->last(FromTransportIdStamp::class)]));
                     }
                 }
 

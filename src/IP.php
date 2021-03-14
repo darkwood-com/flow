@@ -10,19 +10,21 @@ namespace RFBP;
  */
 class IP
 {
-    private static int $ipId = 0;
+    private string $id; // internal IP unique identifier
 
-    private int $id; // internal IP unique identifier
-    private int $railIndex; // internal rail index for supervisor
+    private string $state; // internal state for supervisor : 'process'|'error'|'done'
+    private int $railIndex; // internal state for supervisor
 
     public function __construct(
         private object $data // Information Packet data representing any object
     ) {
-        $this->id = self::$ipId++;
+        $this->id = uniqid('ip_', true);
+
+        $this->state = 'process';
         $this->railIndex = 0;
     }
 
-    public function getId(): int {
+    public function getId(): string {
         return $this->id;
     }
 
@@ -32,6 +34,14 @@ class IP
 
     public function nextRail(): void {
         $this->railIndex++;
+    }
+
+    public function errorRail(): void {
+        $this->state = 'error';
+    }
+
+    public function done(): void {
+        $this->state = 'done';
     }
 
     public function getData(): object {

@@ -6,17 +6,12 @@ use Amp\Coroutine;
 
 class Rail
 {
-    private static int $railId = 0;
-
-    private int $id; // internal rail unique identifier
     private $ipJobs = [];
 
     public function __construct(
         private \Closure $job,
         private int $scale
-    ) {
-        $this->id = self::$railId++;
-    }
+    ) {}
 
     public function run(IP $ip): void {
         // does the rail can scale ?
