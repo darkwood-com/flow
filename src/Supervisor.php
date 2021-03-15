@@ -24,30 +24,29 @@ class Supervisor
     }
 
     public function start() {
-        Loop::run(function() {
-            Loop::repeat(1, callback: function() {
-                $envelopes = $this->producer->get();
-                foreach ($envelopes as $envelope) {
-                    $ip = $envelope->getMessage();
-                    if(!isset($this->envelopes[$ip->getId()])) {
-                        $this->envelopes[$ip->getId()] = $envelope;
-                    }
+        Loop::repeat(1, callback: function() {
+            $envelopes = $this->producer->get();
+            foreach ($envelopes as $envelope) {
+                $ip = $envelope->getMessage();
+                if(!isset($this->envelopes[$ip->getId()])) {
+                    $this->envelopes[$ip->getId()] = $envelope;
                 }
+            }
 
-                foreach ($this->envelopes as $envelope) {
-                    /** @var IP $ip */
-                    $ip = $envelope->getMessage();
-                    if($ip->getCurrentRail() < count($this->rails)) {
-                        $this->rails[$ip->getCurrentRail()]->run($ip);
-                    } else {
-                        unset($this->envelopes[$ip->getId()]);
-                        $this->producer->ack($envelope);
-                        $this->consumer->send(Envelope::wrap($ip, [$envelope->last(FromTransportIdStamp::class)]));
-                    }
+            foreach ($this->envelopes as $envelope) {
+                /** @var IP $ip */
+                $ip = $envelope->getMessage();
+                if($ip->getCurrentRail() < count($this->rails)) {
+                    $this->rails[$ip->getCurrentRail()]->run($ip);
+                } else {
+                    unset($this->envelopes[$ip->getId()]);
+                    $this->producer->ack($envelope);
+                    $this->consumer->send(Envelope::wrap($ip, [$envelope->last(FromTransportIdStamp::class)]));
                 }
+            }
 
-                //echo "******* Tick *******\n";
-            });
+            //echo "******* Tick *******\n";
         });
+        Loop::run();
     }
 }

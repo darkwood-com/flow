@@ -23,10 +23,7 @@ class Client
         $this->sender->send($envelope);
     }
 
-    /**
-     * @param callable $callback
-     */
-    public function wait($callback) {
+    public function wait(callable $callback) {
         $bus = new MessageBus([
             new HandleMessageMiddleware(new HandlersLocator([
                 IP::class => [$callback]
