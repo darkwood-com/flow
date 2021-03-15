@@ -6,8 +6,8 @@ Look at the slides of this project for more information about this concept : [Sp
 
 ## Installation
 
-Minimal PHP version to use _PHP Railway Flow Based Programming_ is 8.0.  
-The recommended way to install it through [Composer](http://getcomposer.org/) and execute `composer install`.
+Minimal PHP version to use _PHP Railway Flow Based Programming_ is 8.0  
+The recommended way to install it through [Composer](http://getcomposer.org/) and execute `composer install`
 
 ## Usage
 
@@ -15,7 +15,7 @@ A working script is available in the bundled `examples` directory
 - Start server : `php examples/server.php`
 - Start client(s) : `php examples/client.php`
 
-Messaging part require install [Docker](https://www.docker.com) and execute `docker-compose up -d`.
+Messaging part require install [Docker](https://www.docker.com) and execute `docker-compose up -d`
 
 ## More information about the code
 
