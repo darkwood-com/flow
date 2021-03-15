@@ -32,7 +32,7 @@ Flow Based Programming :
 - Implementation in javascript from [Henri Bergius](https://github.com/bergie) : [https://noflojs.org](https://noflojs.org)
 - Implementation in PHP from [Henri Bergius](https://github.com/bergie) : [https://github.com/phpflo/phpflo](https://github.com/phpflo/phpflo)
 
-Railway Flow Based Programming :
+Railway Oriented Programming :
 - Presentation from [Sarmiento Calle](https://twitter.com/rrramiro) : [https://www.youtube.com/watch?v=RNTo7Y2wMyI](https://www.youtube.com/watch?v=RNTo7Y2wMyI)
 - Presentation from [Scott Wlaschin](https://fr.slideshare.net/scottwlaschin) : [https://fr.slideshare.net/ScottWlaschin/railway-oriented-programming](https://fr.slideshare.net/ScottWlaschin/railway-oriented-programming)
 - Implementation in PHP from [Turanct](https://github.com/turanct) : [https://github.com/turanct/railway](https://github.com/turanct/railway)
