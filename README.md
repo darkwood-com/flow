@@ -15,7 +15,7 @@ A working script is available in the bundled `examples` directory
 - Start server : `php examples/server.php`
 - Start client(s) : `php examples/client.php`
 
-Messaging part require install [Docker](https://www.docker.com) and execute `docker-compose up -d`
+Messaging part require to install [Docker](https://www.docker.com) and execute `docker-compose up -d`
 
 ## More information about the code
 
@@ -29,8 +29,8 @@ Railway Flow Based Programming with Elixir from [Anton Mishchuk](https://twitter
 
 Flow Based Programming :
 - [J. Paul Rodker Morrison](https://jpaulm.github.io) concept : [https://jpaulm.github.io/fbp](https://jpaulm.github.io/fbp)
-- Implementation en javascript from [Henri Bergius](https://github.com/bergie) : [https://noflojs.org](https://noflojs.org)
-- Implementation en PHP from [Henri Bergius](https://github.com/bergie) : [https://github.com/phpflo/phpflo](https://github.com/phpflo/phpflo)
+- Implementation in javascript from [Henri Bergius](https://github.com/bergie) : [https://noflojs.org](https://noflojs.org)
+- Implementation in PHP from [Henri Bergius](https://github.com/bergie) : [https://github.com/phpflo/phpflo](https://github.com/phpflo/phpflo)
 
 Railway Flow Based Programming :
 - Presentation from [Sarmiento Calle](https://twitter.com/rrramiro) : [https://www.youtube.com/watch?v=RNTo7Y2wMyI](https://www.youtube.com/watch?v=RNTo7Y2wMyI)
