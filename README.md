@@ -43,7 +43,7 @@ Coroutines in PHP :
 - 100% Asynchrone - 0% Callback en PHP - [Joel Wurtz](https://jolicode.com/equipe/joel-wurtz) - PHP Tour Montpellier 2018 : [https://www.youtube.com/watch?v=g1UgU5KMyMA](https://www.youtube.com/watch?v=g1UgU5KMyMA)
 - Générateurs et Programmation Asynchrone: Mode d’emploi - [Benoit Viguier](https://twitter.com/b_viguier) - Forum PHP 2018 : [https://www.youtube.com/watch?v=7TvIIt4c8uY](https://www.youtube.com/watch?v=7TvIIt4c8uY)
 
-Messagin approach with East oriented code from [Frédéric Hardy](https://twitter.com/mageekguy) :
+Messaging approach with East oriented code from [Frédéric Hardy](https://twitter.com/mageekguy) :
 - Article : [http://blog.est.voyage/phpTour2015](http://blog.est.voyage/phpTour2015)
 - Source code : [https://github.com/estvoyage/phpTour2015](https://github.com/estvoyage/phpTour2015)
 
