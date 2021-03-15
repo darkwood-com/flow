@@ -15,7 +15,7 @@ A working script is available in the bundled `examples` directory
 - Start server : `php examples/server.php`
 - Start client(s) : `php examples/client.php`
 
-Messaging is based on [Redis](https://redis.io), you can install [Docker](https://www.docker.com) and execute docker-compose up -d to get Redis working.
+Messaging is based on [Redis](https://redis.io), you can install [Docker](https://www.docker.com) and execute `docker-compose up -d` to get Redis working.
 
 ## More information about the code
 
