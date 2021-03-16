@@ -15,7 +15,7 @@ A working script is available in the bundled `examples` directory
 - Start server : `php examples/server.php`
 - Start client(s) : `php examples/client.php`
 
-Messaging part require install [Docker](https://www.docker.com) and execute `docker-compose up -d`
+Messaging part require to install [Docker](https://www.docker.com) and execute `docker-compose up -d`
 
 ## More information about the code
 
@@ -29,10 +29,10 @@ Railway Flow Based Programming with Elixir from [Anton Mishchuk](https://twitter
 
 Flow Based Programming :
 - [J. Paul Rodker Morrison](https://jpaulm.github.io) concept : [https://jpaulm.github.io/fbp](https://jpaulm.github.io/fbp)
-- Implementation en javascript from [Henri Bergius](https://github.com/bergie) : [https://noflojs.org](https://noflojs.org)
-- Implementation en PHP from [Henri Bergius](https://github.com/bergie) : [https://github.com/phpflo/phpflo](https://github.com/phpflo/phpflo)
+- Implementation in javascript from [Henri Bergius](https://github.com/bergie) : [https://noflojs.org](https://noflojs.org)
+- Implementation in PHP from [Henri Bergius](https://github.com/bergie) : [https://github.com/phpflo/phpflo](https://github.com/phpflo/phpflo)
 
-Railway Flow Based Programming :
+Railway Oriented Programming :
 - Presentation from [Sarmiento Calle](https://twitter.com/rrramiro) : [https://www.youtube.com/watch?v=RNTo7Y2wMyI](https://www.youtube.com/watch?v=RNTo7Y2wMyI)
 - Presentation from [Scott Wlaschin](https://fr.slideshare.net/scottwlaschin) : [https://fr.slideshare.net/ScottWlaschin/railway-oriented-programming](https://fr.slideshare.net/ScottWlaschin/railway-oriented-programming)
 - Implementation in PHP from [Turanct](https://github.com/turanct) : [https://github.com/turanct/railway](https://github.com/turanct/railway)
@@ -43,7 +43,7 @@ Coroutines in PHP :
 - 100% Asynchrone - 0% Callback en PHP - [Joel Wurtz](https://jolicode.com/equipe/joel-wurtz) - PHP Tour Montpellier 2018 : [https://www.youtube.com/watch?v=g1UgU5KMyMA](https://www.youtube.com/watch?v=g1UgU5KMyMA)
 - Générateurs et Programmation Asynchrone: Mode d’emploi - [Benoit Viguier](https://twitter.com/b_viguier) - Forum PHP 2018 : [https://www.youtube.com/watch?v=7TvIIt4c8uY](https://www.youtube.com/watch?v=7TvIIt4c8uY)
 
-Messagin approach with East oriented code from [Frédéric Hardy](https://twitter.com/mageekguy) :
+Messaging approach with East oriented code from [Frédéric Hardy](https://twitter.com/mageekguy) :
 - Article : [http://blog.est.voyage/phpTour2015](http://blog.est.voyage/phpTour2015)
 - Source code : [https://github.com/estvoyage/phpTour2015](https://github.com/estvoyage/phpTour2015)
 
