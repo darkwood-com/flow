@@ -11,40 +11,37 @@ use Amp\Delayed;
 use Doctrine\DBAL\DriverManager;
 
 $addOneJob = static function (object $data): \Generator {
-    $data['number']++;
     printf("Client %s : Add one %d\n", $data['client'], $data['number']);
 
-    // simulating calculating some "light" operation from 10 to 90 milliseconds
+    // simulating calculating some "light" operation from 10 to 90 milliseconds as async generator
     $delay = random_int(1, 9) * 10;
     yield new Delayed($delay);
-
-    return $data;
+    $data['number']++;
 };
 
 $multbyTwoJob = static function(object $data): \Generator {
-    $data['number'] *= 2;
     printf("Client %s : Mult by two %d\n", $data['client'], $data['number']);
 
-    // simulating calculating some "heavy" operation from 4 to 6 seconds
+    // simulating calculating some "heavy" operation from 4 to 6 seconds as async generator
     $delay = random_int(4, 6) * 1000;
     yield new Delayed($delay);
+    $data['number'] *= 2;
 
-    return $data;
+    // simulating 1 chance on 3 to produce an exception from the "heavy" operation
+    if(random_int(1, 3) === 1) {
+        throw new Error('Failure when processing "Mult by two"');
+    }
 };
 
-$minusThreeJob = static function (object $data): \Generator {
-    $data['number'] -= 3;
+$minusThreeJob = static function (object $data): void {
     printf("Client %s : Minus three %d\n", $data['client'], $data['number']);
 
-    // simulating calculating some "light" operation from 10 to 90 milliseconds
-    $delay = random_int(1, 9) * 10;
-    yield new Delayed($delay);
-
-    return $data;
+    // simulating calculating some "light" operation as anonymous function
+    $data['number'] -= 3;
 };
 
-$errorJob = static function(): \Generator {
-    yield;
+$errorJob = static function(object $data, \Throwable $exception): void {
+    printf("Client %s : Exception %s\n", $data['client'], $exception->getMessage());
 };
 
 $rails = [

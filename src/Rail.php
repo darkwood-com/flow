@@ -2,18 +2,18 @@
 
 namespace RFBP;
 
-use Amp\Coroutine;
+use function Amp\coroutine;
 
 class Rail
 {
-    private $ipJobs = [];
+    private array $ipJobs = [];
 
     public function __construct(
         private \Closure $job,
         private int $scale
     ) {}
 
-    public function run(IP $ip): void {
+    public function __invoke(IP $ip): void {
         // does the rail can scale ?
         if (count($this->ipJobs) >= $this->scale) {
             return;
@@ -21,11 +21,17 @@ class Rail
 
         // create an new job coroutine instance with IP data if not exist
         if(!isset($this->ipJobs[$ip->getId()])) {
-            $job = $this->job;
-            $this->ipJobs[$ip->getId()] = $job($ip->getData());
-            $promise = new Coroutine($this->ipJobs[$ip->getId()]);
-            $promise->onResolve(function() use ($ip) {
-                $ip->nextRail();
+            $this->ipJobs[$ip->getId()] = true;
+
+            $promise = coroutine($this->job)($ip->getData(), $ip->getException());
+            $promise->onResolve(function($exception) use ($ip) {
+                if($exception) {
+                    $ip->setException($exception);
+                } else {
+                    $ip->nextRail();
+                    $ip->setException(null);
+                }
+
                 unset($this->ipJobs[$ip->getId()]);
             });
         }

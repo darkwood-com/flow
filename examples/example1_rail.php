@@ -58,12 +58,12 @@ Loop::repeat(1, static function() use ($rails, $ips) {
     foreach ($ips as $ip) {
         // IP need to be processed by the rail 1
         if($ip->getCurrentRail() === 0) {
-            $rails[0]->run($ip);
+            $rails[0]($ip);
         }
 
         // IP need to be processed by the rail 2
         if($ip->getCurrentRail() === 1) {
-            $rails[1]->run($ip);
+            $rails[1]($ip);
         }
 
         // IP were processed by the rails ?

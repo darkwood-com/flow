@@ -18,7 +18,7 @@ class Supervisor
         private SenderInterface $consumer,
         /** @var array<Rail> */
         private $rails,
-        private ?Rail $error = null
+        private ?Rail $errorRail = null
     ) {
         $this->envelopes = [];
     }
@@ -36,8 +36,13 @@ class Supervisor
             foreach ($this->envelopes as $envelope) {
                 /** @var IP $ip */
                 $ip = $envelope->getMessage();
-                if($ip->getCurrentRail() < count($this->rails)) {
-                    $this->rails[$ip->getCurrentRail()]->run($ip);
+                if($this->errorRail && $ip->getException()) {
+                    while($ip->getCurrentRail() < count($this->rails)) {
+                        $ip->nextRail();
+                    }
+                    ($this->errorRail)($ip);
+                } elseif($ip->getCurrentRail() < count($this->rails)) {
+                    $this->rails[$ip->getCurrentRail()]($ip);
                 } else {
                     unset($this->envelopes[$ip->getId()]);
                     $this->producer->ack($envelope);
