@@ -13,8 +13,8 @@ use Symfony\Component\Messenger\Worker;
 class Client
 {
     public function __construct(
-        protected SenderInterface $sender,
-        protected ReceiverInterface $receiver
+        private SenderInterface $sender,
+        private ReceiverInterface $receiver
     ) {}
 
     public function call(object $data) {

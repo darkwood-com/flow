@@ -11,7 +11,7 @@ use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 class Supervisor
 {
     /** @var array<Envelope> */
-    protected $envelopes;
+    private array $envelopes;
 
     public function __construct(
         private ReceiverInterface $producer,

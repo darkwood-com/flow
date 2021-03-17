@@ -6,12 +6,14 @@ use function Amp\coroutine;
 
 class Rail
 {
-    private array $ipJobs = [];
+    private array $ipJobs;
 
     public function __construct(
         private \Closure $job,
-        private int $scale
-    ) {}
+        private ?int $scale = 1
+    ) {
+        $this->ipJobs = [];
+    }
 
     public function __invoke(IP $ip): void {
         // does the rail can scale ?

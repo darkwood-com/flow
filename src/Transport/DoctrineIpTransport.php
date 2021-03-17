@@ -16,8 +16,8 @@ class DoctrineIpTransport implements TransportInterface
     private ?SerializerInterface $serializer;
 
     public function __construct(
-        protected DbalConnection $connection,
-        protected ?string $id = 'supervisor',
+        private DbalConnection $connection,
+        private ?string $id = 'supervisor',
         ?SerializerInterface $serializer = null
     )
     {

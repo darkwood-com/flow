@@ -13,13 +13,16 @@ class IP
     private string $id; // internal IP unique identifier
 
     // internal state for supervisor
-    private int $railIndex = 0;
-    private ?\Throwable $exception = null;
+    private int $railIndex;
+    private ?\Throwable $exception;
 
     public function __construct(
         private object $data // Information Packet data representing any object
     ) {
         $this->id = uniqid('ip_', true);
+
+        $this->railIndex = 0;
+        $this->exception = null;
     }
 
     public function getId(): string {
