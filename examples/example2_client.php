@@ -24,5 +24,9 @@ $client->call($data);
 
 $client->wait(function(IP $ip) {
     $data = $ip->getData();
-    printf("Client %s : result number %d\n", $data['client'], $data['number']);
+    if(is_null($data['number'])) {
+        printf("Client %s : error in process\n", $data['client']);
+    } else {
+        printf("Client %s : result number %d\n", $data['client'], $data['number']);
+    }
 });

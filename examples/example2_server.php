@@ -42,6 +42,8 @@ $minusThreeJob = static function (object $data): void {
 
 $errorJob = static function(object $data, \Throwable $exception): void {
     printf("Client %s : Exception %s\n", $data['client'], $exception->getMessage());
+
+    $data['number'] = null;
 };
 
 $rails = [
