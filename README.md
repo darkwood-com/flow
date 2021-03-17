@@ -2,7 +2,8 @@
 
 Railway Flow Based Programming implementation in PHP
 
-Look at the slides of this project for more information about this concept : [Speakerdeck](https://speakerdeck.com/matyo91/php-railway-flow-based-programming)
+Article of this project : [https://blog.darkwood.fr/article/php-railway-flow-based-programming](https://blog.darkwood.fr/article/php-railway-flow-based-programming)
+Slides of this project : [Speakerdeck](https://speakerdeck.com/matyo91/php-railway-flow-based-programming)
 
 ## Installation
 
