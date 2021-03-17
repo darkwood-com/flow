@@ -36,9 +36,11 @@ class Supervisor
             foreach ($this->envelopes as $envelope) {
                 /** @var IP $ip */
                 $ip = $envelope->getMessage();
-                if($this->errorRail && $ip->getException()) {
+                if($ip->getException()) {
                     $ip->setRailIndex(count($this->rails));
-                    ($this->errorRail)($ip);
+                    if($this->errorRail) {
+                        ($this->errorRail)($ip);
+                    }
                 } elseif($ip->getRailIndex() < count($this->rails)) {
                     $this->rails[$ip->getRailIndex()]($ip);
                 } else {
