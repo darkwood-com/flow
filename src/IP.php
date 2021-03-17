@@ -12,7 +12,8 @@ class IP
 {
     private string $id; // internal IP unique identifier
 
-    private int $railIndex = 0; // internal state for supervisor
+    // internal state for supervisor
+    private int $railIndex = 0;
     private ?\Throwable $exception = null;
 
     public function __construct(
@@ -29,12 +30,14 @@ class IP
         return $this->data;
     }
 
-    public function getCurrentRail(): int {
+    public function getRailIndex(): int
+    {
         return $this->railIndex;
     }
 
-    public function nextRail(): void {
-        $this->railIndex++;
+    public function setRailIndex(int $railIndex): void
+    {
+        $this->railIndex = $railIndex;
     }
 
     public function getException(): ?\Throwable

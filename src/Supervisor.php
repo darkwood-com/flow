@@ -37,20 +37,16 @@ class Supervisor
                 /** @var IP $ip */
                 $ip = $envelope->getMessage();
                 if($this->errorRail && $ip->getException()) {
-                    while($ip->getCurrentRail() < count($this->rails)) {
-                        $ip->nextRail();
-                    }
+                    $ip->setRailIndex(count($this->rails));
                     ($this->errorRail)($ip);
-                } elseif($ip->getCurrentRail() < count($this->rails)) {
-                    $this->rails[$ip->getCurrentRail()]($ip);
+                } elseif($ip->getRailIndex() < count($this->rails)) {
+                    $this->rails[$ip->getRailIndex()]($ip);
                 } else {
                     unset($this->envelopes[$ip->getId()]);
                     $this->producer->ack($envelope);
                     $this->consumer->send(Envelope::wrap($ip, [$envelope->last(FromTransportIdStamp::class)]));
                 }
             }
-
-            //echo "******* Tick *******\n";
         });
         Loop::run();
     }

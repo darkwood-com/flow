@@ -24,11 +24,11 @@ class Rail
             $this->ipJobs[$ip->getId()] = true;
 
             $promise = coroutine($this->job)($ip->getData(), $ip->getException());
-            $promise->onResolve(function($exception) use ($ip) {
+            $promise->onResolve(function(\Throwable $exception = null) use ($ip) {
                 if($exception) {
                     $ip->setException($exception);
                 } else {
-                    $ip->nextRail();
+                    $ip->setRailIndex($ip->getRailIndex() + 1);
                     $ip->setException(null);
                 }
 

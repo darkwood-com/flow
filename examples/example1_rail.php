@@ -57,17 +57,17 @@ for($i = 1; $i < 5; $i++) {
 Loop::repeat(1, static function() use ($rails, $ips) {
     foreach ($ips as $ip) {
         // IP need to be processed by the rail 1
-        if($ip->getCurrentRail() === 0) {
+        if($ip->getRailIndex() === 0) {
             $rails[0]($ip);
         }
 
         // IP need to be processed by the rail 2
-        if($ip->getCurrentRail() === 1) {
+        if($ip->getRailIndex() === 1) {
             $rails[1]($ip);
         }
 
         // IP were processed by the rails ?
-        if($ip->getCurrentRail() === 2) {
+        if($ip->getRailIndex() === 2) {
             unset($ips[$ip->getId()]);
         }
     }
