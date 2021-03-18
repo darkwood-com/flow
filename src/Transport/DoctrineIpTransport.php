@@ -3,6 +3,7 @@
 namespace RFBP\Transport;
 
 use Doctrine\DBAL\Connection as DbalConnection;
+use RFBP\Stamp\FromTransportIdStamp;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineReceiver;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineSender;
 use Symfony\Component\Messenger\Envelope;

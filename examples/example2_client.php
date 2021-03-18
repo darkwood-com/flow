@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 require __DIR__.'/../vendor/autoload.php';
 
+use Doctrine\DBAL\DriverManager;
 use RFBP\Client;
 use RFBP\IP;
 use RFBP\Transport\DoctrineIpTransport;
-use Doctrine\DBAL\DriverManager;
 
 $data = new ArrayObject([
     'client' => long2ip(random_int(ip2long("10.0.0.0"), ip2long("10.255.255.255"))),

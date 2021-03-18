@@ -6,8 +6,8 @@ require __DIR__.'/../vendor/autoload.php';
 
 use Amp\Loop;
 use Amp\Delayed;
-use RFBP\Rail;
 use RFBP\IP;
+use RFBP\Rail;
 
 $job1 = static function (object $data): \Generator {
     printf("*. #%d : Calculating number %d\n", $data['id'], $data['number']);

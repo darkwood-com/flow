@@ -1,6 +1,6 @@
 <?php
 
-namespace RFBP\Transport;
+namespace RFBP\Stamp;
 
 use Symfony\Component\Messenger\Stamp\StampInterface;
 

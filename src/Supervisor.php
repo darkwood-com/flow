@@ -3,7 +3,7 @@
 namespace RFBP;
 
 use Amp\Loop;
-use RFBP\Transport\FromTransportIdStamp;
+use RFBP\Stamp\FromTransportIdStamp;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;

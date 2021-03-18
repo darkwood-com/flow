@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 require __DIR__.'/../vendor/autoload.php';
 
+use Amp\Delayed;
+use Doctrine\DBAL\DriverManager;
 use RFBP\Rail;
 use RFBP\Supervisor;
 use RFBP\Transport\DoctrineIpTransport;
-use Amp\Delayed;
-use Doctrine\DBAL\DriverManager;
 
 $addOneJob = static function (object $data): \Generator {
     printf("Client %s : Add one %d\n", $data['client'], $data['number']);
