@@ -6,6 +6,9 @@ use function Amp\coroutine;
 
 class Rail
 {
+    /**
+     * @var array<string, bool>
+     */
     private array $ipJobs;
 
     public function __construct(

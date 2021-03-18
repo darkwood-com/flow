@@ -57,7 +57,10 @@ class DoctrineIpTransport implements TransportInterface
         return $this->getSender($envelope)->send($envelope);
     }
 
-    private function queue($queue = 'default'): array {
+    /**
+     * @return array<string, string>
+     */
+    private function queue(string $queue = 'default'): array {
         return Connection::buildConfiguration('doctrine://default?queue_name='.$queue);
     }
 
@@ -70,8 +73,12 @@ class DoctrineIpTransport implements TransportInterface
     private function getSender(Envelope $envelope): DoctrineSender
     {
         if($this->id === 'supervisor') {
-            $id = $envelope->last(FromTransportIdStamp::class)->getId();
-            $connection = new Connection($this->queue($id), $this->connection);
+            $stamp = $envelope->last(FromTransportIdStamp::class);
+            if(!$stamp instanceof FromTransportIdStamp) {
+                throw new \RuntimeException('Sender not found');
+            }
+
+            $connection = new Connection($this->queue($stamp->getId()), $this->connection);
         } else {
             $connection = new Connection($this->queue('supervisor'), $this->connection);
         }

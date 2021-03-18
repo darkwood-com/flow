@@ -6,17 +6,17 @@ use Symfony\Component\Messenger\Stamp\StampInterface;
 
 final class FromTransportIdStamp implements StampInterface
 {
-    private $id;
+    private string $id;
 
     /**
-     * @param mixed $id some "identifier" of the transport name
+     * @param string $id some "identifier" of the transport name
      */
-    public function __construct($id)
+    public function __construct(string $id)
     {
         $this->id = $id;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }

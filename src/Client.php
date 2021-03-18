@@ -17,13 +17,13 @@ class Client
         private ReceiverInterface $receiver
     ) {}
 
-    public function call(object $data) {
+    public function call(object $data): void {
         $ip = new IP($data);
         $envelope = new Envelope($ip);
         $this->sender->send($envelope);
     }
 
-    public function wait(callable $callback) {
+    public function wait(callable $callback): void {
         $bus = new MessageBus([
             new HandleMessageMiddleware(new HandlersLocator([
                 IP::class => [$callback]

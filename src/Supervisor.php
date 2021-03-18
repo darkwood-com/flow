@@ -23,7 +23,7 @@ class Supervisor
         $this->envelopes = [];
     }
 
-    public function start() {
+    public function start(): void {
         Loop::repeat(1, callback: function() {
             $envelopes = $this->producer->get();
             foreach ($envelopes as $envelope) {
