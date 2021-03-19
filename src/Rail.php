@@ -29,7 +29,7 @@ class Rail
         }
 
         // create an new job coroutine instance with IP data if not exist
-        $id = $this->getIpId($ip);
+        $id = $this->getId($ip);
         if(!isset($this->ipJobs[$id])) {
             $this->ipJobs[$id] = true;
 
@@ -51,7 +51,7 @@ class Rail
         $this->pipeCallback = $callback;
     }
 
-    private function getIpId(IP $ip): mixed
+    private function getId(IP $ip): mixed
     {
         /** @var ?IPidStamp $stamp */
         $stamp = $ip->last(IPidStamp::class);

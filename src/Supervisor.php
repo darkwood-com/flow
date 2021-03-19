@@ -34,7 +34,7 @@ class Supervisor
 
     private function next(?int $index = null): callable {
         return function(IP $ip, \Throwable $exception = null) use ($index) {
-            $id = $this->getIpId($ip);
+            $id = $this->getId($ip);
 
             if($exception) {
                 if($this->errorRail) {
@@ -59,7 +59,7 @@ class Supervisor
             // producer receive new incoming IP and initialise their state
             $ips = $this->producer->get();
             foreach ($ips as $ip) {
-                $id = $this->getIpId($ip);
+                $id = $this->getId($ip);
                 if(!isset($this->ipPool[$id])) {
                     $this->ipPool[$id] = [$ip, 0, null];
                 }
@@ -79,7 +79,7 @@ class Supervisor
         Loop::run();
     }
 
-    private function getIpId(IP $ip): mixed
+    private function getId(IP $ip): mixed
     {
         /** @var ?IPidStamp $stamp */
         $stamp = $ip->last(IPidStamp::class);
