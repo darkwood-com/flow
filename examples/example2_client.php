@@ -7,7 +7,6 @@ require __DIR__.'/../vendor/autoload.php';
 use Doctrine\DBAL\DriverManager;
 use RFBP\Client;
 use RFBP\Transport\DoctrineIpTransport;
-use Symfony\Component\Messenger\Envelope as IP;
 
 $data = new ArrayObject([
     'client' => long2ip(random_int(ip2long("10.0.0.0"), ip2long("10.255.255.255"))),
