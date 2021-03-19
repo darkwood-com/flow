@@ -27,7 +27,9 @@ class Supervisor
         foreach ($rails as $index => $rail) {
             $rail->pipe($this->next($index + 1));
         }
-        $this->errorRail->pipe($this->next());
+        if($this->errorRail) {
+            $this->errorRail->pipe($this->next());
+        }
     }
 
     private function next(?int $index = null): callable {
@@ -35,7 +37,12 @@ class Supervisor
             $id = $this->getIpId($ip);
 
             if($exception) {
-                $this->ipPool[$id][2] = $exception;
+                if($this->errorRail) {
+                    $this->ipPool[$id][2] = $exception;
+                } else {
+                    unset($this->ipPool[$id]);
+                    $this->producer->reject($ip);
+                }
             } elseif (!is_null($index) && $index < count($this->rails)) {
                 $this->ipPool[$id][1] = $index;
             } else {
