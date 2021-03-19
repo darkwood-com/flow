@@ -4,7 +4,7 @@ namespace RFBP\Stamp;
 
 use Symfony\Component\Messenger\Stamp\StampInterface;
 
-final class FromTransportIdStamp implements StampInterface
+final class DoctrineIpTransportIdStamp implements StampInterface
 {
     private string $id;
 
