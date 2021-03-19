@@ -5,7 +5,7 @@ namespace RFBP;
 use function Amp\coroutine;
 use Amp\Promise;
 use Symfony\Component\Messenger\Envelope as IP;
-use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPid;
+use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
 
 class Rail
 {
@@ -53,10 +53,10 @@ class Rail
 
     private function getIpId(IP $ip): mixed
     {
-        /** @var ?IPid $stamp */
-        $stamp = $ip->last(IPid::class);
+        /** @var ?IPidStamp $stamp */
+        $stamp = $ip->last(IPidStamp::class);
 
-        if(is_null($stamp) || $stamp->getId() === null) {
+        if(is_null($stamp) || is_null($stamp->getId())) {
             throw new \RuntimeException('Transport does not define Id for IP');
         }
 

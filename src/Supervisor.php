@@ -4,7 +4,7 @@ namespace RFBP;
 
 use Amp\Loop;
 use Symfony\Component\Messenger\Envelope as IP;
-use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPid;
+use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 
@@ -74,10 +74,10 @@ class Supervisor
 
     private function getIpId(IP $ip): mixed
     {
-        /** @var ?IPid $stamp */
-        $stamp = $ip->last(IPid::class);
+        /** @var ?IPidStamp $stamp */
+        $stamp = $ip->last(IPidStamp::class);
 
-        if(is_null($stamp) || $stamp->getId() === null) {
+        if(is_null($stamp) || is_null($stamp->getId())) {
             throw new \RuntimeException('Transport does not define Id for IP');
         }
 
