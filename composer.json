@@ -28,7 +28,12 @@
     },
     "autoload": {
         "psr-4": {
-            "RFBP\\": "src/"
+            "RFBP\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RFBP\\Test\\": "tests"
         }
     }
 }
