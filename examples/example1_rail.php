@@ -39,7 +39,7 @@ $job2 = static function (object $data): void {
 
 $rails = [
     new Rail($job1, 2),
-    new Rail($job2, 4),
+    new Rail($job2, 1),
 ];
 
 $ipPool = new SplObjectStorage();
