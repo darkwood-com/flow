@@ -37,7 +37,7 @@ class Supervisor
             if($exception) {
                 $this->ipPool[$id][2] = $exception;
             } elseif (!is_null($index) && $index < count($this->rails)) {
-                $this->ipPool[$id] = [$ip, $index, null];
+                $this->ipPool[$id][1] = $index;
             } else {
                 unset($this->ipPool[$id]);
                 $this->producer->ack($ip);
