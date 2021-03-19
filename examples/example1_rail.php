@@ -8,7 +8,7 @@ use Amp\Loop;
 use Amp\Delayed;
 use RFBP\Rail;
 use Symfony\Component\Messenger\Envelope as IP;
-use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
+use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
 
 $job1 = static function (object $data): \Generator {
     printf("*. #%d : Calculating %d + %d\n", $data['id'], $data['number'], $data['number']);
@@ -51,7 +51,7 @@ $rails[1]->pipe(static function($ip) use ($ipPool) {
 });
 
 for($i = 1; $i < 5; $i++) {
-    $ip = IP::wrap(new ArrayObject(['id' => $i, 'number' => $i]), [new TransportMessageIdStamp(uniqid('ip_', true))]);
+    $ip = IP::wrap(new ArrayObject(['id' => $i, 'number' => $i]), [new IPidStamp(uniqid('ip_', true))]);
     $ipPool->offsetSet($ip, 0);
 }
 
