@@ -15,6 +15,9 @@ use Symfony\Component\Messenger\Bridge\Doctrine\Transport\Connection;
 class DoctrineIpTransport implements TransportInterface
 {
     private ?SerializerInterface $serializer;
+    private ?DoctrineReceiver $receiver;
+    /** @var array<mixed, DoctrineSender> */
+    private array $senders;
 
     public function __construct(
         private DbalConnection $connection,
@@ -23,6 +26,7 @@ class DoctrineIpTransport implements TransportInterface
     )
     {
         $this->serializer = $serializer ?? new PhpSerializer();
+        $this->senders = [];
     }
 
     /**
@@ -30,7 +34,7 @@ class DoctrineIpTransport implements TransportInterface
      */
     public function get(): iterable
     {
-        return $this->getReceiver()->get();
+        return ($this->receiver ?? $this->getReceiver())->get();
     }
 
     /**
@@ -38,7 +42,7 @@ class DoctrineIpTransport implements TransportInterface
      */
     public function ack(Envelope $envelope): void
     {
-        $this->getReceiver()->ack($envelope);
+        ($this->receiver ?? $this->getReceiver())->ack($envelope);
     }
 
     /**
@@ -46,7 +50,7 @@ class DoctrineIpTransport implements TransportInterface
      */
     public function reject(Envelope $envelope): void
     {
-        $this->getReceiver()->reject($envelope);
+        ($this->receiver ?? $this->getReceiver())->reject($envelope);
     }
 
     public function send(Envelope $envelope): Envelope
@@ -67,7 +71,9 @@ class DoctrineIpTransport implements TransportInterface
     private function getReceiver(): DoctrineReceiver
     {
         $connection = new Connection($this->queue($this->id), $this->connection);
-        return new DoctrineReceiver($connection, $this->serializer);
+        $this->receiver = new DoctrineReceiver($connection, $this->serializer);
+
+        return $this->receiver;
     }
 
     private function getSender(Envelope $envelope): DoctrineSender
@@ -78,11 +84,16 @@ class DoctrineIpTransport implements TransportInterface
                 throw new \RuntimeException('Sender not found');
             }
 
-            $connection = new Connection($this->queue($stamp->getId()), $this->connection);
+            $queue = $stamp->getId();
         } else {
-            $connection = new Connection($this->queue('supervisor'), $this->connection);
+            $queue = 'supervisor';
         }
 
-        return new DoctrineSender($connection, $this->serializer);
+        if(!isset($this->senders[$queue])) {
+            $connection = new Connection($this->queue($queue), $this->connection);
+            $this->senders[$queue] = new DoctrineSender($connection, $this->serializer);
+        }
+
+        return $this->senders[$queue];
     }
 }
