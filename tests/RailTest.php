@@ -11,13 +11,38 @@ use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
 
 class RailTest extends TestCase
 {
-    public function testIpWithoutId(): void
+    /**
+     * @dataProvider jobProvider
+     * @param \Closure $job
+     */
+    public function testIpWithoutId(\Closure $job): void
     {
-        $job = static function() {};
         $ip = new Ip(new \stdClass());
         $rail = new Rail($job);
         $this->expectException(\RuntimeException::class);
         ($rail)($ip);
+
+        Loop::run();
+    }
+
+    /**
+     * @dataProvider jobProvider
+     * @param \Closure $job
+     * @param int $resultNumber
+     * @param \Throwable|null $resultException
+     */
+    public function testSyncJob(\Closure $job, int $resultNumber, ?\Throwable $resultException): void
+    {
+        $ip = Ip::wrap(new \ArrayObject(['number' => 0]), [new IPidStamp('ip_id')]);
+        $rail = new Rail($job);
+        $rail->pipe(function(IP $ip, ?\Throwable $exception) use ($resultNumber, $resultException) {
+            self::assertSame(\ArrayObject::class, $ip->getMessage()::class);
+            self::assertSame($resultNumber, $ip->getMessage()['number']);
+            self::assertSame($resultException, $exception);
+        });
+        ($rail)($ip);
+
+        Loop::run();
     }
 
     public function jobProvider(): array
@@ -40,24 +65,5 @@ class RailTest extends TestCase
                 throw $exception;
             }, 0, $exception],
         ];
-    }
-
-    /**
-     * @dataProvider jobProvider
-     * @param \Closure $job
-     * @param int $resultNumber
-     * @param \Throwable $exception
-     */
-    public function testSyncJob($job, int $resultNumber, ?\Throwable $resultException): void
-    {
-        $ip = Ip::wrap(new \ArrayObject(['number' => 0]), [new IPidStamp('ip_id')]);
-        $rail = new Rail($job);
-        $rail->pipe(function(IP $ip, ?\Throwable $exception) use ($resultNumber, $resultException) {
-            self::assertSame($resultNumber, $ip->getMessage()['number']);
-            self::assertSame($resultException, $exception);
-        });
-        ($rail)($ip);
-
-        Loop::run();
     }
 }
