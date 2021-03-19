@@ -48,7 +48,7 @@ class Supervisor
 
     public function start(): void
     {
-        Loop::repeat(1, callback: function() {
+        Loop::repeat(1, function() {
             // producer receive new incoming IP and initialise their state
             $ips = $this->producer->get();
             foreach ($ips as $ip) {
