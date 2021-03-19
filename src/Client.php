@@ -7,6 +7,7 @@ use Symfony\Component\Messenger\Handler\HandlerDescriptor;
 use Symfony\Component\Messenger\Handler\HandlersLocator;
 use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 use Symfony\Component\Messenger\Worker;
@@ -18,8 +19,11 @@ class Client
         private ReceiverInterface $receiver
     ) {}
 
-    public function call(object $data): void {
-        $ip = new IP($data);
+    /**
+     * @param ?int $delay The delay in milliseconds
+     */
+    public function call(object $data, ?int $delay = null): void {
+        $ip = IP::wrap($data, $delay ? [new DelayStamp($delay)] : []);
         $this->sender->send($ip);
     }
 
