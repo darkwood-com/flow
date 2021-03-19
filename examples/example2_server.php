@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require __DIR__.'/../vendor/autoload.php';
 
-use Amp\Delayed;
+use function Amp\delay;
 use Doctrine\DBAL\DriverManager;
 use RFBP\Rail;
 use RFBP\Supervisor;
@@ -15,7 +15,7 @@ $addOneJob = static function (object $data): \Generator {
 
     // simulating calculating some "light" operation from 10 to 90 milliseconds as async generator
     $delay = random_int(1, 9) * 10;
-    yield new Delayed($delay);
+    yield delay($delay);
     $data['number']++;
 };
 
@@ -24,7 +24,7 @@ $multbyTwoJob = static function(object $data): \Generator {
 
     // simulating calculating some "heavy" operation from 4 to 6 seconds as async generator
     $delay = random_int(4, 6) * 1000;
-    yield new Delayed($delay);
+    yield delay($delay);
     $data['number'] *= 2;
 
     // simulating 1 chance on 3 to produce an exception from the "heavy" operation

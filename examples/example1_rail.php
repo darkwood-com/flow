@@ -5,7 +5,7 @@ declare(strict_types=1);
 require __DIR__.'/../vendor/autoload.php';
 
 use Amp\Loop;
-use Amp\Delayed;
+use function Amp\delay;
 use RFBP\Rail;
 use Symfony\Component\Messenger\Envelope as IP;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
@@ -15,7 +15,7 @@ $job1 = static function (object $data): \Generator {
 
     // simulating calculating some "light" operation from 100 to 900 milliseconds as async generator
     $delay = random_int(1, 9) * 100;
-    yield new Delayed($delay);
+    yield delay($delay);
     $result = $data['number'];
     $result += $result;
 
