@@ -24,27 +24,27 @@ class Supervisor
     ) {
         $this->ipPool = [];
 
-        foreach ($rails as $railIndex => $rail) {
-            $rail->pipe($this->nextIpState($railIndex + 1));
+        foreach ($rails as $index => $rail) {
+            $rail->pipe($this->nextIpState($index + 1 < count($rails) ? $rails[$index + 1] : null));
         }
         if($this->errorRail) {
-            $this->errorRail->pipe($this->nextIpState(count($this->rails)));
+            $this->errorRail->pipe($this->nextIpState());
         }
     }
 
-    private function nextIpState(int $railIndex): callable {
-        return function(IP $ip, \Throwable $exception = null) use ($railIndex) {
+    private function nextIpState(?Rail $rail = null): callable {
+        return function(IP $ip, \Throwable $exception = null) use ($rail) {
             $id = $this->getId($ip);
 
             if($exception) {
                 if($this->errorRail) {
-                    $this->ipPool[$id][2] = $exception;
+                    $this->ipPool[$id] = [$this->errorRail, $ip, $exception];
                 } else {
                     unset($this->ipPool[$id]);
                     $this->producer->reject($ip);
                 }
-            } elseif ($railIndex < count($this->rails)) {
-                $this->ipPool[$id] = [$ip, $railIndex, $exception];
+            } elseif ($rail) {
+                $this->ipPool[$id] = [$rail, $ip, null];
             } else {
                 unset($this->ipPool[$id]);
                 $this->producer->ack($ip);
@@ -61,19 +61,14 @@ class Supervisor
             foreach ($ips as $ip) {
                 $id = $this->getId($ip);
                 if(!isset($this->ipPool[$id])) {
-                    $this->nextIpState(0)($ip);
+                    $this->nextIpState(count($this->rails) > 0 ? $this->rails[0] : null)($ip);
                 }
             }
 
             // process IPs from the pool to their respective rail
             foreach ($this->ipPool as $state) {
-                [$ip, $railIndex, $exception] = $state;
-
-                if($exception) {
-                    ($this->errorRail)($ip, $exception);
-                } else {
-                    $this->rails[$railIndex]($ip);
-                }
+                [$rail, $ip, $exception] = $state;
+                ($rail)($ip, $exception);
             }
         });
         Loop::run();
