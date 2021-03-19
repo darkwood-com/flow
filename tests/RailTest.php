@@ -20,31 +20,44 @@ class RailTest extends TestCase
         ($rail)($ip);
     }
 
-    public function testSyncJob(): void
+    public function jobProvider(): array
     {
-        $job = static function(\ArrayObject $data): \Callable {
-            $data['number'] = 1;
-        };
-        $ip = Ip::wrap(new \ArrayObject(['number' => 0]), [new IPidStamp('ip_id')]);
-        $rail = new Rail($job);
-        $rail->pipe(function(IP $ip) {
-            self::assertSame(1, $ip->getMessage()['number']);
-        });
-        ($rail)($ip);
+        $exception = new \RuntimeException('job error');
+
+        return [
+            'syncJob' => [static function(\ArrayObject $data) {
+                $data['number'] = 5;
+            }, 5, null],
+            'asyncJob' => [static function(\ArrayObject $data): \Generator {
+                yield delay(10);
+                $data['number'] = 12;
+            }, 12, null],
+            'syncExceptionJob' => [static function() use ($exception) {
+                throw $exception;
+            }, 0, $exception],
+            'asyncExceptionJob' => [static function() use ($exception): \Generator {
+                yield delay(10);
+                throw $exception;
+            }, 0, $exception],
+        ];
     }
 
-    public function testAsyncJob(): void
+    /**
+     * @dataProvider jobProvider
+     * @param \Closure $job
+     * @param int $resultNumber
+     * @param \Throwable $exception
+     */
+    public function testSyncJob($job, int $resultNumber, ?\Throwable $resultException): void
     {
-        $job = static function(\ArrayObject $data): \Generator {
-            yield delay(10);
-            $data['number'] = 1;
-        };
         $ip = Ip::wrap(new \ArrayObject(['number' => 0]), [new IPidStamp('ip_id')]);
         $rail = new Rail($job);
-        $rail->pipe(function(IP $ip) {
-            self::assertSame(1, $ip->getMessage()['number']);
+        $rail->pipe(function(IP $ip, ?\Throwable $exception) use ($resultNumber, $resultException) {
+            self::assertSame($resultNumber, $ip->getMessage()['number']);
+            self::assertSame($resultException, $exception);
         });
         ($rail)($ip);
+
         Loop::run();
     }
 }
