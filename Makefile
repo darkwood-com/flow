@@ -7,11 +7,14 @@ SYMFONY         = symfony
 ##Dev
 ##-------------
 
-dev: ## Start symfony dev server
+dev: ## start symfony dev server
 	docker-compose up -d
 
 phpstan: ## static analysis tool
 	vendor/bin/phpstan analyse
+
+test: ## test
+	vendor/bin/phpunit
 
 # DEFAULT
 .DEFAULT_GOAL := help
