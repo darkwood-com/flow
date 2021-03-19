@@ -32,7 +32,7 @@ class Supervisor
         }
     }
 
-    private function nextIpState(?Rail $rail = null): callable {
+    private function nextIpState(?Rail $rail = null): \Closure {
         return function(IP $ip, \Throwable $exception = null) use ($rail) {
             $id = $this->getId($ip);
 
