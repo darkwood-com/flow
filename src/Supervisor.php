@@ -27,8 +27,8 @@ class Supervisor
         foreach ($rails as $index => $rail) {
             $rail->pipe($this->nextIpState($index + 1 < count($rails) ? $rails[$index + 1] : null));
         }
-        if($this->errorRail) {
-            $this->errorRail->pipe($this->nextIpState());
+        if($errorRail) {
+            $errorRail->pipe($this->nextIpState());
         }
     }
 
