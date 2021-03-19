@@ -26,7 +26,7 @@ class Client
     /**
      * @param HandlerDescriptor[][]|callable[][] $handlers
      */
-    public function wait($handlers): void {
+    public function wait(array $handlers): void {
         $bus = new MessageBus([
             new HandleMessageMiddleware(new HandlersLocator($handlers)),
         ]);

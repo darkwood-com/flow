@@ -3,7 +3,6 @@
 namespace RFBP;
 
 use Amp\Loop;
-use RFBP\Stamp\DoctrineIpTransportIdStamp;
 use Symfony\Component\Messenger\Envelope as IP;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPid;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
@@ -11,6 +10,9 @@ use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 
 class Supervisor
 {
+    /**
+     * @var array<mixed, array>
+     */
     private array $ipPool;
 
     public function __construct(
@@ -39,7 +41,7 @@ class Supervisor
             } else {
                 unset($this->ipPool[$id]);
                 $this->producer->ack($ip);
-                $this->consumer->send(IP::wrap($ip, [$ip->last(DoctrineIpTransportIdStamp::class)]));
+                $this->consumer->send($ip);
             }
         };
     }
@@ -70,11 +72,15 @@ class Supervisor
         Loop::run();
     }
 
-    private function getIpId(IP $ip)
+    private function getIpId(IP $ip): mixed
     {
-        /** @var IPid $stamp */
+        /** @var ?IPid $stamp */
         $stamp = $ip->last(IPid::class);
 
-        return null !== $stamp ? $stamp->getId() : null;
+        if(is_null($stamp) || $stamp->getId() === null) {
+            throw new \RuntimeException('Transport does not define Id for IP');
+        }
+
+        return $stamp->getId();
     }
 }

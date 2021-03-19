@@ -10,7 +10,7 @@ use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPid;
 class Rail
 {
     /**
-     * @var array<string, bool>
+     * @var array<mixed, bool>
      */
     private array $ipJobs;
     private ?\Closure $pipeCallback = null;
@@ -33,7 +33,7 @@ class Rail
         if(!isset($this->ipJobs[$id])) {
             $this->ipJobs[$id] = true;
 
-            /** @var Promise $promise */
+            /** @var Promise<void> $promise */
             $promise = coroutine($this->job)($ip->getMessage(), $exception);
             if($this->pipeCallback) {
                 $promise->onResolve(function(\Throwable $exception = null) use ($ip) {
@@ -46,16 +46,20 @@ class Rail
         }
     }
 
-    public function pipe(?\Closure $callback = null)
+    public function pipe(?\Closure $callback = null): void
     {
         $this->pipeCallback = $callback;
     }
 
-    private function getIpId(IP $ip)
+    private function getIpId(IP $ip): mixed
     {
-        /** @var IPid $stamp */
+        /** @var ?IPid $stamp */
         $stamp = $ip->last(IPid::class);
 
-        return null !== $stamp ? $stamp->getId() : null;
+        if(is_null($stamp) || $stamp->getId() === null) {
+            throw new \RuntimeException('Transport does not define Id for IP');
+        }
+
+        return $stamp->getId();
     }
 }
