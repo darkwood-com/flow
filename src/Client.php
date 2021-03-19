@@ -3,6 +3,7 @@
 namespace RFBP;
 
 use Symfony\Component\Messenger\Envelope as IP;
+use Symfony\Component\Messenger\Handler\HandlerDescriptor;
 use Symfony\Component\Messenger\Handler\HandlersLocator;
 use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
@@ -22,11 +23,12 @@ class Client
         $this->sender->send($ip);
     }
 
-    public function wait(callable $callback): void {
+    /**
+     * @param HandlerDescriptor[][]|callable[][] $handlers
+     */
+    public function wait($handlers): void {
         $bus = new MessageBus([
-            new HandleMessageMiddleware(new HandlersLocator([
-                IP::class => [$callback]
-            ])),
+            new HandleMessageMiddleware(new HandlersLocator($handlers)),
         ]);
         $worker = new Worker(['transport' => $this->receiver], $bus);
         $worker->run();

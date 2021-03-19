@@ -3,7 +3,7 @@
 namespace RFBP\Transport;
 
 use Doctrine\DBAL\Connection as DbalConnection;
-use RFBP\Stamp\FromTransportIdStamp;
+use RFBP\Stamp\DoctrineIpTransportIdStamp;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineReceiver;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineSender;
 use Symfony\Component\Messenger\Envelope;
@@ -52,7 +52,7 @@ class DoctrineIpTransport implements TransportInterface
     public function send(Envelope $envelope): Envelope
     {
         if($this->id !== 'supervisor') {
-            $envelope = $envelope->with(new FromTransportIdStamp($this->id));
+            $envelope = $envelope->with(new DoctrineIpTransportIdStamp($this->id));
         }
         return $this->getSender($envelope)->send($envelope);
     }
@@ -73,8 +73,8 @@ class DoctrineIpTransport implements TransportInterface
     private function getSender(Envelope $envelope): DoctrineSender
     {
         if($this->id === 'supervisor') {
-            $stamp = $envelope->last(FromTransportIdStamp::class);
-            if(!$stamp instanceof FromTransportIdStamp) {
+            $stamp = $envelope->last(DoctrineIpTransportIdStamp::class);
+            if(!$stamp instanceof DoctrineIpTransportIdStamp) {
                 throw new \RuntimeException('Sender not found');
             }
 

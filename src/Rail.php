@@ -5,7 +5,7 @@ namespace RFBP;
 use function Amp\coroutine;
 use Amp\Promise;
 use Symfony\Component\Messenger\Envelope as IP;
-use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
+use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPid;
 
 class Rail
 {
@@ -53,8 +53,8 @@ class Rail
 
     private function getIpId(IP $ip)
     {
-        /** @var TransportMessageIdStamp $stamp */
-        $stamp = $ip->last(TransportMessageIdStamp::class);
+        /** @var IPid $stamp */
+        $stamp = $ip->last(IPid::class);
 
         return null !== $stamp ? $stamp->getId() : null;
     }

@@ -11,7 +11,7 @@ use Symfony\Component\Messenger\Envelope as IP;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
 
 $job1 = static function (object $data): \Generator {
-    printf("*. #%d : Calculating number %d\n", $data['id'], $data['number']);
+    printf("*. #%d : Calculating %d + %d\n", $data['id'], $data['number'], $data['number']);
 
     // simulating calculating some "light" operation from 100 to 900 milliseconds as async generator
     $delay = random_int(1, 9) * 100;
@@ -19,20 +19,20 @@ $job1 = static function (object $data): \Generator {
     $result = $data['number'];
     $result += $result;
 
-    printf("*. #%d : Result for number %d is %d and took %d milliseconds\n", $data['id'], $data['number'], $result, $delay);
+    printf("*. #%d : Result for %d + %d = %d and took %d milliseconds\n", $data['id'], $data['number'], $data['number'], $result, $delay);
 
     $data['number'] = $result;
 };
 
 
 $job2 = static function (object $data): void {
-    printf(".* #%d : Calculating number %d\n", $data['id'], $data['number']);
+    printf(".* #%d : Calculating %d * %d\n", $data['id'], $data['number'], $data['number']);
 
     // simulating calculating some "light" operation as anonymous function
     $result = $data['number'];
     $result *= $result;
 
-    printf(".* #%d : Result for number %d is %d\n", $data['id'], $data['number'], $result);
+    printf(".* #%d : Result for %d * %d is %d\n", $data['id'], $data['number'], $data['number'], $result);
 
     $data['number'] = $result;
 };

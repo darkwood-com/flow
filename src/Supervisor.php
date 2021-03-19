@@ -3,55 +3,67 @@
 namespace RFBP;
 
 use Amp\Loop;
-use RFBP\Stamp\FromTransportIdStamp;
+use RFBP\Stamp\DoctrineIpTransportIdStamp;
 use Symfony\Component\Messenger\Envelope as IP;
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\StampInterface;
-use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
+use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPid;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 
 class Supervisor
 {
-    /** @var array<IP> */
-    private array $ips;
+    private array $ipPool;
 
     public function __construct(
         private ReceiverInterface $producer,
         private SenderInterface $consumer,
-        /** @var array<Rail> */
-        private $rails,
+        /** @var array<int, Rail> */
+        private array $rails,
         private ?Rail $errorRail = null
     ) {
-        $this->ips = [];
+        $this->ipPool = [];
 
-        foreach ($this->rails as )
+        foreach ($rails as $index => $rail) {
+            $rail->pipe($this->next($index + 1));
+        }
+        $this->errorRail->pipe($this->next());
     }
 
-    public function start(): void {
+    private function next(?int $index = null): callable {
+        return function(IP $ip, \Throwable $exception = null) use ($index) {
+            $id = $this->getIpId($ip);
+
+            if($exception) {
+                $this->ipPool[$id][2] = $exception;
+            } elseif (!is_null($index) && $index < count($this->rails)) {
+                $this->ipPool[$id] = [$ip, $index, null];
+            } else {
+                unset($this->ipPool[$id]);
+                $this->producer->ack($ip);
+                $this->consumer->send(IP::wrap($ip, [$ip->last(DoctrineIpTransportIdStamp::class)]));
+            }
+        };
+    }
+
+    public function start(): void
+    {
         Loop::repeat(1, callback: function() {
+            // producer receive new incoming IP and initialise their state
             $ips = $this->producer->get();
             foreach ($ips as $ip) {
                 $id = $this->getIpId($ip);
-                if(!isset($this->ips[$id])) {
-                    $this->ips[$id] = $ip;
+                if(!isset($this->ipPool[$id])) {
+                    $this->ipPool[$id] = [$ip, 0, null];
                 }
             }
 
-            foreach ($this->ips as $ip) {
-                /** @var IP $ip */
-                $ip = $ip->getMessage();
-                if($ip->getException()) {
-                    $ip->setRailIndex(count($this->rails));
-                    if($this->errorRail) {
-                        ($this->errorRail)($ip);
-                    }
-                } elseif($ip->getRailIndex() < count($this->rails)) {
-                    $this->rails[$ip->getRailIndex()]($ip);
+            // process IPs from the pool to their respective rail
+            foreach ($this->ipPool as $state) {
+                [$ip, $index, $exception] = $state;
+
+                if($exception) {
+                    ($this->errorRail)($ip, $exception);
                 } else {
-                    unset($this->ips[$ip->getId()]);
-                    $this->producer->ack($ip);
-                    $this->consumer->send(IP::wrap($ip, [$ip->last(FromTransportIdStamp::class)]));
+                    $this->rails[$index]($ip);
                 }
             }
         });
@@ -60,8 +72,8 @@ class Supervisor
 
     private function getIpId(IP $ip)
     {
-        /** @var TransportMessageIdStamp $stamp */
-        $stamp = $ip->last(TransportMessageIdStamp::class);
+        /** @var IPid $stamp */
+        $stamp = $ip->last(IPid::class);
 
         return null !== $stamp ? $stamp->getId() : null;
     }
