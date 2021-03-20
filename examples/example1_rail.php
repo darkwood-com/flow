@@ -43,8 +43,8 @@ $rails = [
 ];
 
 $ipPool = new SplObjectStorage();
-$rails[0]->pipe(static function($ip) use ($ipPool) {
-    $ipPool->offsetSet($ip, 1);
+$rails[0]->pipe(static function($ip) use ($ipPool, $rails) {
+    $ipPool->offsetSet($ip, $rails[1]);
 });
 $rails[1]->pipe(static function($ip) use ($ipPool) {
     $ipPool->offsetUnset($ip);
@@ -52,13 +52,13 @@ $rails[1]->pipe(static function($ip) use ($ipPool) {
 
 for($i = 1; $i < 5; $i++) {
     $ip = IP::wrap(new ArrayObject(['id' => $i, 'number' => $i]), [new IPidStamp(uniqid('ip_', true))]);
-    $ipPool->offsetSet($ip, 0);
+    $ipPool->offsetSet($ip, $rails[0]);
 }
 
-Loop::repeat(1, static function() use ($rails, $ipPool) {
+Loop::repeat(1, static function() use ($ipPool) {
     foreach ($ipPool as $ip) {
-        $index = $ipPool[$ip];
-        $rails[$index]($ip);
+        $rail = $ipPool[$ip];
+        ($rail)($ip);
     }
 
     if($ipPool->count() === 0) {
