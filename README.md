@@ -57,4 +57,4 @@ Messaging approach with East oriented code from [Frédéric Hardy](https://twitt
 
 ## License
 
-_PHP Railway Flow Based Programming_ is released under the MIT License.
+_PHP Railway Flow Based Programming_ is released under the AGPL License.
