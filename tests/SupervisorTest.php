@@ -9,6 +9,7 @@ use Symfony\Component\Messenger\Transport\InMemoryTransport;
 use RFBP\Rail;
 use Symfony\Component\Messenger\Envelope as IP;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
+use function Amp\delay;
 
 class SupervisorTest extends AsyncTestCase
 {
@@ -24,23 +25,25 @@ class SupervisorTest extends AsyncTestCase
         $supervisor->run();
     }
 
-    public function testValidIp(): void
+
+    /**
+     * @dataProvider jobsProvider
+     * @param array<\Closure> $jobs
+     * @param int $resultNumber
+     */
+    public function testRail(array $jobs, int $resultNumber): void
     {
         $transport1 = new InMemoryTransport();
         $transport2 = new InMemoryTransport();
-        $rails = [
-            new Rail(static function (\ArrayObject $data) {
-                $data['number'] = 1;
-            })
-        ];
+        $rails = array_map(static function($job) { return new Rail($job); }, $jobs);
 
         $supervisor = new Supervisor($transport1, $transport2, $rails);
 
-        Loop::repeat(1, static function() use ($supervisor, $transport2) {
+        Loop::repeat(1, static function() use ($supervisor, $transport2, $resultNumber) {
             $ips = $transport2->get();
             foreach ($ips as $ip) {
                 $data = $ip->getMessage();
-                self::assertEquals(1, $data['number']);
+                self::assertEquals($resultNumber, $data['number']);
 
                 $supervisor->stop();
             }
@@ -50,5 +53,14 @@ class SupervisorTest extends AsyncTestCase
         $transport1->send($ip);
 
         $supervisor->run();
+    }
+
+    public function jobsProvider(): array
+    {
+        return [
+            'oneJob' => [[static function (\ArrayObject $data) {
+                $data['number'] = 1;
+            }], 1],
+        ];
     }
 }

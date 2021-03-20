@@ -31,7 +31,7 @@ class RailTest extends AsyncTestCase
      * @param int $resultNumber
      * @param \Throwable|null $resultException
      */
-    public function testSyncJob(\Closure $job, int $resultNumber, ?\Throwable $resultException): void
+    public function testJob(\Closure $job, int $resultNumber, ?\Throwable $resultException): void
     {
         $ip = Ip::wrap(new \ArrayObject(['number' => 0]), [new IPidStamp('ip_id')]);
         $rail = new Rail($job);
