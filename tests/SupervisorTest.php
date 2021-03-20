@@ -13,18 +13,22 @@ use function Amp\delay;
 
 class SupervisorTest extends AsyncTestCase
 {
-    public function testIpWithoutId(): void
+    /**
+     * @dataProvider jobsProvider
+     * @param array<\Closure> $jobs
+     */
+    public function testIpWithoutId(array $jobs): void
     {
         $transport1 = new InMemoryTransport();
         $transport2 = new InMemoryTransport();
+        $rails = array_map(static function($job) { return new Rail($job); }, $jobs);
 
-        $supervisor = new Supervisor($transport1, $transport2, []);
+        $supervisor = new Supervisor($transport1, $transport2, $rails);
         $ip = new Ip(new \stdClass());
         $transport1->send($ip);
         $this->expectException(\RuntimeException::class);
         $supervisor->run();
     }
-
 
     /**
      * @dataProvider jobsProvider
