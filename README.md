@@ -1,5 +1,11 @@
 # PHP Railway Flow Based Programming
 
+<p align="center">
+  <a href="https://github.com/matyo91/dj-stream">
+    <img src="cover.png" height="128" alt="PHP Railway Flow Based Programming">
+  </a>
+</p>
+
 Railway Flow Based Programming implementation in PHP
 
 Article of this project : [https://blog.darkwood.fr/article/php-railway-flow-based-programming](https://blog.darkwood.fr/article/php-railway-flow-based-programming)  
