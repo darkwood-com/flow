@@ -61,6 +61,22 @@ class SupervisorTest extends AsyncTestCase
             'oneJob' => [[static function (\ArrayObject $data) {
                 $data['number'] = 1;
             }], 1],
+            'oneAsyncJob' => [[static function (\ArrayObject $data) {
+                yield delay(10);
+                $data['number'] = 5;
+            }], 5],
+            'twoJob' => [[static function (\ArrayObject $data) {
+                $data['number'] += 2;
+            }, static function (\ArrayObject $data) {
+                $data['number'] *= 3;
+            }], 6],
+            'twoAsyncJob' => [[static function (\ArrayObject $data) {
+                yield delay(10);
+                $data['number'] += 5;
+            }, static function (\ArrayObject $data) {
+                yield delay(10);
+                $data['number'] *= 2;
+            }], 10],
         ];
     }
 }
