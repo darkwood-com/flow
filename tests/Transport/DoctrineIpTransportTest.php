@@ -2,13 +2,11 @@
 
 namespace RFBP\Test\Transport;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use PHPUnit\Framework\TestCase;
 use RFBP\Stamp\DoctrineIpTransportIdStamp;
 use RFBP\Transport\DoctrineIpTransport;
 use Symfony\Component\Messenger\Envelope as IP;
-use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
 
 class DoctrineIpTransportTest extends TestCase
 {
