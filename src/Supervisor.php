@@ -74,6 +74,11 @@ class Supervisor
         Loop::run();
     }
 
+    public function stop(): void
+    {
+        Loop::stop();
+    }
+
     private function getId(IP $ip): mixed
     {
         /** @var ?IPidStamp $stamp */

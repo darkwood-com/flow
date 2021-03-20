@@ -3,13 +3,13 @@
 namespace RFBP\Test;
 
 use Amp\Loop;
+use Amp\PHPUnit\AsyncTestCase;
 use function Amp\delay;
-use PHPUnit\Framework\TestCase;
 use RFBP\Rail;
 use Symfony\Component\Messenger\Envelope as IP;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
 
-class RailTest extends TestCase
+class RailTest extends AsyncTestCase
 {
     /**
      * @dataProvider jobProvider

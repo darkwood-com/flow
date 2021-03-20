@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "35595aa6902c9c48ca3c23ee792e51bc",
+    "content-hash": "268d38168839d5b0b0470863b7b5d114",
     "packages": [
         {
             "name": "amphp/amp",
@@ -4721,6 +4721,57 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "amphp/phpunit-util",
+            "version": "v1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/amphp/phpunit-util.git",
+                "reference": "99db640d44395cf85289e1bfbde9fbed9f2a45b9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/amphp/phpunit-util/zipball/99db640d44395cf85289e1bfbde9fbed9f2a45b9",
+                "reference": "99db640d44395cf85289e1bfbde9fbed9f2a45b9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1",
+                "phpunit/phpunit": "^6 | ^7 | ^8 | ^9"
+            },
+            "require-dev": {
+                "amphp/amp": "^2",
+                "amphp/php-cs-fixer-config": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Amp\\PHPUnit\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Niklas Keller",
+                    "email": "me@kelunik.com"
+                },
+                {
+                    "name": "Aaron Piotrowski",
+                    "email": "aaron@trowski.com"
+                }
+            ],
+            "description": "Helper package to ease testing with PHPUnit.",
+            "homepage": "http://amphp.org/phpunit-util",
+            "support": {
+                "irc": "irc://irc.freenode.org/amphp",
+                "issues": "https://github.com/amphp/phpunit-util/issues",
+                "source": "https://github.com/amphp/phpunit-util/tree/master"
+            },
+            "time": "2020-05-01T14:48:17+00:00"
+        },
         {
             "name": "myclabs/deep-copy",
             "version": "1.10.2",
