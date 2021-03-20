@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/matyo91/dj-stream">
-    <img src="cover.png" height="512" alt="PHP Railway Flow Based Programming">
+    <img src="cover.png" width="auto" alt="PHP Railway Flow Based Programming">
   </a>
 </p>
 
