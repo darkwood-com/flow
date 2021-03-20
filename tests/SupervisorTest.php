@@ -35,7 +35,7 @@ class SupervisorTest extends AsyncTestCase
      * @param array<\Closure> $jobs
      * @param int $resultNumber
      */
-    public function testRail(array $jobs, int $resultNumber): void
+    public function testJobs(array $jobs, int $resultNumber): void
     {
         $transport1 = new InMemoryTransport();
         $transport2 = new InMemoryTransport();
