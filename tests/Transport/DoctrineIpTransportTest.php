@@ -2,6 +2,7 @@
 
 namespace RFBP\Test\Transport;
 
+use ArrayObject;
 use Doctrine\DBAL\DriverManager;
 use PHPUnit\Framework\TestCase;
 use RFBP\Stamp\DoctrineIpTransportIdStamp;
@@ -21,7 +22,7 @@ class DoctrineIpTransportTest extends TestCase
         }
 
         for($i = 0; $i < 20; $i++) {
-            $data = new \ArrayObject(['number' => 1]);
+            $data = new ArrayObject(['number' => 1]);
             $clientTransports[$i % 5]->send(new Ip($data));
         }
 

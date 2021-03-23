@@ -3,10 +3,13 @@
 namespace RFBP;
 
 use Amp\Loop;
+use Closure;
+use RuntimeException;
 use Symfony\Component\Messenger\Envelope as IP;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
+use Throwable;
 
 class Supervisor
 {
@@ -32,8 +35,8 @@ class Supervisor
         }
     }
 
-    private function nextIpState(?Rail $rail = null): \Closure {
-        return function(IP $ip, \Throwable $exception = null) use ($rail) {
+    private function nextIpState(?Rail $rail = null): Closure {
+        return function(IP $ip, Throwable $exception = null) use ($rail) {
             $id = $this->getId($ip);
 
             if($exception) {
@@ -85,7 +88,7 @@ class Supervisor
         $stamp = $ip->last(IPidStamp::class);
 
         if(is_null($stamp) || is_null($stamp->getId())) {
-            throw new \RuntimeException('Transport does not define Id for IP');
+            throw new RuntimeException('Transport does not define Id for IP');
         }
 
         return $stamp->getId();

@@ -20,6 +20,7 @@ class Client
     ) {}
 
     /**
+     * @param object $data
      * @param ?int $delay The delay in milliseconds
      */
     public function call(object $data, ?int $delay = null): void {

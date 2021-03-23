@@ -2,6 +2,9 @@
 
 namespace RFBP;
 
+use Closure;
+use RuntimeException;
+use Throwable;
 use function Amp\coroutine;
 use Amp\Promise;
 use Symfony\Component\Messenger\Envelope as IP;
@@ -13,16 +16,16 @@ class Rail
      * @var array<mixed, bool>
      */
     private array $ipJobs;
-    private ?\Closure $pipeCallback = null;
+    private ?Closure $pipeCallback = null;
 
     public function __construct(
-        private \Closure $job,
+        private Closure $job,
         private ?int $scale = 1
     ) {
         $this->ipJobs = [];
     }
 
-    public function __invoke(IP $ip, \Throwable $exception = null): void {
+    public function __invoke(IP $ip, Throwable $exception = null): void {
         // does the rail can scale ?
         if (count($this->ipJobs) >= $this->scale) {
             return;
@@ -36,7 +39,7 @@ class Rail
             /** @var Promise<void> $promise */
             $promise = coroutine($this->job)($ip->getMessage(), $exception);
             if($this->pipeCallback) {
-                $promise->onResolve(function(\Throwable $exception = null) use ($ip) {
+                $promise->onResolve(function(Throwable $exception = null) use ($ip) {
                     ($this->pipeCallback)($ip, $exception);
                 });
             }
@@ -46,7 +49,7 @@ class Rail
         }
     }
 
-    public function pipe(?\Closure $callback = null): void
+    public function pipe(?Closure $callback = null): void
     {
         $this->pipeCallback = $callback;
     }
@@ -57,7 +60,7 @@ class Rail
         $stamp = $ip->last(IPidStamp::class);
 
         if(is_null($stamp) || is_null($stamp->getId())) {
-            throw new \RuntimeException('Transport does not define Id for IP');
+            throw new RuntimeException('Transport does not define Id for IP');
         }
 
         return $stamp->getId();

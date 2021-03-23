@@ -4,7 +4,11 @@ namespace RFBP\Test;
 
 use Amp\Loop;
 use Amp\PHPUnit\AsyncTestCase;
+use ArrayObject;
+use Closure;
 use RFBP\Supervisor;
+use RuntimeException;
+use stdClass;
 use Symfony\Component\Messenger\Transport\InMemoryTransport;
 use RFBP\Rail;
 use Symfony\Component\Messenger\Envelope as IP;
@@ -15,7 +19,7 @@ class SupervisorTest extends AsyncTestCase
 {
     /**
      * @dataProvider jobsProvider
-     * @param array<\Closure> $jobs
+     * @param array<Closure> $jobs
      */
     public function testIpWithoutId(array $jobs): void
     {
@@ -24,15 +28,15 @@ class SupervisorTest extends AsyncTestCase
         $rails = array_map(static function($job) { return new Rail($job); }, $jobs);
 
         $supervisor = new Supervisor($transport1, $transport2, $rails);
-        $ip = new Ip(new \stdClass());
+        $ip = new Ip(new stdClass());
         $transport1->send($ip);
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $supervisor->run();
     }
 
     /**
      * @dataProvider jobsProvider
-     * @param array<\Closure> $jobs
+     * @param array<Closure> $jobs
      * @param int $resultNumber
      */
     public function testJobs(array $jobs, int $resultNumber): void
@@ -53,7 +57,7 @@ class SupervisorTest extends AsyncTestCase
             }
         });
 
-        $ip = Ip::wrap(new \ArrayObject(['number' => 0]), [new IPidStamp('ip_id')]);
+        $ip = Ip::wrap(new ArrayObject(['number' => 0]), [new IPidStamp('ip_id')]);
         $transport1->send($ip);
 
         $supervisor->run();
@@ -62,22 +66,22 @@ class SupervisorTest extends AsyncTestCase
     public function jobsProvider(): array
     {
         return [
-            'oneJob' => [[static function (\ArrayObject $data) {
+            'oneJob' => [[static function (ArrayObject $data) {
                 $data['number'] = 1;
             }], 1],
-            'oneAsyncJob' => [[static function (\ArrayObject $data) {
+            'oneAsyncJob' => [[static function (ArrayObject $data) {
                 yield delay(10);
                 $data['number'] = 5;
             }], 5],
-            'twoJob' => [[static function (\ArrayObject $data) {
+            'twoJob' => [[static function (ArrayObject $data) {
                 $data['number'] += 2;
-            }, static function (\ArrayObject $data) {
+            }, static function (ArrayObject $data) {
                 $data['number'] *= 3;
             }], 6],
-            'twoAsyncJob' => [[static function (\ArrayObject $data) {
+            'twoAsyncJob' => [[static function (ArrayObject $data) {
                 yield delay(10);
                 $data['number'] += 5;
-            }, static function (\ArrayObject $data) {
+            }, static function (ArrayObject $data) {
                 yield delay(10);
                 $data['number'] *= 2;
             }], 10],

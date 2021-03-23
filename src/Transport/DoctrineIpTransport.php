@@ -4,6 +4,7 @@ namespace RFBP\Transport;
 
 use Doctrine\DBAL\Connection as DbalConnection;
 use RFBP\Stamp\DoctrineIpTransportIdStamp;
+use RuntimeException;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineReceiver;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineSender;
 use Symfony\Component\Messenger\Envelope;
@@ -81,7 +82,7 @@ class DoctrineIpTransport implements TransportInterface
         if($this->id === 'supervisor') {
             $stamp = $envelope->last(DoctrineIpTransportIdStamp::class);
             if(!$stamp instanceof DoctrineIpTransportIdStamp) {
-                throw new \RuntimeException('Sender not found');
+                throw new RuntimeException('Sender not found');
             }
 
             $queue = $stamp->getId();
