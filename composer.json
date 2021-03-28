@@ -2,7 +2,7 @@
     "name": "matyo91/php-railway-flow-based-programming",
     "description": "Railway Flow Based Programming implementation in PHP",
     "type": "library",
-    "license": "MIT",
+    "license": "AGPL-3.0-or-later",
     "authors": [
         {
             "name": "Mathieu Ledru",
