@@ -15,7 +15,7 @@ Video of this project : [https://www.youtube.com/watch?v=u7LTuBRlITA](https://ww
 ## Installation
 
 Minimal PHP version to use _PHP Railway Flow Based Programming_ is 8.0  
-The recommended way to install it through [Composer](http://getcomposer.org/) and execute `composer install`
+The recommended way to install it through [Composer](http://getcomposer.org/) and execute `composer require darkwood/php-railway-flow-based-programming`
 
 ## Usage
 
