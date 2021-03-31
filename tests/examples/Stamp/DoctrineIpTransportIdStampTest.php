@@ -1,9 +1,11 @@
 <?php
 
-namespace RFBP\Test\Stamp;
+declare(strict_types=1);
+
+namespace RFBP\Test\Examples\Stamp;
 
 use PHPUnit\Framework\TestCase;
-use RFBP\Stamp\DoctrineIpTransportIdStamp;
+use RFBP\Examples\Stamp\DoctrineIpTransportIdStamp;
 
 class DoctrineIpTransportIdStampTest extends TestCase
 {

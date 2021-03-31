@@ -23,7 +23,7 @@ class Supervisor
     public function __construct(
         private ReceiverInterface $producer,
         private SenderInterface $consumer,
-        /* @var array<int, Rail> */
+        /** @var array<int, Rail>*/
         private array $rails,
         private ?Rail $errorRail = null
     ) {

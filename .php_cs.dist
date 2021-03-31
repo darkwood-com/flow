@@ -1,6 +1,10 @@
 <?php
 
-$finder = PhpCsFixer\Finder::create()->in(__DIR__.'/src');
+$finder = PhpCsFixer\Finder::create()->in([
+    'examples',
+    'src',
+    'tests',
+]);
 
 return PhpCsFixer\Config::create()
     ->setRules([

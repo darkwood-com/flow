@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 require __DIR__.'/../vendor/autoload.php';
 
-use Amp\Loop;
 use function Amp\delay;
+use Amp\Loop;
 use RFBP\Rail;
 use Symfony\Component\Messenger\Envelope as IP;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
 
-$job1 = static function (object $data): \Generator {
+$job1 = static function (object $data): Generator {
     printf("*. #%d : Calculating %d + %d\n", $data['id'], $data['number'], $data['number']);
 
     // simulating calculating some "light" operation from 100 to 900 milliseconds as async generator
@@ -23,7 +23,6 @@ $job1 = static function (object $data): \Generator {
 
     $data['number'] = $result;
 };
-
 
 $job2 = static function (object $data): void {
     printf(".* #%d : Calculating %d * %d\n", $data['id'], $data['number'], $data['number']);
@@ -43,25 +42,25 @@ $rails = [
 ];
 
 $ipPool = new SplObjectStorage();
-$rails[0]->pipe(static function($ip) use ($ipPool, $rails) {
+$rails[0]->pipe(static function ($ip) use ($ipPool, $rails) {
     $ipPool->offsetSet($ip, $rails[1]);
 });
-$rails[1]->pipe(static function($ip) use ($ipPool) {
+$rails[1]->pipe(static function ($ip) use ($ipPool) {
     $ipPool->offsetUnset($ip);
 });
 
-for($i = 1; $i < 5; $i++) {
+for ($i = 1; $i < 5; ++$i) {
     $ip = IP::wrap(new ArrayObject(['id' => $i, 'number' => $i]), [new IPidStamp(uniqid('ip_', true))]);
     $ipPool->offsetSet($ip, $rails[0]);
 }
 
-Loop::repeat(1, static function() use ($ipPool) {
+Loop::repeat(1, static function () use ($ipPool) {
     foreach ($ipPool as $ip) {
         $rail = $ipPool[$ip];
         ($rail)($ip);
     }
 
-    if($ipPool->count() === 0) {
+    if (0 === $ipPool->count()) {
         Loop::stop();
     }
 

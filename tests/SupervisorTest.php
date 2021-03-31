@@ -1,31 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RFBP\Test;
 
+use function Amp\delay;
 use Amp\Loop;
 use Amp\PHPUnit\AsyncTestCase;
 use ArrayObject;
 use Closure;
+use RFBP\Rail;
 use RFBP\Supervisor;
 use RuntimeException;
 use stdClass;
-use Symfony\Component\Messenger\Transport\InMemoryTransport;
-use RFBP\Rail;
 use Symfony\Component\Messenger\Envelope as IP;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
-use function Amp\delay;
+use Symfony\Component\Messenger\Transport\InMemoryTransport;
 
 class SupervisorTest extends AsyncTestCase
 {
     /**
      * @dataProvider jobsProvider
+     *
      * @param array<Closure> $jobs
      */
     public function testIpWithoutId(array $jobs): void
     {
         $transport1 = new InMemoryTransport();
         $transport2 = new InMemoryTransport();
-        $rails = array_map(static function($job) { return new Rail($job); }, $jobs);
+        $rails = array_map(static function ($job) { return new Rail($job); }, $jobs);
 
         $supervisor = new Supervisor($transport1, $transport2, $rails);
         $ip = new Ip(new stdClass());
@@ -36,18 +39,18 @@ class SupervisorTest extends AsyncTestCase
 
     /**
      * @dataProvider jobsProvider
+     *
      * @param array<Closure> $jobs
-     * @param int $resultNumber
      */
     public function testJobs(array $jobs, int $resultNumber): void
     {
         $transport1 = new InMemoryTransport();
         $transport2 = new InMemoryTransport();
-        $rails = array_map(static function($job) { return new Rail($job); }, $jobs);
+        $rails = array_map(static function ($job) { return new Rail($job); }, $jobs);
 
         $supervisor = new Supervisor($transport1, $transport2, $rails);
 
-        Loop::repeat(1, static function() use ($supervisor, $transport2, $resultNumber) {
+        Loop::repeat(1, static function () use ($supervisor, $transport2, $resultNumber) {
             $ips = $transport2->get();
             foreach ($ips as $ip) {
                 $data = $ip->getMessage();

@@ -6,20 +6,20 @@ require __DIR__.'/../vendor/autoload.php';
 
 use function Amp\delay;
 use Doctrine\DBAL\DriverManager;
+use RFBP\Examples\Transport\DoctrineIpTransport;
 use RFBP\Rail;
 use RFBP\Supervisor;
-use RFBP\Transport\DoctrineIpTransport;
 
-$addOneJob = static function (object $data): \Generator {
+$addOneJob = static function (object $data): Generator {
     printf("Client %s #%d : Calculating %d + 1\n", $data['client'], $data['id'], $data['number']);
 
     // simulating calculating some "light" operation from 10 to 90 milliseconds as async generator
     $delay = random_int(1, 9) * 10;
     yield delay($delay);
-    $data['number']++;
+    ++$data['number'];
 };
 
-$multbyTwoJob = static function(object $data): \Generator {
+$multbyTwoJob = static function (object $data): Generator {
     printf("Client %s #%d : Calculating %d * 2\n", $data['client'], $data['id'], $data['number']);
 
     // simulating calculating some "heavy" operation from 4 to 6 seconds as async generator
@@ -28,7 +28,7 @@ $multbyTwoJob = static function(object $data): \Generator {
     $data['number'] *= 2;
 
     // simulating 1 chance on 3 to produce an exception from the "heavy" operation
-    if(random_int(1, 3) === 1) {
+    if (1 === random_int(1, 3)) {
         throw new Error('Failure when processing "Mult by two"');
     }
 };
@@ -40,7 +40,7 @@ $minusThreeJob = static function (object $data): void {
     $data['number'] -= 3;
 };
 
-$errorJob = static function(object $data, \Throwable $exception): void {
+$errorJob = static function (object $data, Throwable $exception): void {
     printf("Client %s #%d : Exception %s\n", $data['client'], $data['id'], $exception->getMessage());
 
     $data['number'] = null;

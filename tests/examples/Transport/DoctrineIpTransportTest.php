@@ -1,12 +1,14 @@
 <?php
 
-namespace RFBP\Test\Transport;
+declare(strict_types=1);
+
+namespace RFBP\Test\Examples\Transport;
 
 use ArrayObject;
 use Doctrine\DBAL\DriverManager;
 use PHPUnit\Framework\TestCase;
-use RFBP\Stamp\DoctrineIpTransportIdStamp;
-use RFBP\Transport\DoctrineIpTransport;
+use RFBP\Examples\Stamp\DoctrineIpTransportIdStamp;
+use RFBP\Examples\Transport\DoctrineIpTransport;
 use Symfony\Component\Messenger\Envelope as IP;
 
 class DoctrineIpTransportTest extends TestCase
@@ -17,11 +19,11 @@ class DoctrineIpTransportTest extends TestCase
         $supervisorTransport = new DoctrineIpTransport($connection);
 
         $clientTransports = [];
-        for($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; ++$i) {
             $clientTransports[] = new DoctrineIpTransport($connection, uniqid('transport_', true));
         }
 
-        for($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 20; ++$i) {
             $data = new ArrayObject(['number' => 1]);
             $clientTransports[$i % 5]->send(new Ip($data));
         }
@@ -36,7 +38,7 @@ class DoctrineIpTransportTest extends TestCase
                 $supervisorTransport->send(Ip::wrap($data, [$ip->last(DoctrineIpTransportIdStamp::class)]));
             }
             $ips = $supervisorTransport->get();
-        } while(count($ips) > 0);
+        } while (count($ips) > 0);
 
         foreach ($clientTransports as $clientTransport) {
             $ips = $clientTransport->get();
