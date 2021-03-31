@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RFBP;
 
 use Symfony\Component\Messenger\Envelope as IP;
@@ -17,13 +19,14 @@ class Client
     public function __construct(
         private SenderInterface $sender,
         private ReceiverInterface $receiver
-    ) {}
+    ) {
+    }
 
     /**
-     * @param object $data
      * @param ?int $delay The delay in milliseconds
      */
-    public function call(object $data, ?int $delay = null): void {
+    public function call(object $data, ?int $delay = null): void
+    {
         $ip = IP::wrap($data, $delay ? [new DelayStamp($delay)] : []);
         $this->sender->send($ip);
     }
@@ -31,7 +34,8 @@ class Client
     /**
      * @param HandlerDescriptor[][]|callable[][] $handlers
      */
-    public function wait(array $handlers): void {
+    public function wait(array $handlers): void
+    {
         $bus = new MessageBus([
             new HandleMessageMiddleware(new HandlersLocator($handlers)),
         ]);

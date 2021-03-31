@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RFBP;
 
-use Closure;
-use RuntimeException;
-use Throwable;
 use function Amp\coroutine;
 use Amp\Promise;
+use Closure;
+use RuntimeException;
 use Symfony\Component\Messenger\Envelope as IP;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
+use Throwable;
 
 class Rail
 {
@@ -25,7 +27,8 @@ class Rail
         $this->ipJobs = [];
     }
 
-    public function __invoke(IP $ip, Throwable $exception = null): void {
+    public function __invoke(IP $ip, Throwable $exception = null): void
+    {
         // does the rail can scale ?
         if (count($this->ipJobs) >= $this->scale) {
             return;
@@ -33,17 +36,17 @@ class Rail
 
         // create an new job coroutine instance with IP data if not exist
         $id = $this->getId($ip);
-        if(!isset($this->ipJobs[$id])) {
+        if (!isset($this->ipJobs[$id])) {
             $this->ipJobs[$id] = true;
 
             /** @var Promise<void> $promise */
             $promise = coroutine($this->job)($ip->getMessage(), $exception);
-            if($this->pipeCallback) {
-                $promise->onResolve(function(Throwable $exception = null) use ($ip) {
+            if ($this->pipeCallback) {
+                $promise->onResolve(function (Throwable $exception = null) use ($ip) {
                     ($this->pipeCallback)($ip, $exception);
                 });
             }
-            $promise->onResolve(function() use ($id) {
+            $promise->onResolve(function () use ($id) {
                 unset($this->ipJobs[$id]);
             });
         }
@@ -59,7 +62,7 @@ class Rail
         /** @var ?IPidStamp $stamp */
         $stamp = $ip->last(IPidStamp::class);
 
-        if(is_null($stamp) || is_null($stamp->getId())) {
+        if (is_null($stamp) || is_null($stamp->getId())) {
             throw new RuntimeException('Transport does not define Id for IP');
         }
 

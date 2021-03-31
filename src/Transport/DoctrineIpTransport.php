@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RFBP\Transport;
 
 use Doctrine\DBAL\Connection as DbalConnection;
 use RFBP\Stamp\DoctrineIpTransportIdStamp;
 use RuntimeException;
+use Symfony\Component\Messenger\Bridge\Doctrine\Transport\Connection;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineReceiver;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineSender;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Messenger\Transport\TransportInterface;
-use Symfony\Component\Messenger\Bridge\Doctrine\Transport\Connection;
 
 class DoctrineIpTransport implements TransportInterface
 {
@@ -24,8 +26,7 @@ class DoctrineIpTransport implements TransportInterface
         private DbalConnection $connection,
         private ?string $id = 'supervisor',
         ?SerializerInterface $serializer = null
-    )
-    {
+    ) {
         $this->serializer = $serializer ?? new PhpSerializer();
         $this->senders = [];
     }
@@ -56,16 +57,18 @@ class DoctrineIpTransport implements TransportInterface
 
     public function send(Envelope $envelope): Envelope
     {
-        if($this->id !== 'supervisor') {
+        if ('supervisor' !== $this->id) {
             $envelope = $envelope->with(new DoctrineIpTransportIdStamp($this->id));
         }
+
         return $this->getSender($envelope)->send($envelope);
     }
 
     /**
      * @return array<string, string>
      */
-    private function queue(string $queue = 'default'): array {
+    private function queue(string $queue = 'default'): array
+    {
         return Connection::buildConfiguration('doctrine://default?queue_name='.$queue);
     }
 
@@ -79,9 +82,9 @@ class DoctrineIpTransport implements TransportInterface
 
     private function getSender(Envelope $envelope): DoctrineSender
     {
-        if($this->id === 'supervisor') {
+        if ('supervisor' === $this->id) {
             $stamp = $envelope->last(DoctrineIpTransportIdStamp::class);
-            if(!$stamp instanceof DoctrineIpTransportIdStamp) {
+            if (!$stamp instanceof DoctrineIpTransportIdStamp) {
                 throw new RuntimeException('Sender not found');
             }
 
@@ -90,7 +93,7 @@ class DoctrineIpTransport implements TransportInterface
             $queue = 'supervisor';
         }
 
-        if(!isset($this->senders[$queue])) {
+        if (!isset($this->senders[$queue])) {
             $connection = new Connection($this->queue($queue), $this->connection);
             $this->senders[$queue] = new DoctrineSender($connection, $this->serializer);
         }

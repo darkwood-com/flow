@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RFBP;
 
 use Amp\Loop;
@@ -21,7 +23,7 @@ class Supervisor
     public function __construct(
         private ReceiverInterface $producer,
         private SenderInterface $consumer,
-        /** @var array<int, Rail> */
+        /* @var array<int, Rail> */
         private array $rails,
         private ?Rail $errorRail = null
     ) {
@@ -30,17 +32,18 @@ class Supervisor
         foreach ($rails as $index => $rail) {
             $rail->pipe($this->nextIpState($index + 1 < count($rails) ? $rails[$index + 1] : null));
         }
-        if($errorRail) {
+        if ($errorRail) {
             $errorRail->pipe($this->nextIpState());
         }
     }
 
-    private function nextIpState(?Rail $rail = null): Closure {
-        return function(IP $ip, Throwable $exception = null) use ($rail) {
+    private function nextIpState(?Rail $rail = null): Closure
+    {
+        return function (IP $ip, Throwable $exception = null) use ($rail) {
             $id = $this->getId($ip);
 
-            if($exception) {
-                if($this->errorRail) {
+            if ($exception) {
+                if ($this->errorRail) {
                     $this->ipPool[$id] = [$this->errorRail, $ip, $exception];
                 } else {
                     unset($this->ipPool[$id]);
@@ -58,12 +61,12 @@ class Supervisor
 
     public function run(): void
     {
-        Loop::repeat(1, function() {
+        Loop::repeat(1, function () {
             // producer receive new incoming IP and initialise their state
             $ips = $this->producer->get();
             foreach ($ips as $ip) {
                 $id = $this->getId($ip);
-                if(!isset($this->ipPool[$id])) {
+                if (!isset($this->ipPool[$id])) {
                     $this->nextIpState(count($this->rails) > 0 ? $this->rails[0] : null)($ip);
                 }
             }
@@ -87,7 +90,7 @@ class Supervisor
         /** @var ?IPidStamp $stamp */
         $stamp = $ip->last(IPidStamp::class);
 
-        if(is_null($stamp) || is_null($stamp->getId())) {
+        if (is_null($stamp) || is_null($stamp->getId())) {
             throw new RuntimeException('Transport does not define Id for IP');
         }
 

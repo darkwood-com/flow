@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RFBP\Stamp;
 
 use Symfony\Component\Messenger\Stamp\StampInterface;
