@@ -21,6 +21,11 @@ class Supervisor
     private array $ipPool;
 
     /**
+     * @var array<string>
+     */
+    private array $loopWatcherIds;
+
+    /**
      * @param array<int, Rail> $rails
      */
     public function __construct(
@@ -30,6 +35,7 @@ class Supervisor
         private ?Rail $errorRail = null
     ) {
         $this->ipPool = [];
+        $this->loopWatcherIds = [];
 
         foreach ($rails as $index => $rail) {
             $rail->pipe($this->nextIpState($index + 1 < count($rails) ? $rails[$index + 1] : null));
@@ -71,7 +77,7 @@ class Supervisor
             'interval' => 0,
         ], $options);
 
-        Loop::repeat($options['interval'], function () {
+        $this->loopWatcherIds[] = Loop::repeat($options['interval'], function () {
             // producer receive new incoming IP and initialise their state
             $ips = $this->producer->get();
             foreach ($ips as $ip) {
@@ -92,6 +98,11 @@ class Supervisor
 
     public function stop(): void
     {
+        foreach ($this->loopWatcherIds as $loopWatcherId) {
+            Loop::cancel($loopWatcherId);
+        }
+        $this->loopWatcherIds = [];
+
         Loop::stop();
     }
 
