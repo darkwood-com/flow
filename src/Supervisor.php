@@ -59,9 +59,17 @@ class Supervisor
         };
     }
 
-    public function run(): void
+    /**
+     * @param array $options valid options are:
+     *  - interval (default: 0): tick interval in milliseconds
+     */
+    public function run(array $options = []): void
     {
-        Loop::repeat(1, function () {
+        $options = array_merge([
+            'interval' => 0,
+        ], $options);
+
+        Loop::repeat($options['interval'], function () {
             // producer receive new incoming IP and initialise their state
             $ips = $this->producer->get();
             foreach ($ips as $ip) {
