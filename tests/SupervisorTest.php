@@ -66,6 +66,9 @@ class SupervisorTest extends AsyncTestCase
         $supervisor->run();
     }
 
+    /**
+     * @return array<array>
+     */
     public function jobsProvider(): array
     {
         return [

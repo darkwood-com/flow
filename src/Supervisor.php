@@ -20,10 +20,12 @@ class Supervisor
      */
     private array $ipPool;
 
+    /**
+     * @param array<int, Rail> $rails
+     */
     public function __construct(
         private ReceiverInterface $producer,
         private SenderInterface $consumer,
-        /** @var array<int, Rail>*/
         private array $rails,
         private ?Rail $errorRail = null
     ) {
@@ -60,8 +62,8 @@ class Supervisor
     }
 
     /**
-     * @param array $options valid options are:
-     *  - interval (default: 0): tick interval in milliseconds
+     * @param array<string, mixed> $options valid options are:
+     *                                      - interval (default: 0): tick interval in milliseconds
      */
     public function run(array $options = []): void
     {

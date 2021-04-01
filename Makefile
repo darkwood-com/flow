@@ -1,20 +1,27 @@
 EXEC_PHP        = php -d memory_limit=-1
-CONSOLE         = $(EXEC_PHP) bin/console
 COMPOSER        = composer
-SYMFONY         = symfony
 
 ##
 ##Dev
 ##-------------
 
-dev: ## start symfony dev server
+dev: ## Start dev server
 	docker-compose up -d
 
-phpstan: ## static analysis tool
-	vendor/bin/phpstan analyse
+cs-fix: ## Check and fix coding styles using PHP CS Fixer
+	composer cs-fix
 
-test: ## test
-	vendor/bin/phpunit
+phpqa: ## Execute PHQA toolsuite analysis
+	composer phpqa
+
+phpstan: ## Execute PHPStan analysis
+	composer phpstan
+
+psalm: ## Execute Psalm analysis
+	composer psalm
+
+test: ## Launch PHPUnit test suite
+	composer test
 
 # DEFAULT
 .DEFAULT_GOAL := help

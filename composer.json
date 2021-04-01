@@ -19,13 +19,16 @@
         "symfony/messenger": "^5.2"
     },
     "require-dev": {
-        "phpstan/phpstan": "^0.12.81",
-        "phpunit/phpunit": "^9.5",
         "amphp/phpunit-util": "^1.4",
-        "symfony/redis-messenger": "^5.2",
+        "edgedesign/phpqa": "^1.24",
+        "friendsofphp/php-cs-fixer": "^2.18",
+        "phpstan/phpstan": "^0.12.82",
+        "phpunit/phpunit": "^9.5",
         "symfony/amqp-messenger": "^5.2",
         "symfony/doctrine-messenger": "^5.2",
-        "symfony/orm-pack": "^2.1"
+        "symfony/orm-pack": "^2.1",
+        "symfony/redis-messenger": "^5.2",
+        "vimeo/psalm": "^4.7"
     },
     "autoload": {
         "psr-4": {
@@ -37,5 +40,22 @@
             "RFBP\\Examples\\": "examples",
             "RFBP\\Test\\": "tests"
         }
+    },
+    "scripts": {
+        "cs-fix": "@php ./vendor/bin/php-cs-fixer fix",
+        "phpqa": "@php ./vendor/bin/phpqa --report --tools phpcs:0,phpmd:0,phpmetrics,phploc,pdepend,security-checker:0,parallel-lint:0 --ignoredDirs vendor",
+        "phpstan": "@php ./vendor/bin/phpstan analyse",
+        "psalm": "@php ./vendor/bin/psalm --threads=8 --diff",
+        "test": "@php ./vendor/bin/phpunit"
+    },
+    "scripts-descriptions": {
+        "cs-fix": "Check and fix coding styles using PHP CS Fixer",
+        "phpqa": "Execute PHQA toolsuite analysis",
+        "phpstan": "Execute PHPStan analysis",
+        "psalm": "Execute Psalm analysis",
+        "test": "Launch PHPUnit test suite"
+    },
+    "config": {
+        "sort-packages": true
     }
 }

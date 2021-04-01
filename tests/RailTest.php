@@ -49,6 +49,9 @@ class RailTest extends AsyncTestCase
         Loop::run();
     }
 
+    /**
+     * @return array<array>
+     */
     public function jobProvider(): array
     {
         $exception = new RuntimeException('job error');
