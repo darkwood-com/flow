@@ -1,0 +1,43 @@
+name: Code Quality
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php: [ '8' ]
+
+    steps:
+      - name: 'Init repository'
+        uses: actions/checkout@v2
+
+      - name: 'Setup PHP'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: xsl
+          tools: composer
+
+      - name: 'Install dependencies'
+        run: composer  --working-dir=packages/php install
+
+      - name: 'PHPStan'
+        run: composer  --working-dir=packages/php phpstan
+
+      - name: 'PHP-CS-Fixer'
+        run: composer  --working-dir=packages/php cs-fix
+
+      #- name: 'Psalm'
+      #  run: composer  --working-dir=packages/php psalm
+
+      #- name: 'PHPQA'
+      #  run: composer  --working-dir=packages/php phpqa
+
+      - name: 'Test suite'
+        run: composer  --working-dir=packages/php test

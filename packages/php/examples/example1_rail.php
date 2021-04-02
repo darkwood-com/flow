@@ -7,8 +7,8 @@ require __DIR__.'/../vendor/autoload.php';
 use function Amp\delay;
 use Amp\Loop;
 use RFBP\Rail;
-use Symfony\Component\Messenger\Envelope as IP;
-use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
+use Symfony\Component\Messenger\Envelope as Ip;
+use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IpIdStamp;
 
 $job1 = static function (object $data): Generator {
     printf("*. #%d : Calculating %d + %d\n", $data['id'], $data['number'], $data['number']);
@@ -50,7 +50,7 @@ $rails[1]->pipe(static function ($ip) use ($ipPool) {
 });
 
 for ($i = 1; $i < 5; ++$i) {
-    $ip = IP::wrap(new ArrayObject(['id' => $i, 'number' => $i]), [new IPidStamp(uniqid('ip_', true))]);
+    $ip = Ip::wrap(new ArrayObject(['id' => $i, 'number' => $i]), [new IpIdStamp(uniqid('ip_', true))]);
     $ipPool->offsetSet($ip, $rails[0]);
 }
 

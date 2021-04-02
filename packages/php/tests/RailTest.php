@@ -13,8 +13,8 @@ use Generator;
 use RFBP\Rail;
 use RuntimeException;
 use stdClass;
-use Symfony\Component\Messenger\Envelope as IP;
-use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
+use Symfony\Component\Messenger\Envelope as Ip;
+use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IpIdStamp;
 use Throwable;
 
 class RailTest extends AsyncTestCase
@@ -37,9 +37,9 @@ class RailTest extends AsyncTestCase
      */
     public function testJob(Closure $job, int $resultNumber, ?Throwable $resultException): void
     {
-        $ip = Ip::wrap(new ArrayObject(['number' => 0]), [new IPidStamp('ip_id')]);
+        $ip = Ip::wrap(new ArrayObject(['number' => 0]), [new IpIdStamp('ip_id')]);
         $rail = new Rail($job);
-        $rail->pipe(function (IP $ip, ?Throwable $exception) use ($resultNumber, $resultException) {
+        $rail->pipe(function (Ip $ip, ?Throwable $exception) use ($resultNumber, $resultException) {
             self::assertSame(ArrayObject::class, $ip->getMessage()::class);
             self::assertSame($resultNumber, $ip->getMessage()['number']);
             self::assertSame($resultException, $exception);

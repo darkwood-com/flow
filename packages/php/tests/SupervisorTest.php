@@ -13,8 +13,8 @@ use RFBP\Rail;
 use RFBP\Supervisor;
 use RuntimeException;
 use stdClass;
-use Symfony\Component\Messenger\Envelope as IP;
-use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
+use Symfony\Component\Messenger\Envelope as Ip;
+use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IpIdStamp;
 use Symfony\Component\Messenger\Transport\InMemoryTransport;
 
 class SupervisorTest extends AsyncTestCase
@@ -60,7 +60,7 @@ class SupervisorTest extends AsyncTestCase
             }
         });
 
-        $ip = Ip::wrap(new ArrayObject(['number' => 0]), [new IPidStamp('ip_id')]);
+        $ip = Ip::wrap(new ArrayObject(['number' => 0]), [new IpIdStamp('ip_id')]);
         $transport1->send($ip);
 
         $supervisor->run();

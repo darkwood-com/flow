@@ -9,7 +9,7 @@ use Doctrine\DBAL\DriverManager;
 use PHPUnit\Framework\TestCase;
 use RFBP\Examples\Stamp\DoctrineIpTransportIdStamp;
 use RFBP\Examples\Transport\DoctrineIpTransport;
-use Symfony\Component\Messenger\Envelope as IP;
+use Symfony\Component\Messenger\Envelope as Ip;
 
 class DoctrineIpTransportTest extends TestCase
 {

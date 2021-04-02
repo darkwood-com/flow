@@ -1,5 +1,5 @@
 {
-    "name": "darkwood/php-railway-flow-based-programming",
+    "name": "darkwood/railway-fbp",
     "description": "Railway Flow Based Programming implementation in PHP",
     "type": "library",
     "license": "AGPL-3.0-or-later",
@@ -11,7 +11,11 @@
     ],
     "keywords": [
         "railway flow based programming",
-        "php"
+        "php",
+        "symfony",
+        "coroutine",
+        "amphp",
+        "monoid"
     ],
     "require": {
         "php": "^8.0",
@@ -55,7 +59,5 @@
         "psalm": "Execute Psalm analysis",
         "test": "Launch PHPUnit test suite"
     },
-    "config": {
-        "sort-packages": true
-    }
+    "minimum-stability": "dev"
 }

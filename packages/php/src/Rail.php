@@ -7,13 +7,14 @@ namespace RFBP;
 use function Amp\coroutine;
 use Amp\Promise;
 use Closure;
-use RuntimeException;
-use Symfony\Component\Messenger\Envelope as IP;
-use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
+use RFBP\Stamp\IpIdStampTrait;
+use Symfony\Component\Messenger\Envelope as Ip;
 use Throwable;
 
 class Rail
 {
+    use IpIdStampTrait;
+
     /**
      * @var array<mixed, bool>
      */
@@ -27,15 +28,15 @@ class Rail
         $this->ipJobs = [];
     }
 
-    public function __invoke(IP $ip, Throwable $exception = null): void
+    public function __invoke(Ip $ip, Throwable $exception = null): void
     {
         // does the rail can scale ?
         if (count($this->ipJobs) >= $this->scale) {
             return;
         }
 
-        // create an new job coroutine instance with IP data if not exist
-        $id = $this->getId($ip);
+        // create an new job coroutine instance with Ip data if not exist
+        $id = $this->getIpId($ip);
         if (!isset($this->ipJobs[$id])) {
             $this->ipJobs[$id] = true;
 
@@ -55,17 +56,5 @@ class Rail
     public function pipe(?Closure $callback = null): void
     {
         $this->pipeCallback = $callback;
-    }
-
-    private function getId(IP $ip): mixed
-    {
-        /** @var ?IPidStamp $stamp */
-        $stamp = $ip->last(IPidStamp::class);
-
-        if (is_null($stamp) || is_null($stamp->getId())) {
-            throw new RuntimeException('Transport does not define Id for IP');
-        }
-
-        return $stamp->getId();
     }
 }

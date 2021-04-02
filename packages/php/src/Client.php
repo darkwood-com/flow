@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RFBP;
 
-use Symfony\Component\Messenger\Envelope as IP;
+use Symfony\Component\Messenger\Envelope as Ip;
 use Symfony\Component\Messenger\Handler\HandlerDescriptor;
 use Symfony\Component\Messenger\Handler\HandlersLocator;
 use Symfony\Component\Messenger\MessageBus;
@@ -27,7 +27,7 @@ class Client
      */
     public function call(object $data, ?int $delay = null): void
     {
-        $ip = IP::wrap($data, $delay ? [new DelayStamp($delay)] : []);
+        $ip = Ip::wrap($data, $delay ? [new DelayStamp($delay)] : []);
         $this->sender->send($ip);
     }
 

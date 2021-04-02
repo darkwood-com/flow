@@ -6,15 +6,16 @@ namespace RFBP;
 
 use Amp\Loop;
 use Closure;
-use RuntimeException;
-use Symfony\Component\Messenger\Envelope as IP;
-use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IPidStamp;
-use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
-use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
+use RFBP\Stamp\IpIdStampTrait;
+use Symfony\Component\Messenger\Envelope as Ip;
+use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface as ProducerInterface;
+use Symfony\Component\Messenger\Transport\Sender\SenderInterface as ConsumerInterface;
 use Throwable;
 
 class Supervisor
 {
+    use IpIdStampTrait;
+
     /**
      * @var array<mixed, array>
      */
@@ -29,8 +30,8 @@ class Supervisor
      * @param array<int, Rail> $rails
      */
     public function __construct(
-        private ReceiverInterface $producer,
-        private SenderInterface $consumer,
+        private ProducerInterface $producer,
+        private ConsumerInterface $consumer,
         private array $rails,
         private ?Rail $errorRail = null
     ) {
@@ -47,8 +48,8 @@ class Supervisor
 
     private function nextIpState(?Rail $rail = null): Closure
     {
-        return function (IP $ip, Throwable $exception = null) use ($rail) {
-            $id = $this->getId($ip);
+        return function (Ip $ip, Throwable $exception = null) use ($rail) {
+            $id = $this->getIpId($ip);
 
             if ($exception) {
                 if ($this->errorRail) {
@@ -78,10 +79,10 @@ class Supervisor
         ], $options);
 
         $this->loopWatcherIds[] = Loop::repeat($options['interval'], function () {
-            // producer receive new incoming IP and initialise their state
+            // producer receive new incoming Ip and initialise their state
             $ips = $this->producer->get();
             foreach ($ips as $ip) {
-                $id = $this->getId($ip);
+                $id = $this->getIpId($ip);
                 if (!isset($this->ipPool[$id])) {
                     $this->nextIpState(count($this->rails) > 0 ? $this->rails[0] : null)($ip);
                 }
@@ -93,6 +94,7 @@ class Supervisor
                 ($rail)($ip, $exception);
             }
         });
+
         Loop::run();
     }
 
@@ -104,17 +106,5 @@ class Supervisor
         $this->loopWatcherIds = [];
 
         Loop::stop();
-    }
-
-    private function getId(IP $ip): mixed
-    {
-        /** @var ?IPidStamp $stamp */
-        $stamp = $ip->last(IPidStamp::class);
-
-        if (is_null($stamp) || is_null($stamp->getId())) {
-            throw new RuntimeException('Transport does not define Id for IP');
-        }
-
-        return $stamp->getId();
     }
 }
