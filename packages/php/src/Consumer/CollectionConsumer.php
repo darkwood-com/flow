@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace RFBP\Consumer;
 
-use RFBP\Stamp\IpIdStampTrait;
+use RFBP\Ip\IpTrait;
 use Symfony\Component\Messenger\Envelope as Ip;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface as ConsumerInterface;
 
 class CollectionConsumer implements ConsumerInterface
 {
-    use IpIdStampTrait;
+    use IpTrait;
 
     /**
      * @param iterable<ConsumerInterface> $consumers

@@ -6,14 +6,14 @@ namespace RFBP\Test\Producer;
 
 use RuntimeException;
 use PHPUnit\Framework\TestCase;
-use RFBP\Stamp\IpIdStampTrait;
+use RFBP\Ip\IpTrait;
 use stdClass;
 use Symfony\Component\Messenger\Envelope as Ip;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IpIdStamp;
 
-class IpIdStampTraitTest extends TestCase
+class IpTraitTest extends TestCase
 {
-    use IpIdStampTrait;
+    use IpTrait;
 
     public function testGetIpId(): void
     {

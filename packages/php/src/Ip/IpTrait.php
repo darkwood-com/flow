@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Stamp;
+namespace RFBP\Ip;
 
 use RuntimeException;
 use Symfony\Component\Messenger\Envelope as Ip;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IpIdStamp;
 
-trait IpIdStampTrait
+trait IpTrait
 {
     private function getIpId(Ip $ip): mixed
     {

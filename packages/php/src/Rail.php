@@ -7,13 +7,13 @@ namespace RFBP;
 use function Amp\coroutine;
 use Amp\Promise;
 use Closure;
-use RFBP\Stamp\IpIdStampTrait;
+use RFBP\Ip\IpTrait;
 use Symfony\Component\Messenger\Envelope as Ip;
 use Throwable;
 
 class Rail
 {
-    use IpIdStampTrait;
+    use IpTrait;
 
     /**
      * @var array<mixed, bool>

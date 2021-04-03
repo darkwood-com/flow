@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace RFBP\Producer;
 
-use RFBP\Stamp\IpIdStampTrait;
+use RFBP\Ip\IpTrait;
 use Symfony\Component\Messenger\Envelope as Ip;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface as ProducerInterface;
 
 class CollectionProducer implements ProducerInterface
 {
-    use IpIdStampTrait;
+    use IpTrait;
 
     /**
      * @var array<mixed, ProducerInterface>

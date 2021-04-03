@@ -7,7 +7,7 @@ namespace RFBP\Test\Producer;
 use ArrayObject;
 use PHPUnit\Framework\TestCase;
 use RFBP\Producer\CollectionProducer;
-use RFBP\Stamp\IpIdStampTrait;
+use RFBP\Ip\IpTrait;
 use SplObjectStorage;
 use stdClass;
 use Symfony\Component\Messenger\Envelope as Ip;
@@ -16,7 +16,7 @@ use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface as Producer
 
 class CollectionProducerTest extends TestCase
 {
-    use IpIdStampTrait;
+    use IpTrait;
 
     /**
      * @param array<ProducerInterface>                       $producers
@@ -99,7 +99,7 @@ class CollectionProducerTest extends TestCase
             }
 
             $producer = new class($ips, $expectedAckIpsProducers, $expectedRejectIpsProducers) implements ProducerInterface {
-                use IpIdStampTrait;
+                use IpTrait;
 
                 /**
                  * @param array<Ip>                       $ips

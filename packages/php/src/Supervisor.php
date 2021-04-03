@@ -6,7 +6,7 @@ namespace RFBP;
 
 use Amp\Loop;
 use Closure;
-use RFBP\Stamp\IpIdStampTrait;
+use RFBP\Ip\IpTrait;
 use Symfony\Component\Messenger\Envelope as Ip;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface as ProducerInterface;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface as ConsumerInterface;
@@ -14,7 +14,7 @@ use Throwable;
 
 class Supervisor
 {
-    use IpIdStampTrait;
+    use IpTrait;
 
     /**
      * @var array<mixed, array>
