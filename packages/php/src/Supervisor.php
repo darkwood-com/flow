@@ -61,9 +61,9 @@ class Supervisor
             } elseif ($rail) {
                 $this->ipPool[$id] = [$rail, $ip, null];
             } else {
-                unset($this->ipPool[$id]);
-                $this->producer->ack($ip);
                 $this->consumer->send($ip);
+                $this->producer->ack($ip);
+                unset($this->ipPool[$id]);
             }
         };
     }

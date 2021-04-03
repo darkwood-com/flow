@@ -19,7 +19,7 @@ class CollectionProducerTest extends TestCase
     use IpIdStampTrait;
 
     /**
-     * @param array<ProducerInterface> $producers
+     * @param array<ProducerInterface>                       $producers
      * @param SplObjectStorage<ProducerInterface, array<Ip>> $expectedProducersIps
      * @dataProvider producerProvider
      */
@@ -43,10 +43,10 @@ class CollectionProducerTest extends TestCase
     }
 
     /**
-     * @param array<ProducerInterface> $producers
+     * @param array<ProducerInterface>                       $producers
      * @param SplObjectStorage<ProducerInterface, array<Ip>> $expectedProducersIps
-     * @param array<mixed, ProducerInterface> $expectedAckIpsProducers
-     * @param array<mixed, ProducerInterface> $expectedRejectIpsProducers
+     * @param array<mixed, ProducerInterface>                $expectedAckIpsProducers
+     * @param array<mixed, ProducerInterface>                $expectedRejectIpsProducers
      * @dataProvider producerProvider
      */
     public function testAckAndReject($producers, $expectedProducersIps, $expectedAckIpsProducers, $expectedRejectIpsProducers): void
@@ -102,7 +102,7 @@ class CollectionProducerTest extends TestCase
                 use IpIdStampTrait;
 
                 /**
-                 * @param array<Ip> $ips
+                 * @param array<Ip>                       $ips
                  * @param array<mixed, ProducerInterface> $expectedAckIpsProducers
                  * @param array<mixed, ProducerInterface> $expectedRejectIpsProducers
                  */
@@ -143,6 +143,7 @@ class CollectionProducerTest extends TestCase
      *
      * Both arrays must have the same indexes with identical values
      * without respect to key ordering
+     *
      * @param array<mixed, mixed> $expected
      * @param array<mixed, mixed> $array
      */

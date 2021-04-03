@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace RFBP\Test\Consumer;
 
+use ArrayObject;
 use PHPUnit\Framework\TestCase;
 use RFBP\Consumer\CollectionConsumer;
 use stdClass;
-use ArrayObject;
 use Symfony\Component\Messenger\Envelope as Ip;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface as ConsumerInterface;
 

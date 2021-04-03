@@ -18,7 +18,7 @@ class CollectionProducer implements ProducerInterface
     private array $ipPool;
 
     /**
-     * @param array<ProducerInterface> $producers
+     * @param iterable<ProducerInterface> $producers
      */
     public function __construct(private iterable $producers)
     {

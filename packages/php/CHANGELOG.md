@@ -2,6 +2,7 @@
 
 - Add RFBP\Producer\CollectionConsumer
 - Add RFBP\Producer\CollectionProducer
+- Add RFBP\Transport\CollectionTransport
 
 # 1.0.0
 

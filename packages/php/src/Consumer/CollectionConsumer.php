@@ -13,7 +13,7 @@ class CollectionConsumer implements ConsumerInterface
     use IpIdStampTrait;
 
     /**
-     * @param array<ConsumerInterface> $consumers
+     * @param iterable<ConsumerInterface> $consumers
      */
     public function __construct(private iterable $consumers)
     {
