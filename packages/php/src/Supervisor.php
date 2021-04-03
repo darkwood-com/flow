@@ -8,6 +8,7 @@ use Closure;
 use RFBP\Driver\AmpDriver;
 use RFBP\Driver\DriverInterface;
 use RFBP\Ip\IpTrait;
+use RFBP\Rail\Rail;
 use Symfony\Component\Messenger\Envelope as Ip;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface as ProducerInterface;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface as ConsumerInterface;
@@ -18,7 +19,7 @@ class Supervisor
     use IpTrait;
 
     /**
-     * @var array<mixed, array>
+     * @var array<mixed, Ip>
      */
     private array $ipPool;
 
@@ -28,43 +29,56 @@ class Supervisor
      * @param array<int, Rail> $rails
      */
     public function __construct(
-        private ProducerInterface $producer,
-        private ConsumerInterface $consumer,
         private array $rails,
         private ?Rail $errorRail = null,
+        private ?ProducerInterface $producer = null,
+        private ?ConsumerInterface $consumer = null,
         ?DriverInterface $driver = null
     ) {
         $this->ipPool = [];
         $this->driver = $driver ?? new AmpDriver();
 
         foreach ($rails as $index => $rail) {
-            $rail->pipe($this->nextIpState($index + 1 < count($rails) ? $rails[$index + 1] : null));
+            $rail->pipe($this->nextIpState($index + 1));
         }
         if ($errorRail) {
-            $errorRail->pipe($this->nextIpState());
+            $errorRail->pipe($this->nextIpState(null));
         }
     }
 
-    private function nextIpState(?Rail $rail = null): Closure
+    private function nextIpState(?int $index): Closure
     {
-        return function (Ip $ip, Throwable $exception = null) use ($rail) {
-            $id = $this->getIpId($ip);
-
+        return function (Ip $ip, Throwable $exception = null) use ($index) {
             if ($exception) {
                 if ($this->errorRail) {
-                    $this->ipPool[$id] = [$this->errorRail, $ip, $exception];
+                    ($this->errorRail)($ip, $exception);
                 } else {
+                    $id = $this->getIpId($ip);
                     unset($this->ipPool[$id]);
                     $this->producer->reject($ip);
                 }
-            } elseif ($rail) {
-                $this->ipPool[$id] = [$rail, $ip, null];
+            } elseif (null !== $index && $index < count($this->rails)) {
+                ($this->rails[$index])($ip);
             } else {
-                $this->consumer->send($ip);
-                $this->producer->ack($ip);
+                if ($this->consumer) {
+                    $this->consumer->send($ip);
+                }
+                if ($this->producer) {
+                    $this->producer->ack($ip);
+                }
+                $id = $this->getIpId($ip);
                 unset($this->ipPool[$id]);
             }
         };
+    }
+
+    public function emit(Ip $ip, int $index = 0): void
+    {
+        $id = $this->getIpId($ip);
+        if (!isset($this->ipPool[$id])) {
+            $this->ipPool[$id] = $ip;
+            $this->nextIpState($index)($ip);
+        }
     }
 
     /**
@@ -77,22 +91,15 @@ class Supervisor
             'interval' => 1,
         ], $options);
 
-        $this->driver->tick($options['interval'], function () {
+        if ($this->producer) {
             // producer receive new incoming Ip and initialise their state
-            $ips = $this->producer->get();
-            foreach ($ips as $ip) {
-                $id = $this->getIpId($ip);
-                if (!isset($this->ipPool[$id])) {
-                    $this->nextIpState(count($this->rails) > 0 ? $this->rails[0] : null)($ip);
+            $this->driver->tick($options['interval'], function () {
+                $ips = $this->producer->get();
+                foreach ($ips as $ip) {
+                    $this->emit($ip);
                 }
-            }
-
-            // process IPs from the pool to their respective rail
-            foreach ($this->ipPool as $state) {
-                [$rail, $ip, $exception] = $state;
-                ($rail)($ip, $exception);
-            }
-        });
+            });
+        }
 
         $this->driver->run();
     }

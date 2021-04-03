@@ -39,7 +39,7 @@ class CollectionProducerTest extends TestCase
             return $this->getIpId($ip);
         }, iterator_to_array($ips));
 
-        $this->assertArraySimilar($expectedIpIds, $ipIds);
+        self::assertArraySimilar($expectedIpIds, $ipIds);
     }
 
     /**

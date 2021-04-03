@@ -66,6 +66,7 @@ nav:
   - Getting started:
       - Introduction: index.md
       - Drivers: getting-started/drivers.md
+      - Ip Strategy: getting-started/ip-strategy.md
       - Ressources: getting-started/ressources.md
       - Release Notes: getting-started/changelog.md
       - License: getting-started/license.md

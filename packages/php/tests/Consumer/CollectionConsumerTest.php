@@ -38,6 +38,6 @@ class CollectionConsumerTest extends TestCase
         $collectionConsumer = new CollectionConsumer($consumers);
         $collectionConsumer->send(new Ip(new stdClass()));
 
-        $this->assertEquals(10, $counter['send']);
+        self::assertEquals(10, $counter['send']);
     }
 }
