@@ -29,7 +29,7 @@ GitHub.
 Then clone your fork:
 
 ```bash
-$ git clone https://github.com/darkwood-fr/php-railway-flow-based-programming
+$ git clone git@github.com:darkwood-fr/railway-fbp.git
 $ git checkout -b bug-or-feature-description
 ```
 
