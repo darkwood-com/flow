@@ -1,4 +1,5 @@
 site_name: Railway FBP
 nav:
   - Home: index.md
+  - Ressources: ressources.md
 theme: readthedocs
