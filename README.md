@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/darkwood-fr/railway-fbp">
-    <img src="docs/medias/logo.png" width="auto" height="256px" alt="Railway Flow Based Programming">
+    <img src="docs/img/concept.png" width="auto" height="256px" alt="Railway Flow Based Programming">
   </a>
 </p>
 

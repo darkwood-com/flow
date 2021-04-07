@@ -1,0 +1,4 @@
+site_name: Railway FBP
+nav:
+  - Home: index.md
+theme: readthedocs
