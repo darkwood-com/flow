@@ -2,7 +2,7 @@
 
 ## Documentation
 
-[https://darkwood-fr.github.io/railway-fbp/](https://darkwood-fr.github.io/railway-fbp/)
+[https://darkwood-fr.github.io/railway-fbp](https://darkwood-fr.github.io/railway-fbp)
 
 ## License
 

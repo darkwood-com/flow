@@ -1,7 +1,7 @@
 site_name: Railway FBP
 google_analytics: null
 site_author: darkwood-fr
-site_url: https://darkwood-fr.github.io/railway-fbp/
+site_url: https://darkwood-fr.github.io/railway-fbp
 docs_dir: docs
 repo_url: https://github.com/darkwood-fr/railway-fbp
 edit_uri: tree/1.x/docs

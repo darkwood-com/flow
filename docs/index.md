@@ -29,7 +29,7 @@ Messaging part require to install [Docker](https://www.docker.com) and execute `
 
 ## Documentation
 
-[https://darkwood-fr.github.io/railway-fbp/](https://darkwood-fr.github.io/railway-fbp/)
+[https://darkwood-fr.github.io/railway-fbp](https://darkwood-fr.github.io/railway-fbp)
 
 ## License
 
