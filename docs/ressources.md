@@ -20,8 +20,10 @@ Video of this project : [https://www.youtube.com/watch?v=u7LTuBRlITA](https://ww
 ## Railway Oriented Programming
 - Presentation from [Sarmiento Calle](https://twitter.com/rrramiro) : [https://www.youtube.com/watch?v=RNTo7Y2wMyI](https://www.youtube.com/watch?v=RNTo7Y2wMyI)
 - Presentation from [Scott Wlaschin](https://fr.slideshare.net/scottwlaschin) : [https://fr.slideshare.net/ScottWlaschin/railway-oriented-programming](https://fr.slideshare.net/ScottWlaschin/railway-oriented-programming)
+- Railway Oriented Programming: C# Edition - Tama Waddell : [https://www.youtube.com/watch?v=45yk2nuRjj8](https://www.youtube.com/watch?v=45yk2nuRjj8)
 - Implementation in PHP from [Turanct](https://github.com/turanct) : [https://github.com/turanct/railway](https://github.com/turanct/railway)
 - Implementation in PHP from [Monsieur Luge](https://github.com/monsieurluge) : [https://github.com/monsieurluge/result](https://github.com/monsieurluge/result)
+
 
 ## Coroutines in PHP
 - [Nikita Popov](https://github.com/nikic) talk about Coroutines in PHP : [https://nikic.github.io/2012/12/22/Cooperative-multitasking-using-coroutines-in-PHP.html](https://nikic.github.io/2012/12/22/Cooperative-multitasking-using-coroutines-in-PHP.html)
