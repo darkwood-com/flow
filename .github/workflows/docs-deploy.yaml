@@ -1,16 +1,13 @@
-name: Doc Deploy
+name: Docs Deploy
 
 on:
   push:
     branches:
       - 1.x
-  pull_request:
-    branches:
-      - 1.x
 
 jobs:
-  doc-deploy:
-    name: Doc Deploy
+  docs-deploy:
+    name: Docs Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Master
