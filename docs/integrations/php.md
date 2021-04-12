@@ -1,6 +1,6 @@
 # PHP Integration
 
-This provide integration in PHP
+This provides integration in PHP
 
 ## Installation
 

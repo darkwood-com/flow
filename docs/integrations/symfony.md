@@ -1,6 +1,6 @@
 # Symfony Integration
 
-This provide integration with Symfony
+This provides integration with Symfony
 
 ## Installation
 

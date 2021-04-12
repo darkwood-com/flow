@@ -1,0 +1,43 @@
+{
+  "name": "@darkwood-fr/railway-fbp",
+  "version": "1.0.5",
+  "description": "Railway Flow Based Programming implementation in Javascript",
+  "author": {
+    "name": "Mathieu Ledru",
+    "email": "matyo91@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/darkwood-fr/railway-fbp/issues"
+  },
+  "homepage": "https://github.com/darkwood-fr/railway-fbp#readme",
+  "keywords": [
+    "railway flow based programming",
+    "javascript",
+    "coroutine",
+    "monoid"
+  ],
+  "license": "AGPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/darkwood-fr/railway-fbp.git",
+    "directory": "packages/javascript"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "prepack": "tsc -b"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "typescript": "^4.2.4"
+  }
+}
