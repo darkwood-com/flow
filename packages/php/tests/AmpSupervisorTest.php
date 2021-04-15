@@ -17,7 +17,7 @@ use Symfony\Component\Messenger\Envelope as Ip;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IpIdStamp;
 use Symfony\Component\Messenger\Transport\InMemoryTransport;
 
-class SupervisorTest extends AsyncTestCase
+class AmpSupervisorTest extends AsyncTestCase
 {
     /**
      * @dataProvider jobsProvider

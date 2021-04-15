@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace RFBP\Test\Producer;
 
-use RuntimeException;
 use PHPUnit\Framework\TestCase;
 use RFBP\Ip\IpTrait;
+use RuntimeException;
 use stdClass;
 use Symfony\Component\Messenger\Envelope as Ip;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IpIdStamp;

@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace RFBP;
 
-use Amp\Loop;
 use Closure;
+use RFBP\Driver\AmpDriver;
+use RFBP\Driver\DriverInterface;
 use RFBP\Ip\IpTrait;
 use Symfony\Component\Messenger\Envelope as Ip;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface as ProducerInterface;
@@ -21,10 +22,7 @@ class Supervisor
      */
     private array $ipPool;
 
-    /**
-     * @var array<string>
-     */
-    private array $loopWatcherIds;
+    private DriverInterface $driver;
 
     /**
      * @param array<int, Rail> $rails
@@ -33,10 +31,11 @@ class Supervisor
         private ProducerInterface $producer,
         private ConsumerInterface $consumer,
         private array $rails,
-        private ?Rail $errorRail = null
+        private ?Rail $errorRail = null,
+        ?DriverInterface $driver = null
     ) {
         $this->ipPool = [];
-        $this->loopWatcherIds = [];
+        $this->driver = $driver ?? new AmpDriver();
 
         foreach ($rails as $index => $rail) {
             $rail->pipe($this->nextIpState($index + 1 < count($rails) ? $rails[$index + 1] : null));
@@ -75,10 +74,10 @@ class Supervisor
     public function run(array $options = []): void
     {
         $options = array_merge([
-            'interval' => 0,
+            'interval' => 1,
         ], $options);
 
-        $this->loopWatcherIds[] = Loop::repeat($options['interval'], function () {
+        $this->driver->tick($options['interval'], function () {
             // producer receive new incoming Ip and initialise their state
             $ips = $this->producer->get();
             foreach ($ips as $ip) {
@@ -95,16 +94,11 @@ class Supervisor
             }
         });
 
-        Loop::run();
+        $this->driver->run();
     }
 
     public function stop(): void
     {
-        foreach ($this->loopWatcherIds as $loopWatcherId) {
-            Loop::cancel($loopWatcherId);
-        }
-        $this->loopWatcherIds = [];
-
-        Loop::stop();
+        $this->driver->stop();
     }
 }

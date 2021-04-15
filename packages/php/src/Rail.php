@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace RFBP;
 
-use function Amp\coroutine;
-use Amp\Promise;
 use Closure;
+use RFBP\Driver\AmpDriver;
+use RFBP\Driver\DriverInterface;
 use RFBP\Ip\IpTrait;
 use Symfony\Component\Messenger\Envelope as Ip;
 use Throwable;
@@ -21,11 +21,15 @@ class Rail
     private array $ipJobs;
     private ?Closure $pipeCallback = null;
 
+    private DriverInterface $driver;
+
     public function __construct(
         private Closure $job,
-        private ?int $scale = 1
+        private ?int $scale = 1,
+        ?DriverInterface $driver = null
     ) {
         $this->ipJobs = [];
+        $this->driver = $driver ?? new AmpDriver();
     }
 
     public function __invoke(Ip $ip, Throwable $exception = null): void
@@ -40,16 +44,13 @@ class Rail
         if (!isset($this->ipJobs[$id])) {
             $this->ipJobs[$id] = true;
 
-            /** @var Promise<void> $promise */
-            $promise = coroutine($this->job)($ip->getMessage(), $exception);
-            if ($this->pipeCallback) {
-                $promise->onResolve(function (Throwable $exception = null) use ($ip) {
+            $this->driver->coroutine($this->job, function (Throwable $exception = null) use ($ip, $id) {
+                if ($this->pipeCallback) {
                     ($this->pipeCallback)($ip, $exception);
-                });
-            }
-            $promise->onResolve(function () use ($id) {
+                }
+
                 unset($this->ipJobs[$id]);
-            });
+            })($ip->getMessage(), $exception);
         }
     }
 
