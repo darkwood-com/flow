@@ -6,8 +6,8 @@ namespace RFBP\Test\Producer;
 
 use ArrayObject;
 use PHPUnit\Framework\TestCase;
-use RFBP\Producer\CollectionProducer;
 use RFBP\Ip\IpTrait;
+use RFBP\Producer\CollectionProducer;
 use SplObjectStorage;
 use stdClass;
 use Symfony\Component\Messenger\Envelope as Ip;

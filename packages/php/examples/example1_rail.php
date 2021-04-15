@@ -5,24 +5,68 @@ declare(strict_types=1);
 require __DIR__.'/../vendor/autoload.php';
 
 use function Amp\delay;
-use Amp\Loop;
+use RFBP\Driver\AmpDriver;
+use RFBP\Driver\ReactDriver;
+use RFBP\Driver\SwooleDriver;
 use RFBP\Rail;
+use Swoole\Coroutine;
 use Symfony\Component\Messenger\Envelope as Ip;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IpIdStamp;
 
-$job1 = static function (object $data): Generator {
-    printf("*. #%d : Calculating %d + %d\n", $data['id'], $data['number'], $data['number']);
+$randomDriver = random_int(1, 3);
+if (1 === $randomDriver) {
+    printf("Use AmpDriver\n");
 
-    // simulating calculating some "light" operation from 100 to 900 milliseconds as async generator
-    $delay = random_int(1, 9) * 100;
-    yield delay($delay);
-    $result = $data['number'];
-    $result += $result;
+    $driver = new AmpDriver();
 
-    printf("*. #%d : Result for %d + %d = %d and took %d milliseconds\n", $data['id'], $data['number'], $data['number'], $result, $delay);
+    $job1 = static function (object $data): Generator {
+        printf("*. #%d : Calculating %d + %d\n", $data['id'], $data['number'], $data['number']);
 
-    $data['number'] = $result;
-};
+        // simulating calculating some "light" operation from 100 to 900 milliseconds as async generator
+        $delay = random_int(1, 9) * 100;
+        yield delay($delay);
+        $result = $data['number'];
+        $result += $result;
+
+        printf("*. #%d : Result for %d + %d = %d and took %d milliseconds\n", $data['id'], $data['number'], $data['number'], $result, $delay);
+
+        $data['number'] = $result;
+    };
+} elseif (2 === $randomDriver) {
+    printf("Use SwooleDriver\n");
+
+    $driver = new SwooleDriver();
+
+    $job1 = static function (object $data) {
+        printf("*. #%d : Calculating %d + %d\n", $data['id'], $data['number'], $data['number']);
+
+        // simulating calculating some "light" operation from 100 to 900 milliseconds as async generator
+        $delay = random_int(1, 9) * 100;
+        Coroutine::sleep($delay / 1000);
+        $result = $data['number'];
+        $result += $result;
+
+        printf("*. #%d : Result for %d + %d = %d and took %d milliseconds\n", $data['id'], $data['number'], $data['number'], $result, $delay);
+
+        $data['number'] = $result;
+    };
+} else {
+    printf("Use ReactDriver\n");
+
+    $driver = new ReactDriver();
+
+    $job1 = static function (object $data) {
+        printf("*. #%d : Calculating %d + %d\n", $data['id'], $data['number'], $data['number']);
+
+        // simulating calculating some "light"
+        $result = $data['number'];
+        $result += $result;
+
+        printf("*. #%d : Result for %d + %d = %d\n", $data['id'], $data['number'], $data['number'], $result);
+
+        $data['number'] = $result;
+    };
+}
 
 $job2 = static function (object $data): void {
     printf(".* #%d : Calculating %d * %d\n", $data['id'], $data['number'], $data['number']);
@@ -31,18 +75,18 @@ $job2 = static function (object $data): void {
     $result = $data['number'];
     $result *= $result;
 
-    printf(".* #%d : Result for %d * %d is %d\n", $data['id'], $data['number'], $data['number'], $result);
+    printf(".* #%d : Result for %d * %d = %d\n", $data['id'], $data['number'], $data['number'], $result);
 
     $data['number'] = $result;
 };
 
 $rails = [
-    new Rail($job1, 2),
-    new Rail($job2, 1),
+    new Rail($job1, 2, $driver),
+    new Rail($job2, 1, $driver),
 ];
 
 $ipPool = new SplObjectStorage();
-$rails[0]->pipe(static function ($ip) use ($ipPool, $rails) {
+$rails[0]->pipe(static function ($ip, $e) use ($ipPool, $rails) {
     $ipPool->offsetSet($ip, $rails[1]);
 });
 $rails[1]->pipe(static function ($ip) use ($ipPool) {
@@ -54,17 +98,16 @@ for ($i = 1; $i < 5; ++$i) {
     $ipPool->offsetSet($ip, $rails[0]);
 }
 
-Loop::repeat(1, static function () use ($ipPool) {
+$driver->tick(1, function () use ($driver, $ipPool) {
     foreach ($ipPool as $ip) {
         $rail = $ipPool[$ip];
         ($rail)($ip);
     }
 
     if (0 === $ipPool->count()) {
-        Loop::stop();
+        $driver->stop();
     }
 
     //echo "*** tick ***\n";
 });
-
-Loop::run();
+$driver->run();

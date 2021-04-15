@@ -1,3 +1,7 @@
+### 1.0.2
+
+- Add RFBP\Driver\DriverInterface and allow use Amp or Swoole
+
 ### 1.0.1
 
 - Add RFBP\Producer\CollectionConsumer
