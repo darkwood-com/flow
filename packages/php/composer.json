@@ -33,7 +33,7 @@
         "symfony/orm-pack": "^2.1",
         "symfony/redis-messenger": "^5.2",
         "vimeo/psalm": "^4.7",
-        "swoole/ide-helper": "dev-master",
+        "swoole/ide-helper": "^4.6.5",
         "react/event-loop": "^1.1.1"
     },
     "suggest": {
