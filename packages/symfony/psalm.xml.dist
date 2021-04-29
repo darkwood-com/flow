@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<psalm
+    name="Psalm configuration for darkwood/php-railway-flow-based-programming library"
+    totallyTyped="true"
+    strictBinaryOperands="true"
+    allowPhpStormGenerics="true"
+    allowStringToStandInForClass="false"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config file:///vendor/vimeo/psalm/config.xsd"
+>
+    <projectFiles>
+        <directory name="examples" />
+        <directory name="src" />
+        <directory name="tests" />
+        <ignoreFiles>
+            <directory name="vendor" />
+        </ignoreFiles>
+    </projectFiles>
+</psalm>

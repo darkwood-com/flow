@@ -54,7 +54,7 @@ git push origin --tags
 bash bin/splitsh-deploy
 
 # Tag Components
-for REMOTE in php
+for REMOTE in php symfony
 do
     echo ""
     echo ""
