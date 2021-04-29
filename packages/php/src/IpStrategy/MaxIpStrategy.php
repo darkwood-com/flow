@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace RFBP\IpStrategy;
 
-use Symfony\Component\Messenger\Envelope as Ip;
+use RFBP\Ip;
+use RFBP\IpStrategyInterface;
 
 class MaxIpStrategy implements IpStrategyInterface
 {

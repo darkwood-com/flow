@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RFBP\IpStrategy;
-
-use Symfony\Component\Messenger\Envelope as Ip;
+namespace RFBP;
 
 interface IpStrategyInterface
 {

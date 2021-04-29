@@ -14,6 +14,7 @@ jobs:
     strategy:
       matrix:
         php: [ '8.0' ]
+        package: [ 'php' ]
 
     steps:
       - name: 'Init repository'
@@ -27,19 +28,19 @@ jobs:
           tools: composer
 
       - name: 'Install dependencies'
-        run: composer  --working-dir=packages/php install
+        run: composer  --working-dir=packages/${{ matrix.package }} install
 
       - name: 'PHPStan'
-        run: composer  --working-dir=packages/php phpstan
+        run: composer  --working-dir=packages/${{ matrix.package }} phpstan
 
       - name: 'PHP-CS-Fixer'
-        run: composer  --working-dir=packages/php cs-fix
+        run: composer  --working-dir=packages/${{ matrix.package }} cs-fix
 
       #- name: 'Psalm'
-      #  run: composer  --working-dir=packages/php psalm
+      #  run: composer  --working-dir=packages/${{ matrix.package }} psalm
 
       #- name: 'PHPQA'
-      #  run: composer  --working-dir=packages/php phpqa
+      #  run: composer  --working-dir=packages/${{ matrix.package }} phpqa
 
       - name: 'Test suite'
-        run: composer  --working-dir=packages/php test
+        run: composer  --working-dir=packages/${{ matrix.package }} test

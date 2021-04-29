@@ -7,11 +7,12 @@ namespace RFBP\Rail;
 use Closure;
 use LogicException;
 use RFBP\Driver\AmpDriver;
-use RFBP\Driver\DriverInterface;
-use RFBP\IpStrategy\IpStrategyInterface;
+use RFBP\DriverInterface;
+use RFBP\Ip;
 use RFBP\IpStrategy\LinearIpStrategy;
+use RFBP\IpStrategyInterface;
+use RFBP\RailInterface;
 use SplObjectStorage;
-use Symfony\Component\Messenger\Envelope as Ip;
 use Throwable;
 
 class Rail implements RailInterface
@@ -49,7 +50,7 @@ class Rail implements RailInterface
             if ($this->pipeCallback) {
                 ($this->pipeCallback)($ip, $exception);
             }
-        })($ip->getMessage(), $context);
+        })($ip->getData(), $context);
     }
 
     public function __invoke(Ip $ip, mixed $context = null): void

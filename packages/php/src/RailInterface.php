@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Rail;
+namespace RFBP;
 
 use Closure;
-use Symfony\Component\Messenger\Envelope as Ip;
 
 interface RailInterface
 {

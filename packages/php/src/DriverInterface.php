@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Driver;
+namespace RFBP;
 
 interface DriverInterface
 {

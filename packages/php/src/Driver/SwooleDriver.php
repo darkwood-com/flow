@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RFBP\Driver;
 
+use RFBP\DriverInterface;
 use RuntimeException;
 use Swoole\Coroutine;
 use Swoole\Timer;

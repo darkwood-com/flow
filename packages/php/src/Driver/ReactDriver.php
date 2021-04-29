@@ -7,6 +7,7 @@ namespace RFBP\Driver;
 use React\EventLoop\Factory;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\TimerInterface;
+use RFBP\DriverInterface;
 use RuntimeException;
 use Throwable;
 

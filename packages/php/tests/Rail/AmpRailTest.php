@@ -11,11 +11,10 @@ use ArrayObject;
 use Closure;
 use Generator;
 use RFBP\Driver\AmpDriver;
+use RFBP\Ip;
 use RFBP\IpStrategy\LinearIpStrategy;
 use RFBP\Rail\Rail;
 use RuntimeException;
-use Symfony\Component\Messenger\Envelope as Ip;
-use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IpIdStamp;
 use Throwable;
 
 class AmpRailTest extends AsyncTestCase
@@ -25,11 +24,11 @@ class AmpRailTest extends AsyncTestCase
      */
     public function testJob(Closure $job, int $resultNumber, ?Throwable $resultException): void
     {
-        $ip = Ip::wrap(new ArrayObject(['number' => 0]), [new IpIdStamp('ip_id')]);
+        $ip = new Ip(new ArrayObject(['number' => 0]));
         $rail = new Rail($job, new LinearIpStrategy(), new AmpDriver());
         $rail->pipe(function (Ip $ip, ?Throwable $exception) use ($resultNumber, $resultException) {
-            self::assertSame(ArrayObject::class, $ip->getMessage()::class);
-            self::assertSame($resultNumber, $ip->getMessage()['number']);
+            self::assertSame(ArrayObject::class, $ip->getData()::class);
+            self::assertSame($resultNumber, $ip->getData()['number']);
             self::assertSame($resultException, $exception);
         });
         ($rail)($ip);
