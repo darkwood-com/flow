@@ -18,7 +18,7 @@ class IpTraitTest extends TestCase
     public function testGetIpId(): void
     {
         $ip = Ip::wrap(new stdClass(), [new IpIdStamp('ip_id_test')]);
-        $this->assertEquals('ip_id_test', $this->getIpId($ip));
+        self::assertEquals('ip_id_test', $this->getIpId($ip));
     }
 
     public function testGetIpIdWithoutId(): void

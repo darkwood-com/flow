@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Test;
+namespace RFBP\Test\Rail;
 
 use function Amp\delay;
 use Amp\Loop;
@@ -11,9 +11,9 @@ use ArrayObject;
 use Closure;
 use Generator;
 use RFBP\Driver\AmpDriver;
-use RFBP\Rail;
+use RFBP\IpStrategy\LinearIpStrategy;
+use RFBP\Rail\Rail;
 use RuntimeException;
-use stdClass;
 use Symfony\Component\Messenger\Envelope as Ip;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IpIdStamp;
 use Throwable;
@@ -23,23 +23,10 @@ class AmpRailTest extends AsyncTestCase
     /**
      * @dataProvider jobProvider
      */
-    public function testIpWithoutId(Closure $job): void
-    {
-        $ip = new Ip(new stdClass());
-        $rail = new Rail($job);
-        $this->expectException(RuntimeException::class);
-        ($rail)($ip);
-
-        Loop::run();
-    }
-
-    /**
-     * @dataProvider jobProvider
-     */
     public function testJob(Closure $job, int $resultNumber, ?Throwable $resultException): void
     {
         $ip = Ip::wrap(new ArrayObject(['number' => 0]), [new IpIdStamp('ip_id')]);
-        $rail = new Rail($job, 1, new AmpDriver());
+        $rail = new Rail($job, new LinearIpStrategy(), new AmpDriver());
         $rail->pipe(function (Ip $ip, ?Throwable $exception) use ($resultNumber, $resultException) {
             self::assertSame(ArrayObject::class, $ip->getMessage()::class);
             self::assertSame($resultNumber, $ip->getMessage()['number']);

@@ -1,3 +1,7 @@
+### 1.0.3
+
+- Add RFBP\IpStrategy add several Ip strategy for data processing
+
 ### 1.0.2
 
 - Add RFBP\Driver\DriverInterface

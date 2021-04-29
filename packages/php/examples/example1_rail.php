@@ -8,7 +8,8 @@ use function Amp\delay;
 use RFBP\Driver\AmpDriver;
 use RFBP\Driver\ReactDriver;
 use RFBP\Driver\SwooleDriver;
-use RFBP\Rail;
+use RFBP\IpStrategy\MaxIpStrategy;
+use RFBP\Rail\Rail;
 use Swoole\Coroutine;
 use Symfony\Component\Messenger\Envelope as Ip;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IpIdStamp;
@@ -81,33 +82,27 @@ $job2 = static function (object $data): void {
 };
 
 $rails = [
-    new Rail($job1, 2, $driver),
-    new Rail($job2, 1, $driver),
+    new Rail($job1, new MaxIpStrategy(2), $driver),
+    new Rail($job2, new MaxIpStrategy(2), $driver),
 ];
 
 $ipPool = new SplObjectStorage();
-$rails[0]->pipe(static function ($ip, $e) use ($ipPool, $rails) {
-    $ipPool->offsetSet($ip, $rails[1]);
+$rails[0]->pipe(static function ($ip) use ($rails) {
+    $rails[1]($ip);
 });
 $rails[1]->pipe(static function ($ip) use ($ipPool) {
     $ipPool->offsetUnset($ip);
 });
 
-for ($i = 1; $i < 5; ++$i) {
+for ($i = 1; $i <= 5; ++$i) {
     $ip = Ip::wrap(new ArrayObject(['id' => $i, 'number' => $i]), [new IpIdStamp(uniqid('ip_', true))]);
-    $ipPool->offsetSet($ip, $rails[0]);
+    $ipPool->offsetSet($ip, true);
+    $rails[0]($ip);
 }
 
 $driver->tick(1, function () use ($driver, $ipPool) {
-    foreach ($ipPool as $ip) {
-        $rail = $ipPool[$ip];
-        ($rail)($ip);
-    }
-
     if (0 === $ipPool->count()) {
         $driver->stop();
     }
-
-    //echo "*** tick ***\n";
 });
 $driver->run();

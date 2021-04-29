@@ -9,7 +9,7 @@ use Amp\Loop;
 use Amp\PHPUnit\AsyncTestCase;
 use ArrayObject;
 use Closure;
-use RFBP\Rail;
+use RFBP\Rail\Rail;
 use RFBP\Supervisor;
 use RuntimeException;
 use stdClass;
@@ -30,7 +30,7 @@ class AmpSupervisorTest extends AsyncTestCase
         $transport2 = new InMemoryTransport();
         $rails = array_map(static function ($job) { return new Rail($job); }, $jobs);
 
-        $supervisor = new Supervisor($transport1, $transport2, $rails);
+        $supervisor = new Supervisor($rails, null, $transport1, $transport2);
         $ip = new Ip(new stdClass());
         $transport1->send($ip);
         $this->expectException(RuntimeException::class);
@@ -48,7 +48,7 @@ class AmpSupervisorTest extends AsyncTestCase
         $transport2 = new InMemoryTransport();
         $rails = array_map(static function ($job) { return new Rail($job); }, $jobs);
 
-        $supervisor = new Supervisor($transport1, $transport2, $rails);
+        $supervisor = new Supervisor($rails, null, $transport1, $transport2);
 
         Loop::repeat(1, static function () use ($supervisor, $transport2, $resultNumber) {
             $ips = $transport2->get();

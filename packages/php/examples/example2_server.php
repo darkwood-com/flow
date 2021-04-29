@@ -10,7 +10,8 @@ use RFBP\Driver\AmpDriver;
 use RFBP\Driver\ReactDriver;
 use RFBP\Driver\SwooleDriver;
 use RFBP\Examples\Transport\DoctrineIpTransport;
-use RFBP\Rail;
+use RFBP\IpStrategy\MaxIpStrategy;
+use RFBP\Rail\Rail;
 use RFBP\Supervisor;
 use Swoole\Coroutine;
 
@@ -110,21 +111,21 @@ $errorJob = static function (object $data, Throwable $exception): void {
 };
 
 $rails = [
-    new Rail($addOneJob, 1, $driver),
-    new Rail($multbyTwoJob, 3, $driver),
-    new Rail($minusThreeJob, 2, $driver),
+    new Rail($addOneJob, new MaxIpStrategy(1), $driver),
+    new Rail($multbyTwoJob, new MaxIpStrategy(3), $driver),
+    new Rail($minusThreeJob, new MaxIpStrategy(2), $driver),
 ];
 
-$error = new Rail($errorJob, 2, $driver);
+$error = new Rail($errorJob, new MaxIpStrategy(2), $driver);
 
 $connection = DriverManager::getConnection(['url' => 'mysql://root:root@127.0.0.1:3306/rfbp?serverVersion=5.7']);
 $transport = new DoctrineIpTransport($connection);
 
 $supervisor = new Supervisor(
-    $transport,
-    $transport,
     $rails,
     $error,
+    $transport,
+    $transport,
     $driver
 );
 
