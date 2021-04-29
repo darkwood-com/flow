@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RFBP\Driver;
 
+use Closure;
 use RFBP\DriverInterface;
 use RuntimeException;
 use Swoole\Coroutine;
@@ -32,10 +33,10 @@ class SwooleDriver implements DriverInterface
         $this->ticksIds = [];
     }
 
-    public function coroutine(callable $callback, ?callable $onResolved): callable
+    public function coroutine(Closure $callback, ?Closure $onResolved = null): Closure
     {
         return static function (...$args) use ($callback, $onResolved): void {
-            Coroutine::create(function (callable $callback, ?callable $onResolved, ...$args) {
+            Coroutine::create(function (Closure $callback, ?Closure $onResolved, ...$args) {
                 try {
                     $callback(...$args);
                     if ($onResolved) {
@@ -50,7 +51,7 @@ class SwooleDriver implements DriverInterface
         };
     }
 
-    public function tick(int $interval, callable $callback): void
+    public function tick(int $interval, Closure $callback): void
     {
         $this->ticks[] = [$interval, $callback];
     }

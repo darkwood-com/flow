@@ -6,6 +6,7 @@ namespace RFBP\Driver;
 
 use function Amp\call;
 use Amp\Loop;
+use Closure;
 use RFBP\DriverInterface;
 use RuntimeException;
 
@@ -25,7 +26,7 @@ class AmpDriver implements DriverInterface
         $this->ticksIds = [];
     }
 
-    public function coroutine(callable $callback, ?callable $onResolved): callable
+    public function coroutine(Closure $callback, ?Closure $onResolved = null): Closure
     {
         return static function (...$args) use ($callback, $onResolved): void {
             $promise = call($callback, ...$args);
@@ -35,7 +36,7 @@ class AmpDriver implements DriverInterface
         };
     }
 
-    public function tick(int $interval, callable $callback): void
+    public function tick(int $interval, Closure $callback): void
     {
         $this->ticksIds[] = Loop::repeat($interval, $callback);
     }

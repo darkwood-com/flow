@@ -1,11 +1,12 @@
 ### 1.0.5
 
 - Add Symfony integration
+- Define monoids
 
 ### 1.0.4
 
 - Refactor structure
-- Decouple from Symfony integration
+- Decouple integration
 
 ### 1.0.3
 

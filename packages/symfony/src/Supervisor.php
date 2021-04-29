@@ -30,7 +30,7 @@ class Supervisor
     private DriverInterface $driver;
 
     /**
-     * @param array<int, Rail> $rails
+     * @param array<Rail> $rails
      */
     public function __construct(
         private array $rails,

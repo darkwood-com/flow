@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace RFBP;
 
+use Closure;
+
 interface DriverInterface
 {
-    public function coroutine(callable $callback, ?callable $onResolved): callable;
+    public function coroutine(Closure $callback, ?Closure $onResolved = null): Closure;
 
-    public function tick(int $interval, callable $callback): void;
+    public function tick(int $interval, Closure $callback): void;
 
     public function run(): void;
 

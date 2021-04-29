@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace RFBP\Driver;
 
+use Closure;
 use React\EventLoop\Factory;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\TimerInterface;
@@ -35,7 +36,7 @@ class ReactDriver implements DriverInterface
         $this->ticksIds = [];
     }
 
-    public function coroutine(callable $callback, ?callable $onResolved): callable
+    public function coroutine(Closure $callback, ?Closure $onResolved = null): Closure
     {
         return function (...$args) use ($callback, $onResolved): void {
             $this->eventLoop->futureTick(static function () use ($callback, $onResolved, $args) {
@@ -53,7 +54,7 @@ class ReactDriver implements DriverInterface
         };
     }
 
-    public function tick(int $interval, callable $callback): void
+    public function tick(int $interval, Closure $callback): void
     {
         $this->ticksIds[] = $this->eventLoop->addPeriodicTimer($interval, $callback);
     }

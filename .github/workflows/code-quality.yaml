@@ -26,6 +26,7 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: xsl, swoole
           tools: composer
+          coverage: none
 
       - name: 'Install dependencies'
         run: composer  --working-dir=packages/${{ matrix.package }} install
