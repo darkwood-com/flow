@@ -75,4 +75,6 @@ do
         git tag $VERSION
         git push origin --tags
     )
+
+    rm -rf $TMP_DIR;
 done
