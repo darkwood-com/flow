@@ -6,6 +6,7 @@ namespace RFBP\Driver;
 
 use function Amp\call;
 use Amp\Loop;
+use RFBP\DriverInterface;
 use RuntimeException;
 
 class AmpDriver implements DriverInterface

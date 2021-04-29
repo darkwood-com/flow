@@ -1,3 +1,8 @@
+### 1.0.4
+
+- Refactor structure
+- Decouple from Symfony integration
+
 ### 1.0.3
 
 - Add RFBP\IpStrategy add several Ip strategy for data processing

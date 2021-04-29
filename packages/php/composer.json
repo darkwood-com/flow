@@ -12,14 +12,12 @@
     "keywords": [
         "railway flow based programming",
         "php",
-        "symfony",
         "coroutine",
         "amphp",
         "monoid"
     ],
     "require": {
-        "php": "^8.0",
-        "symfony/messenger": "^5.2"
+        "php": "^8.0"
     },
     "require-dev": {
         "amphp/amp": "^2.5",
@@ -28,10 +26,6 @@
         "friendsofphp/php-cs-fixer": "^2.18",
         "phpstan/phpstan": "^0.12.82",
         "phpunit/phpunit": "^9.5",
-        "symfony/amqp-messenger": "^5.2",
-        "symfony/doctrine-messenger": "^5.2",
-        "symfony/orm-pack": "^2.1",
-        "symfony/redis-messenger": "^5.2",
         "vimeo/psalm": "^4.7",
         "swoole/ide-helper": "^4.6.5",
         "react/event-loop": "^1.1.1"
@@ -66,5 +60,5 @@
         "psalm": "Execute Psalm analysis",
         "test": "Launch PHPUnit test suite"
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }

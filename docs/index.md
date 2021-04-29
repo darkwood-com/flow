@@ -21,11 +21,7 @@ composer require darkwood/railway-fbp
 
 A working script is available in the bundled `examples` directory
 
-- Run Example 1 : `php examples/example1_rail.php`
-- Start Example 2 Server : `php examples/example2_server.php`
-- Start Example 2 Client(s) : `php examples/example2_client.php`
-
-Messaging part require to install [Docker](https://www.docker.com) and execute `docker-compose up -d`
+- Run Rail : `php examples/rail.php`
 
 ## Documentation
 

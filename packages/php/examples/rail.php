@@ -8,11 +8,10 @@ use function Amp\delay;
 use RFBP\Driver\AmpDriver;
 use RFBP\Driver\ReactDriver;
 use RFBP\Driver\SwooleDriver;
+use RFBP\Ip;
 use RFBP\IpStrategy\MaxIpStrategy;
 use RFBP\Rail\Rail;
 use Swoole\Coroutine;
-use Symfony\Component\Messenger\Envelope as Ip;
-use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp as IpIdStamp;
 
 $randomDriver = random_int(1, 3);
 if (1 === $randomDriver) {
@@ -95,7 +94,7 @@ $rails[1]->pipe(static function ($ip) use ($ipPool) {
 });
 
 for ($i = 1; $i <= 5; ++$i) {
-    $ip = Ip::wrap(new ArrayObject(['id' => $i, 'number' => $i]), [new IpIdStamp(uniqid('ip_', true))]);
+    $ip = new Ip(new ArrayObject(['id' => $i, 'number' => $i]));
     $ipPool->offsetSet($ip, true);
     $rails[0]($ip);
 }

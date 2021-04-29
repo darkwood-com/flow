@@ -6,8 +6,8 @@ namespace RFBP\Test\IpStrategy;
 
 use ArrayObject;
 use PHPUnit\Framework\TestCase;
+use RFBP\Ip;
 use RFBP\IpStrategy\MaxIpStrategy;
-use Symfony\Component\Messenger\Envelope as Ip;
 
 class MaxIpStrategyTest extends TestCase
 {
@@ -17,9 +17,9 @@ class MaxIpStrategyTest extends TestCase
     public function testStrategy(int $doneIndex): void
     {
         $strategy = new MaxIpStrategy(2);
-        $strategy->push(Ip::wrap(new ArrayObject(['data' => 1])));
-        $strategy->push(Ip::wrap(new ArrayObject(['data' => 2])));
-        $strategy->push(Ip::wrap(new ArrayObject(['data' => 3])));
+        $strategy->push(new Ip(new ArrayObject(['data' => 1])));
+        $strategy->push(new Ip(new ArrayObject(['data' => 2])));
+        $strategy->push(new Ip(new ArrayObject(['data' => 3])));
 
         $ips = [];
         $ips[] = $strategy->pop();
