@@ -1,3 +1,7 @@
+### 1.0.5
+
+- Add Symfony integration
+
 ### 1.0.4
 
 - Refactor structure

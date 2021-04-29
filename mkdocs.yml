@@ -70,3 +70,5 @@ nav:
       - Ressources: getting-started/ressources.md
       - Release Notes: getting-started/changelog.md
       - License: getting-started/license.md
+  - Integrations:
+      - Symfony: integrations/symfony.md

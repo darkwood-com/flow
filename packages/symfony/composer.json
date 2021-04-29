@@ -1,6 +1,6 @@
 {
-    "name": "darkwood/railway-fbp",
-    "description": "Railway Flow Based Programming implementation in PHP",
+    "name": "darkwood/railway-fbp-symfony",
+    "description": "Railway Flow Based Programming implementation for Symfony",
     "type": "library",
     "license": "AGPL-3.0-or-later",
     "authors": [
@@ -12,12 +12,13 @@
     "keywords": [
         "railway flow based programming",
         "php",
+        "symfony",
         "coroutine",
         "amphp",
         "monoid"
     ],
     "require": {
-        "php": "^8.0"
+        "darkwood/railway-fbp": "^1.0.4"
     },
     "require-dev": {
         "amphp/amp": "^2.5",
@@ -27,13 +28,14 @@
         "phpstan/phpstan": "^0.12.82",
         "phpunit/phpunit": "^9.5",
         "react/event-loop": "^1.1.1",
+        "symfony/messenger": "^5.2",
+        "symfony/doctrine-messenger": "^5.2",
+        "symfony/orm-pack": "^2.1",
         "swoole/ide-helper": "^4.6.5",
         "vimeo/psalm": "^4.7"
     },
     "suggest": {
-        "amphp/amp": "Provide asynchronous with AMP",
-        "ext-swoole": "Provide asynchronous with Swoole",
-        "react/event-loop": "Provide asynchronous with ReactPHP"
+        "symfony/messenger": "Provide symfony messenger support"
     },
     "autoload": {
         "psr-4": {
