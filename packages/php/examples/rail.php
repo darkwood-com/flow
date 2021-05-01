@@ -10,7 +10,9 @@ use RFBP\Driver\ReactDriver;
 use RFBP\Driver\SwooleDriver;
 use RFBP\Ip;
 use RFBP\IpStrategy\MaxIpStrategy;
+use RFBP\Rail\ErrorRail;
 use RFBP\Rail\Rail;
+use RFBP\Rail\SequenceRail;
 use Swoole\Coroutine;
 
 $randomDriver = random_int(1, 3);
@@ -27,6 +29,10 @@ if (1 === $randomDriver) {
         yield delay($delay);
         $result = $data['number'];
         $result += $result;
+
+        if (1 === random_int(1, 3)) {
+            throw new Error('Failure when processing "Job1"');
+        }
 
         printf("*. #%d : Result for %d + %d = %d and took %d milliseconds\n", $data['id'], $data['number'], $data['number'], $result, $delay);
 
@@ -46,6 +52,10 @@ if (1 === $randomDriver) {
         $result = $data['number'];
         $result += $result;
 
+        if (1 === random_int(1, 3)) {
+            throw new Error('Failure when processing "Job1"');
+        }
+
         printf("*. #%d : Result for %d + %d = %d and took %d milliseconds\n", $data['id'], $data['number'], $data['number'], $result, $delay);
 
         $data['number'] = $result;
@@ -61,6 +71,10 @@ if (1 === $randomDriver) {
         // simulating calculating some "light"
         $result = $data['number'];
         $result += $result;
+
+        if (1 === random_int(1, 3)) {
+            throw new Error('Failure when processing "Job1"');
+        }
 
         printf("*. #%d : Result for %d + %d = %d\n", $data['id'], $data['number'], $data['number'], $result);
 
@@ -80,23 +94,28 @@ $job2 = static function (object $data): void {
     $data['number'] = $result;
 };
 
-$rails = [
+$errorJob = static function (object $data, Throwable $exception): void {
+    printf(".* #%d : Exception %s\n", $data['id'], $exception->getMessage());
+
+    $data['number'] = null;
+};
+
+$rails = new SequenceRail([
     new Rail($job1, new MaxIpStrategy(2), $driver),
     new Rail($job2, new MaxIpStrategy(2), $driver),
-];
+]);
+
+$rail = new ErrorRail($rails, $errorJob, new MaxIpStrategy(2), $driver);
 
 $ipPool = new SplObjectStorage();
-$rails[0]->pipe(static function ($ip) use ($rails) {
-    $rails[1]($ip);
-});
-$rails[1]->pipe(static function ($ip) use ($ipPool) {
+$rail->pipe(static function ($ip) use ($ipPool) {
     $ipPool->offsetUnset($ip);
 });
 
 for ($i = 1; $i <= 5; ++$i) {
     $ip = new Ip(new ArrayObject(['id' => $i, 'number' => $i]));
     $ipPool->offsetSet($ip, true);
-    $rails[0]($ip);
+    $rail($ip);
 }
 
 $driver->tick(1, function () use ($driver, $ipPool) {

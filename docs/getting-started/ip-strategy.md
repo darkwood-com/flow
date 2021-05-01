@@ -17,4 +17,4 @@ You can embed it by a custom strategy with is `LinerarIpStrategy` by default.
 
 ## Make your Ip Strategy
 
-You can make your custom driver by implementing `RFBP\IpStrategy\IpStrategyInterface`
+You can make your custom Ip strategy by implementing `RFBP\IpStrategyInterface`

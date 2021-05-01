@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RFBP\Test\IpStrategy;
 
-use ArrayObject;
 use PHPUnit\Framework\TestCase;
 use RFBP\Ip;
 use RFBP\IpStrategy\MaxIpStrategy;
@@ -17,9 +16,9 @@ class MaxIpStrategyTest extends TestCase
     public function testStrategy(int $doneIndex): void
     {
         $strategy = new MaxIpStrategy(2);
-        $strategy->push(new Ip(new ArrayObject(['data' => 1])));
-        $strategy->push(new Ip(new ArrayObject(['data' => 2])));
-        $strategy->push(new Ip(new ArrayObject(['data' => 3])));
+        $strategy->push(new Ip());
+        $strategy->push(new Ip());
+        $strategy->push(new Ip());
 
         $ips = [];
         $ips[] = $strategy->pop();

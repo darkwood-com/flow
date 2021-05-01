@@ -2,7 +2,7 @@
 ##Dev
 ##-------------
 
-doc-serve: ## Start documentation server locally
+docs-serve: ## Start documentation server locally
 	mkdocs serve
 
 # DEFAULT
