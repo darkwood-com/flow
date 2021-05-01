@@ -26,7 +26,7 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: xsl, swoole
           tools: composer
-          coverage: none
+          coverage: none # disable XDebug for tests
 
       - name: 'Install dependencies'
         run: composer  --working-dir=packages/${{ matrix.package }} install
