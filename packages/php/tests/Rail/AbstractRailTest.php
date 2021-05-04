@@ -15,8 +15,9 @@ use RFBP\IpStrategy\StackIpStrategy;
 abstract class AbstractRailTest extends TestCase
 {
     /**
-     * @param array<array> $datas
+     * @param array<array>      $datas
      * @param array<mixed>|null $mix
+     *
      * @return array<array>
      */
     protected function matrix(array $datas, ?array $mix = null): array
