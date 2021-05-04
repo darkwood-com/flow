@@ -11,8 +11,10 @@ use RFBP\Driver\ReactDriver;
 use RFBP\Driver\SwooleDriver;
 use RFBP\Examples\Transport\DoctrineIpTransport;
 use RFBP\IpStrategy\MaxIpStrategy;
+use RFBP\Rail\ErrorRail;
 use RFBP\Rail\Rail;
-use RFBP\Supervisor;
+use RFBP\Rail\SequenceRail;
+use RFBP\Rail\TransportRail;
 use Swoole\Coroutine;
 
 $randomDriver = random_int(1, 3);
@@ -110,23 +112,22 @@ $errorJob = static function (object $data, Throwable $exception): void {
     $data['number'] = null;
 };
 
-$rails = [
+$rail = new SequenceRail([
     new Rail($addOneJob, new MaxIpStrategy(1), $driver),
     new Rail($multbyTwoJob, new MaxIpStrategy(3), $driver),
     new Rail($minusThreeJob, new MaxIpStrategy(2), $driver),
-];
+]);
 
-$error = new Rail($errorJob, new MaxIpStrategy(2), $driver);
+$rail = new ErrorRail($rail, $errorJob, new MaxIpStrategy(2), $driver);
 
 $connection = DriverManager::getConnection(['url' => 'mysql://root:root@127.0.0.1:3306/rfbp?serverVersion=5.7']);
 $transport = new DoctrineIpTransport($connection);
 
-$supervisor = new Supervisor(
-    $rails,
-    $error,
+new TransportRail(
+    $rail,
     $transport,
     $transport,
     $driver
 );
 
-$supervisor->run();
+$driver->run();
