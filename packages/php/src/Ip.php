@@ -10,7 +10,7 @@ final class Ip
     {
     }
 
-    public function getData(): object
+    public function getData(): ?object
     {
         return $this->data;
     }
