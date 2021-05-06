@@ -1,7 +1,7 @@
 ### 1.0.6
 
 - Add TransportRail
-- Add ParallelRail
+- Rail can process multiple jobs in parallel
 
 ### 1.0.5
 

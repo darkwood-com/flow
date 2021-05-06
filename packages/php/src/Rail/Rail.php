@@ -23,11 +23,15 @@ class Rail implements RailInterface
     private SplObjectStorage $contexts;
     private ?Closure $pipeCallback = null;
 
+    /**
+     * @param Closure|array<Closure> $jobs
+     */
     public function __construct(
-        private Closure $job,
+        private Closure|array $jobs,
         private ?IpStrategyInterface $ipStrategy = null,
         private ?DriverInterface $driver = null
     ) {
+        $this->jobs = is_array($jobs) ? $jobs : [$jobs];
         $this->ipStrategy = $ipStrategy ?? new LinearIpStrategy();
         $this->driver = $driver ?? new AmpDriver();
         $this->contexts = new SplObjectStorage();
@@ -43,14 +47,21 @@ class Rail implements RailInterface
         $context = $this->contexts->offsetGet($ip);
         $this->contexts->offsetUnset($ip);
 
-        $this->driver->coroutine($this->job, function (Throwable $exception = null) use ($ip) {
-            $this->ipStrategy->done($ip);
-            $this->nextIpJob();
+        $count = count($this->jobs);
+        foreach ($this->jobs as $job) {
+            $this->driver->coroutine($job, function (Throwable $exception = null) use ($ip, &$count) {
+                $count--;
+                if($count === 0 || $exception) {
+                    $count = 0;
+                    $this->ipStrategy->done($ip);
+                    $this->nextIpJob();
 
-            if ($this->pipeCallback) {
-                ($this->pipeCallback)($ip, $exception);
-            }
-        })($ip->getData(), $context);
+                    if ($this->pipeCallback) {
+                        ($this->pipeCallback)($ip, $exception);
+                    }
+                }
+            })($ip->getData(), $context);
+        }
     }
 
     public function __invoke(Ip $ip, mixed $context = null): void
