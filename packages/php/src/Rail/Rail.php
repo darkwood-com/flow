@@ -51,7 +51,7 @@ class Rail implements RailInterface
         foreach ($this->jobs as $job) {
             $this->driver->coroutine($job, function (Throwable $exception = null) use ($ip, &$count) {
                 $count--;
-                if($count === 0 || $exception) {
+                if($count === 0 || ($exception && $count >= 0)) {
                     $count = 0;
                     $this->ipStrategy->done($ip);
                     $this->nextIpJob();
