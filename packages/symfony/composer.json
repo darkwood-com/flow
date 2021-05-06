@@ -24,7 +24,7 @@
         "amphp/amp": "^2.5",
         "amphp/phpunit-util": "^1.4",
         "edgedesign/phpqa": "^1.24",
-        "friendsofphp/php-cs-fixer": "^2.18",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "phpstan/phpstan": "^0.12.82",
         "phpunit/phpunit": "^9.5",
         "react/event-loop": "^1.1.1",
