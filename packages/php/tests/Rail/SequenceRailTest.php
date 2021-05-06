@@ -42,8 +42,6 @@ class SequenceRailTest extends AbstractRailTest
      */
     public function jobProvider(): array
     {
-        $exception = new RuntimeException('job error');
-
         return [
             [new AmpDriver()],
             [new ReactDriver()],

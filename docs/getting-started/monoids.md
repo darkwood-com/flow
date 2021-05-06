@@ -16,6 +16,18 @@ This is the standard Rail implementation that support asynchronous `Ip` processi
 
 This is useful for implementing the [decorator design pattern](https://en.wikipedia.org/wiki/Decorator_pattern).
 
+## ErrorRail
+
+ErrorRail catch any exception from rail and will be handled by its own job.
+
+## SequenceRail
+
+SequenceRail will sequence in order the processing IPs from an array of Rail.
+
+## ParallelRail
+
+ParallelRail will sequence processing IPs to parallels array of jobs.
+
 ## Make your own Rail
 
 You can make your custom Rail by implementing `RFBP\RailInterface`
