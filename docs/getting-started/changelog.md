@@ -1,6 +1,7 @@
 ### 1.0.6
 
-- Add Transport Rail
+- Add TransportRail
+- Add ParallelRail
 
 ### 1.0.5
 
