@@ -1,3 +1,7 @@
+### 1.0.7
+
+- Define Monads
+
 ### 1.0.6
 
 - Add TransportRail

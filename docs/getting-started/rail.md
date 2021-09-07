@@ -1,8 +1,8 @@
-# Monoids
-
-According to [Wikipedia](https://en.wikipedia.org/wiki/Monoid), Monoid is an abstract algebra that get its usage in function composition.
+# Rail
 
 ## Rail implementation
+
+According to [Wikipedia](https://en.wikipedia.org/wiki/Monoid), Monoid is an abstract algebra that get its usage in function composition.
 
 We consider `Rails` as a set of elements in our ensemble as a Monoid implementation.  
 By using `pipe` as a binary operation, `Rails` can be composed together with others `Rail` element.  
