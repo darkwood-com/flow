@@ -1,3 +1,7 @@
+### 1.0.8
+
+- Add code of conduct
+
 ### 1.0.7
 
 - Define Monads
@@ -10,7 +14,7 @@
 ### 1.0.5
 
 - Add Symfony integration
-- Define monoids
+- Define monads
 
 ### 1.0.4
 

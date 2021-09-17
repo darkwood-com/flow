@@ -5,7 +5,7 @@
 Railway Flow Based Programming concept aims to solve
 
 - Adopt asynchronous as native implementation
-- Build your code with functional programming and monoids
+- Build your code with functional programming and monads
 - Assemble your code visually
 
 ## Installation

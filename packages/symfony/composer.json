@@ -15,7 +15,7 @@
         "symfony",
         "coroutine",
         "amphp",
-        "monoid"
+        "monad"
     ],
     "require": {
         "darkwood/railway-fbp": "^1.0"

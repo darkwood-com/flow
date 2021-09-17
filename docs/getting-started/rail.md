@@ -2,10 +2,12 @@
 
 ## Rail implementation
 
-According to [Wikipedia](https://en.wikipedia.org/wiki/Monoid), Monoid is an abstract algebra that get its usage in function composition.
+According to [Wikipedia](https://en.wikipedia.org/wiki/Monad_(functional_programming)), Monads is an abstract generic structure that get its usage in function composition. Monads can shortly considered as `Programming with effects`.
 
-We consider `Rails` as a set of elements in our ensemble as a Monoid implementation.  
-By using `pipe` as a binary operation, `Rails` can be composed together with others `Rail` element.  
+We consider `Rails` as a set of elements in our ensemble as a Monad implementation :  
+- By using `job` as basic function type within the `Rail`.  
+- By using `pipe` as a binary operation, `Rail` can be composed together with others `Rail` element.  
+
 A `Rail` can process one or many `Ips` which has its application for asynchronous programming when mixing with [`Drivers`](drivers.md).
 
 ## Rail

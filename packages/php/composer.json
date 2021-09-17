@@ -14,7 +14,7 @@
         "php",
         "coroutine",
         "amphp",
-        "monoid"
+        "monad"
     ],
     "require": {
         "php": "^8.0"
