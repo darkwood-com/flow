@@ -42,8 +42,6 @@ class ErrorRailTest extends AbstractRailTest
      */
     public function jobProvider(): array
     {
-        new RuntimeException('job error');
-
         return $this->matrix([
             'job' => [static function (ArrayObject $data) {
                 $data['number'] = 5;
