@@ -41,9 +41,9 @@ class RailTest extends AbstractRailTest
         $ip1 = new Ip(new ArrayObject(['n1' => 3, 'n2' => 4]));
         $ip2 = new Ip(new ArrayObject(['n1' => 2, 'n2' => 5]));
 
-        $jobs = [function (object $data) {
+        $jobs = [function (object $data): void {
             $data['n1'] *= 2;
-        }, function (object $data) {
+        }, function (object $data): void {
             $data['n2'] *= 4;
         }];
         $rail = new Rail($jobs, null, $driver);

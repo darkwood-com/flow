@@ -56,7 +56,7 @@ if (1 === $randomDriver) {
         }
     };
 } elseif (2 === $randomDriver) {
-    $addOneJob = static function (object $data) {
+    $addOneJob = static function (object $data): void {
         printf("Client %s #%d : Calculating %d + 1\n", $data['client'], $data['id'], $data['number']);
 
         // simulating calculating some "light" operation from 10 to 90 milliseconds as async generator
@@ -65,7 +65,7 @@ if (1 === $randomDriver) {
         ++$data['number'];
     };
 
-    $multbyTwoJob = static function (object $data) {
+    $multbyTwoJob = static function (object $data): void {
         printf("Client %s #%d : Calculating %d * 2\n", $data['client'], $data['id'], $data['number']);
 
         // simulating calculating some "heavy" operation from 4 to 6 seconds as async generator
@@ -79,14 +79,14 @@ if (1 === $randomDriver) {
         }
     };
 } else {
-    $addOneJob = static function (object $data) {
+    $addOneJob = static function (object $data): void {
         printf("Client %s #%d : Calculating %d + 1\n", $data['client'], $data['id'], $data['number']);
 
         // simulating calculating some "light" operation
         ++$data['number'];
     };
 
-    $multbyTwoJob = static function (object $data) {
+    $multbyTwoJob = static function (object $data): void {
         printf("Client %s #%d : Calculating %d * 2\n", $data['client'], $data['id'], $data['number']);
 
         // simulating calculating some "heavy" operation

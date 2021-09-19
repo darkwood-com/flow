@@ -43,7 +43,7 @@ if (1 === $randomDriver) {
 
     $driver = new SwooleDriver();
 
-    $job1 = static function (object $data) {
+    $job1 = static function (object $data): void {
         printf("*. #%d : Calculating %d + %d\n", $data['id'], $data['number'], $data['number']);
 
         // simulating calculating some "light" operation from 100 to 900 milliseconds as async generator
@@ -65,7 +65,7 @@ if (1 === $randomDriver) {
 
     $driver = new ReactDriver();
 
-    $job1 = static function (object $data) {
+    $job1 = static function (object $data): void {
         printf("*. #%d : Calculating %d + %d\n", $data['id'], $data['number'], $data['number']);
 
         // simulating calculating some "light"
