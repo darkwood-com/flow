@@ -20,8 +20,6 @@ theme:
   custom_dir: docs/theme
   font:
     text: Roboto
-  #analytics:
-  #  gtag: G-G0N1ZYBL0F
   palette:
     # light mode
     - primary: light
