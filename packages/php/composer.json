@@ -20,15 +20,15 @@
         "php": "^8.0"
     },
     "require-dev": {
-        "amphp/amp": "^2.5",
+        "amphp/amp": "^2.6",
         "amphp/phpunit-util": "^1.4",
-        "edgedesign/phpqa": "^1.24",
-        "friendsofphp/php-cs-fixer": "^3.0",
-        "phpstan/phpstan": "^0.12.82",
+        "edgedesign/phpqa": "^1.25",
+        "friendsofphp/php-cs-fixer": "^3.1",
+        "phpstan/phpstan": "^0.12.99",
         "phpunit/phpunit": "^9.5",
-        "react/event-loop": "^1.1.1",
-        "swoole/ide-helper": "^4.6.5",
-        "vimeo/psalm": "^4.7"
+        "react/event-loop": "^1.2",
+        "swoole/ide-helper": "^4.7",
+        "vimeo/psalm": "^4.10"
     },
     "suggest": {
         "amphp/amp": "Provide asynchronous with AMP",
