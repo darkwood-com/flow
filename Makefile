@@ -3,7 +3,7 @@
 ##-------------
 
 docs-serve: ## Start documentation server locally
-	mkdocs serve
+	./node_modules/.bin/hugo/hugo server -s docs -D
 
 # DEFAULT
 .DEFAULT_GOAL := help

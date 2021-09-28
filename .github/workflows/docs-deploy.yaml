@@ -6,21 +6,26 @@ on:
       - 1.x
 
 jobs:
-  docs-deploy:
-    name: Docs Deploy
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-20.04
     steps:
-      - name: Checkout Master
-        uses: actions/checkout@v2
-      - name: Install Python
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
-          python-version: '3.x'
+          node-version: '16'
+          cache: 'npm'
+
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install mkdocs-material
-      - name: Deploy
-        run: |
-          mkdocs gh-deploy -c --force
-          mkdocs --version
+        run: npm install
+
+      - name: Check for linting errors
+        run: npm test
+
+      - name: Build production website
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/public

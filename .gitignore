@@ -1,1 +1,5 @@
-site/
+node_modules
+public
+resources
+TODO
+site

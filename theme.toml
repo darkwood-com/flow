@@ -1,0 +1,15 @@
+name = "Railway FBP"
+license = "AGPL-3.0"
+licenselink = "https://github.com/darkwood-fr/railway-fbp/blob/1.x/LICENSE"
+description = "Assemble your code by adopting asynchronous as native implementation and build with functional programming and monads."
+source = "docs"
+
+homepage = "https://github.com/darkwood-fr/railway-fbp"
+demosite = "https://darkwood-fr.github.io"
+
+tags = ["landing page", "documentation", "blog", "minimal", "modern", "customizable", "search", "dark mode", "bootstrap"]
+features = ["security aware", "fast by default", "seo-ready", "development tools", "bootstrap framework", "netlify-ready", "full text search", "page layouts", "dark mode"]
+
+[author]
+  name = "Mathieu Ledru"
+  homepage = "https://darkwood.fr"
