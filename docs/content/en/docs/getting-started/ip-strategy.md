@@ -28,7 +28,7 @@ This process Ip as a stack order : push ip to the top of the stack, then order i
 ## MaxIpStrategy
 
 This process Ip as soon less Ip are currently process than the current max.  
-You can embed it by a custom strategy with is `LinerarIpStrategy` by default.
+You can embed it by a custom strategy with is `LinearIpStrategy` by default.
 
 ## Make your Ip Strategy
 
