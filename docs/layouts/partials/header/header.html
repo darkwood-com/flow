@@ -34,7 +34,7 @@
             {{- $active = or $active (and (eq .Name "Docs") (eq $current.Section "docs")) -}}
             {{- $active = or $active (and (eq .Name "Blog") (eq $current.Section "blog" "authors")) -}}
             <li class="nav-item">
-              <a class="nav-link ps-0 py-1{{ if $active }} active{{ end }}" href="{{ .URL | relURL }}">{{ .Name }}</a>
+              <a class="nav-link ps-0 py-1{{ if $active }} active{{ end }}" href="{{ .URL }}">{{ .Name }}</a>
             </li>
           {{ end -}}
         </ul>
@@ -43,7 +43,7 @@
         <ul class="nav flex-column flex-md-row ms-md-auto me-md-n5 pe-md-2">
           {{ range .Site.Menus.social -}}
             <li class="nav-item">
-              <a class="nav-link ps-0 py-1" href="{{ .URL | relURL }}">{{ .Pre | safeHTML }}<small class="ms-2 d-md-none">{{ .Name | safeHTML }}</small></a>
+              <a class="nav-link ps-0 py-1" href="{{ .URL }}">{{ .Pre | safeHTML }}<small class="ms-2 d-md-none">{{ .Name | safeHTML }}</small></a>
             </li>
           {{ end -}}
         </ul>
