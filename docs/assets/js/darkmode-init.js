@@ -4,30 +4,30 @@ const localMode = localStorage.getItem('theme');
 if (globalDark && (localMode === null)) {
 
   localStorage.setItem('theme', 'light');
-  document.documentElement.setAttribute('data-light-mode', 'true');
+  document.documentElement.classList.add('data-light-mode');
 
 }
 
 if (globalDark && (localMode === 'dark')) {
 
-  document.documentElement.setAttribute('data-dark-mode', 'true');
+  document.documentElement.classList.add('data-dark-mode');
 
 }
 
 if (globalDark && (localMode === 'sepia')) {
 
-  document.documentElement.setAttribute('data-sepia-mode', 'true');
+  document.documentElement.classList.add('data-sepia-mode');
 
 }
 
 if (localMode === 'dark') {
 
-  document.documentElement.setAttribute('data-dark-mode', 'true');
+  document.documentElement.classList.add('data-dark-mode');
 
 }
 
 if (localMode === 'sepia') {
 
-  document.documentElement.setAttribute('data-sepia-mode', 'true');
+  document.documentElement.classList.add('data-sepia-mode');
 
 }

@@ -8,12 +8,12 @@ if (mode !== null) {
     if (event.matches) {
 
       localStorage.setItem('theme', 'dark');
-      body.setAttribute('data-dark-mode', 'true');
+      body.classList.add('data-dark-mode');
 
     } else {
 
       localStorage.setItem('theme', 'light');
-      body.setAttribute('data-light-mode', 'true');
+      body.classList.add('data-light-mode');
 
     }
 
@@ -24,12 +24,12 @@ if (mode !== null) {
     if (event.matches) {
 
       localStorage.setItem('theme', 'sepia');
-      body.setAttribute('data-sepia-mode', 'true');
+      body.classList.add('data-sepia-mode');
 
     } else {
 
       localStorage.setItem('theme', 'light');
-      body.setAttribute('data-light-mode', 'true');
+      body.classList.add('data-light-mode');
 
     }
 
@@ -37,9 +37,9 @@ if (mode !== null) {
 
   mode.addEventListener('click', () => {
 
-    var isDark = body.hasAttribute('data-dark-mode')
-    var isSepia = body.hasAttribute('data-sepia-mode')
-    var isLight = body.hasAttribute('data-light-mode')
+    var isDark = body.classList.contains('data-dark-mode')
+    var isSepia = body.classList.contains('data-sepia-mode')
+    var isLight = body.classList.contains('data-light-mode')
     if(isDark) {
       localStorage.setItem('theme', 'sepia');
     }
@@ -50,27 +50,27 @@ if (mode !== null) {
       localStorage.setItem('theme', 'dark');
     }
 
-    body.removeAttribute('data-dark-mode');
-    body.removeAttribute('data-sepia-mode');
-    body.removeAttribute('data-light-mode');
+    body.classList.remove('data-dark-mode');
+    body.classList.remove('data-sepia-mode');
+    body.classList.remove('data-light-mode');
     if (localStorage.getItem('theme') === 'dark') {
-      body.setAttribute('data-dark-mode', 'true');
+      body.classList.add('data-dark-mode');
     } else if(localStorage.getItem('theme') === 'sepia') {
-      body.setAttribute('data-sepia-mode', 'true');
+      body.classList.add('data-sepia-mode');
     } else if(localStorage.getItem('theme') === 'light') {
-      body.setAttribute('data-light-mode', 'true');
+      body.classList.add('data-light-mode');
     }
   });
 
-  body.removeAttribute('data-dark-mode');
-  body.removeAttribute('data-sepia-mode');
-  body.removeAttribute('data-light-mode');
+  body.classList.remove('data-dark-mode');
+  body.classList.remove('data-sepia-mode');
+  body.classList.remove('data-light-mode');
   if (localStorage.getItem('theme') === 'dark') {
-    body.setAttribute('data-dark-mode', 'true');
+    body.classList.add('data-dark-mode');
   } else if(localStorage.getItem('theme') === 'sepia') {
-    body.setAttribute('data-sepia-mode', 'true');
+    body.classList.add('data-sepia-mode');
   } else if(localStorage.getItem('theme') === 'light') {
-    body.setAttribute('data-light-mode', 'true');
+    body.classList.add('data-light-mode');
   }
 
 }

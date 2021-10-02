@@ -49,27 +49,27 @@ body .toggle-sepia {
   display: block;
 }
 
-body[data-dark-mode] .toggle-light {
+body.data-dark-mode .toggle-light {
   display: none;
 }
 
-body[data-dark-mode] .toggle-sepia {
+body.data-dark-mode .toggle-sepia {
   display: none;
 }
 
-body[data-sepia-mode] .toggle-light {
+body.data-sepia-mode .toggle-light {
   display: none;
 }
 
-body[data-sepia-mode] .toggle-dark {
+body.data-sepia-mode .toggle-dark {
   display: none;
 }
 
-body[data-light-mode] .toggle-sepia {
+body.data-light-mode .toggle-sepia {
   display: none;
 }
 
-body[data-light-mode] .toggle-dark {
+body.data-light-mode .toggle-dark {
   display: none;
 }
 

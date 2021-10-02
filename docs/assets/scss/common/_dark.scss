@@ -22,165 +22,165 @@ $navbar-dark-active-color:          $link-color-dark;
 
 /** Theme styles */
 
-body[data-dark-mode] {
+body.data-dark-mode {
   background: $body-bg-dark;
   color: $body-color-dark;
 }
 
-body[data-dark-mode] a {
+body.data-dark-mode a {
   color: $link-color-dark;
 }
 
-body[data-dark-mode] a.text-body {
+body.data-dark-mode a.text-body {
   color: $body-color-dark !important;
 }
 
-body[data-dark-mode] .btn-primary {
+body.data-dark-mode .btn-primary {
   @include button-variant($button-color-dark, $button-color-dark);
 
   color: $body-bg-dark !important;
 }
 
-body[data-dark-mode] .btn-outline-primary {
+body.data-dark-mode .btn-outline-primary {
   @include button-outline-variant($button-color-dark, $button-color-dark);
 
   color: $link-color-dark;
 }
 
-body[data-dark-mode] .btn-outline-primary:hover {
+body.data-dark-mode .btn-outline-primary:hover {
   color: $body-bg-dark;
 }
 
-body[data-dark-mode] .btn-doks-light {
+body.data-dark-mode .btn-doks-light {
   color: $navbar-dark-color;
 }
 
-body[data-dark-mode] .show > .btn-doks-light,
-body[data-dark-mode] .btn-doks-light:hover,
-body[data-dark-mode] .btn-doks-light:active {
+body.data-dark-mode .show > .btn-doks-light,
+body.data-dark-mode .btn-doks-light:hover,
+body.data-dark-mode .btn-doks-light:active {
   color: $link-color-dark;
 }
 
-body[data-dark-mode] .btn-menu svg {
+body.data-dark-mode .btn-menu svg {
   color: $body-color-dark;
 }
 
-body[data-dark-mode] .doks-sidebar-toggle {
+body.data-dark-mode .doks-sidebar-toggle {
   color: $navbar-dark-color;
 }
 
-body[data-dark-mode] .btn-menu:hover,
-body[data-dark-mode] .btn-doks-light:hover,
-body[data-dark-mode] .doks-sidebar-toggle:hover {
+body.data-dark-mode .btn-menu:hover,
+body.data-dark-mode .btn-doks-light:hover,
+body.data-dark-mode .doks-sidebar-toggle:hover {
   background: $body-overlay-dark;
 }
 
 /*
-body[data-dark-mode] .dropdown-menu {
+body.data-dark-mode .dropdown-menu {
   @extend .dropdown-menu-dark;
 }
 */
 
-body[data-dark-mode] .navbar,
-body[data-dark-mode] .doks-subnavbar {
+body.data-dark-mode .navbar,
+body.data-dark-mode .doks-subnavbar {
   background-color: #091A28;
   border-bottom: 1px solid $border-dark;
 }
 
-body[data-dark-mode].home .navbar {
+body.data-dark-mode.home .navbar {
   border-bottom: 0;
 }
 
-body[data-dark-mode] .offcanvas-header {
+body.data-dark-mode .offcanvas-header {
   border-bottom: 1px solid $gray-800;
 }
 
-body[data-dark-mode] .offcanvas .nav-link {
+body.data-dark-mode .offcanvas .nav-link {
   color: $body-color-dark;
 }
 
-body[data-dark-mode] .offcanvas .nav-link:hover,
-body[data-dark-mode] .offcanvas .nav-link:focus {
+body.data-dark-mode .offcanvas .nav-link:hover,
+body.data-dark-mode .offcanvas .nav-link:focus {
   color: $link-color-dark;
 }
 
-body[data-dark-mode] .offcanvas .nav-link.active {
+body.data-dark-mode .offcanvas .nav-link.active {
   color: $link-color-dark;
 }
 
-body[data-dark-mode] .navbar-light .navbar-brand {
+body.data-dark-mode .navbar-light .navbar-brand {
   color: $navbar-dark-color !important;
 }
 
-body[data-dark-mode] .navbar-light .navbar-nav .nav-link {
+body.data-dark-mode .navbar-light .navbar-nav .nav-link {
   color: $navbar-dark-color;
 }
 
-body[data-dark-mode] .navbar-light .navbar-nav .nav-link:hover,
-body[data-dark-mode] .navbar-light .navbar-nav .nav-link:focus {
+body.data-dark-mode .navbar-light .navbar-nav .nav-link:hover,
+body.data-dark-mode .navbar-light .navbar-nav .nav-link:focus {
   color: $navbar-dark-hover-color;
 }
 
-body[data-dark-mode] .navbar-light .navbar-nav .nav-link.disabled {
+body.data-dark-mode .navbar-light .navbar-nav .nav-link.disabled {
   color: $navbar-dark-disabled-color;
 }
 
-body[data-dark-mode] .navbar-light .navbar-nav .show > .nav-link,
-body[data-dark-mode] .navbar-light .navbar-nav .active > .nav-link,
-body[data-dark-mode] .navbar-light .navbar-nav .nav-link.show,
-body[data-dark-mode] .navbar-light .navbar-nav .nav-link.active {
+body.data-dark-mode .navbar-light .navbar-nav .show > .nav-link,
+body.data-dark-mode .navbar-light .navbar-nav .active > .nav-link,
+body.data-dark-mode .navbar-light .navbar-nav .nav-link.show,
+body.data-dark-mode .navbar-light .navbar-nav .nav-link.active {
   color: $navbar-dark-active-color;
 }
 
-body[data-dark-mode] .navbar-light .navbar-text {
+body.data-dark-mode .navbar-light .navbar-text {
   color: $navbar-dark-color;
 }
 
-body[data-dark-mode] .alert-primary a {
+body.data-dark-mode .alert-primary a {
   color: $body-bg-dark;
 }
 
-body[data-dark-mode] .alert-warning {
+body.data-dark-mode .alert-warning {
   background: $body-overlay-dark;
   color: $body-color-dark;
 }
 
-body[data-dark-mode] .page-links a {
+body.data-dark-mode .page-links a {
   color: $body-color-dark;
 }
 
-body[data-dark-mode] .btn-toggle-nav a {
+body.data-dark-mode .btn-toggle-nav a {
   color: $body-color-dark;
 }
 
-body[data-dark-mode] .showcase-meta a {
+body.data-dark-mode .showcase-meta a {
   color: $body-color-dark;
 }
 
-body[data-dark-mode] .showcase-meta a:hover,
-body[data-dark-mode] .showcase-meta a:focus {
+body.data-dark-mode .showcase-meta a:hover,
+body.data-dark-mode .showcase-meta a:focus {
   color: $link-color-dark;
 }
 
-body[data-dark-mode] .docs-link:hover,
-body[data-dark-mode] .docs-link.active,
-body[data-dark-mode] .page-links a:hover {
+body.data-dark-mode .docs-link:hover,
+body.data-dark-mode .docs-link.active,
+body.data-dark-mode .page-links a:hover {
   text-decoration: none;
   color: $link-color-dark;
 }
 
-body[data-dark-mode] .btn-toggle {
+body.data-dark-mode .btn-toggle {
   color: $body-color-dark;
   background-color: transparent;
   border: 0;
 }
 
-body[data-dark-mode] .btn-toggle:hover,
-body[data-dark-mode] .btn-toggle:focus {
+body.data-dark-mode .btn-toggle:hover,
+body.data-dark-mode .btn-toggle:focus {
   color: $body-color-dark;
 }
 
-body[data-dark-mode] .btn-toggle::before {
+body.data-dark-mode .btn-toggle::before {
   width: 1.25em;
   line-height: 0;
   content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%28222, 226, 230, 0.75%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
@@ -189,58 +189,58 @@ body[data-dark-mode] .btn-toggle::before {
   margin-bottom: 0.125rem;
 }
 
-body[data-dark-mode] .btn-toggle[aria-expanded="true"] {
+body.data-dark-mode .btn-toggle[aria-expanded="true"] {
   color: $body-color-dark;
 }
 
-body[data-dark-mode] .btn-toggle[aria-expanded="true"]::before {
+body.data-dark-mode .btn-toggle[aria-expanded="true"]::before {
   transform: rotate(90deg);
 }
 
-body[data-dark-mode] .btn-toggle-nav a:hover,
-body[data-dark-mode] .btn-toggle-nav a:focus {
+body.data-dark-mode .btn-toggle-nav a:hover,
+body.data-dark-mode .btn-toggle-nav a:focus {
   color: $link-color-dark;
 }
 
-body[data-dark-mode] .btn-toggle-nav a.active {
+body.data-dark-mode .btn-toggle-nav a.active {
   color: $link-color-dark;
 }
 
-body[data-dark-mode] .navbar-light .navbar-text a {
+body.data-dark-mode .navbar-light .navbar-text a {
   color: $navbar-dark-active-color;
 }
 
-body[data-dark-mode] .docs-links h3.sidebar-link a,
-body[data-dark-mode] .page-links h3.sidebar-link a {
+body.data-dark-mode .docs-links h3.sidebar-link a,
+body.data-dark-mode .page-links h3.sidebar-link a {
   color: $body-color-dark;
 }
 
-body[data-dark-mode] .navbar-light .navbar-text a:hover,
-body[data-dark-mode] .navbar-light .navbar-text a:focus {
+body.data-dark-mode .navbar-light .navbar-text a:hover,
+body.data-dark-mode .navbar-light .navbar-text a:focus {
   color: $navbar-dark-active-color;
 }
 
-body[data-dark-mode] .navbar .btn-link {
+body.data-dark-mode .navbar .btn-link {
   color: $navbar-dark-color;
 }
 
-body[data-dark-mode] .content .btn-link {
+body.data-dark-mode .content .btn-link {
   color: $link-color-dark;
 }
 
-body[data-dark-mode] .content .btn-link:hover {
+body.data-dark-mode .content .btn-link:hover {
   color: $link-color-dark;
 }
 
-body[data-dark-mode] .navbar .btn-link:hover {
+body.data-dark-mode .navbar .btn-link:hover {
   color: $navbar-dark-hover-color;
 }
 
-body[data-dark-mode] .navbar .btn-link:active {
+body.data-dark-mode .navbar .btn-link:active {
   color: $navbar-dark-active-color;
 }
 
-body[data-dark-mode] .form-control.is-search {
+body.data-dark-mode .form-control.is-search {
   background: $body-overlay-dark;
   border: 1px solid transparent;
   color: $gray-300;
@@ -253,219 +253,219 @@ body[data-dark-mode] .form-control.is-search {
   */
 }
 
-body[data-dark-mode] .form-control.is-search:focus {
+body.data-dark-mode .form-control.is-search:focus {
   border: 1px solid $link-color-dark;
 }
 
-body[data-dark-mode] .doks-search::after {
+body.data-dark-mode .doks-search::after {
   color: $gray-300;
   border: 1px solid $gray-700;
 }
 
-body[data-dark-mode] .text-dark {
+body.data-dark-mode .text-dark {
   color: $body-color-dark !important;
 }
 
 /*
-body[data-dark-mode] .navbar-form::after {
+body.data-dark-mode .navbar-form::after {
   color: $gray-600;
   border: 1px solid $gray-800;
 }
 */
 
-body[data-dark-mode] .form-control {
+body.data-dark-mode .form-control {
   color: $gray-300;
 }
 
-body[data-dark-mode] .form-control::placeholder {
+body.data-dark-mode .form-control::placeholder {
   color: $gray-400;
   opacity: 1;
 }
 
-body[data-dark-mode] .border-top {
+body.data-dark-mode .border-top {
   border-top: 1px solid $border-dark !important;
 }
 
 @include media-breakpoint-up(lg) {
-  body[data-dark-mode] .docs-sidebar {
+  body.data-dark-mode .docs-sidebar {
     order: 0;
     border-right: 1px solid $border-dark;
   }
 }
 
-body[data-dark-mode] .docs-navigation {
+body.data-dark-mode .docs-navigation {
   border-top: 1px solid $border-dark;
 }
 
-body[data-dark-mode] pre code::-webkit-scrollbar-thumb {
+body.data-dark-mode pre code::-webkit-scrollbar-thumb {
   background: $gray-400;
 }
 
-body[data-dark-mode] code:not(.hljs) {
+body.data-dark-mode code:not(.hljs) {
   background: $body-overlay-dark;
   color: $body-color-dark;
 }
 
-body[data-dark-mode] pre code:hover {
+body.data-dark-mode pre code:hover {
   scrollbar-width: thin;
   scrollbar-color: $border-dark transparent;
 }
 
-body[data-dark-mode] pre code::-webkit-scrollbar-thumb:hover {
+body.data-dark-mode pre code::-webkit-scrollbar-thumb:hover {
   background: $gray-500;
 }
 
-body[data-dark-mode] blockquote {
+body.data-dark-mode blockquote {
   border-left: 3px solid $border-dark;
 }
 
-body[data-dark-mode] .footer {
+body.data-dark-mode .footer {
   border-top: 1px solid $border-dark;
 }
 
-body[data-dark-mode] .docs-links,
-body[data-dark-mode] .docs-toc {
+body.data-dark-mode .docs-links,
+body.data-dark-mode .docs-toc {
   scrollbar-width: thin;
   scrollbar-color: $body-bg-dark $body-bg-dark;
 }
 
-body[data-dark-mode] .docs-links::-webkit-scrollbar,
-body[data-dark-mode] .docs-toc::-webkit-scrollbar {
+body.data-dark-mode .docs-links::-webkit-scrollbar,
+body.data-dark-mode .docs-toc::-webkit-scrollbar {
   width: 5px;
 }
 
-body[data-dark-mode] .docs-links::-webkit-scrollbar-track,
-body[data-dark-mode] .docs-toc::-webkit-scrollbar-track {
+body.data-dark-mode .docs-links::-webkit-scrollbar-track,
+body.data-dark-mode .docs-toc::-webkit-scrollbar-track {
   background: $body-bg-dark;
 }
 
-body[data-dark-mode] .docs-links::-webkit-scrollbar-thumb,
-body[data-dark-mode] .docs-toc::-webkit-scrollbar-thumb {
+body.data-dark-mode .docs-links::-webkit-scrollbar-thumb,
+body.data-dark-mode .docs-toc::-webkit-scrollbar-thumb {
   background: $body-bg-dark;
 }
 
-body[data-dark-mode] .docs-links:hover,
-body[data-dark-mode] .docs-toc:hover {
+body.data-dark-mode .docs-links:hover,
+body.data-dark-mode .docs-toc:hover {
   scrollbar-width: thin;
   scrollbar-color: $border-dark $body-bg-dark;
 }
 
-body[data-dark-mode] .docs-links:hover::-webkit-scrollbar-thumb,
-body[data-dark-mode] .docs-toc:hover::-webkit-scrollbar-thumb {
+body.data-dark-mode .docs-links:hover::-webkit-scrollbar-thumb,
+body.data-dark-mode .docs-toc:hover::-webkit-scrollbar-thumb {
   background: $border-dark;
 }
 
-body[data-dark-mode] .docs-links::-webkit-scrollbar-thumb:hover,
-body[data-dark-mode] .docs-toc::-webkit-scrollbar-thumb:hover {
+body.data-dark-mode .docs-links::-webkit-scrollbar-thumb:hover,
+body.data-dark-mode .docs-toc::-webkit-scrollbar-thumb:hover {
   background: $border-dark;
 }
 
-body[data-dark-mode] .docs-links h3:not(:first-child) {
+body.data-dark-mode .docs-links h3:not(:first-child) {
   border-top: 1px solid $border-dark;
 }
 
-body[data-dark-mode] a.docs-link {
+body.data-dark-mode a.docs-link {
   color: $body-color-dark;
 }
 
-body[data-dark-mode] .page-links li:not(:first-child) {
+body.data-dark-mode .page-links li:not(:first-child) {
   border-top: 1px dashed $border-dark;
 }
 
-body[data-dark-mode] .card {
+body.data-dark-mode .card {
   background: $body-bg-dark;
   border: 1px solid $border-dark;
 }
 
-body[data-dark-mode] .card.bg-light {
+body.data-dark-mode .card.bg-light {
   background: $body-overlay-dark !important;
 }
 
-body[data-dark-mode] .navbar .menu-icon .navicon {
+body.data-dark-mode .navbar .menu-icon .navicon {
   background: $navbar-dark-color;
 }
 
-body[data-dark-mode] .navbar .menu-icon .navicon::before,
-body[data-dark-mode] .navbar .menu-icon .navicon::after {
+body.data-dark-mode .navbar .menu-icon .navicon::before,
+body.data-dark-mode .navbar .menu-icon .navicon::after {
   background: $navbar-dark-color;
 }
 
-body[data-dark-mode] .logo-light {
+body.data-dark-mode .logo-light {
   display: none !important;
 }
 
-body[data-dark-mode] .logo-dark {
+body.data-dark-mode .logo-dark {
   display: inline-block !important;
 }
 
-body[data-dark-mode] .bg-light {
+body.data-dark-mode .bg-light {
   background: darken($body-bg-dark, 1.5%) !important;
 }
 
-body[data-dark-mode] .bg-dots {
+body.data-dark-mode .bg-dots {
   background-image: radial-gradient($dots-dark 15%, transparent 15%);
 }
 
-body[data-dark-mode] .text-muted {
+body.data-dark-mode .text-muted {
   color: darken($body-color-dark, 7.5%) !important;
 }
 
-body[data-dark-mode] .alert-primary {
+body.data-dark-mode .alert-primary {
   background: $link-color-dark;
   color: $body-bg-dark;
 }
 
-body[data-dark-mode] .figure-caption {
+body.data-dark-mode .figure-caption {
   color: $body-color-dark;
 }
 
-body[data-dark-mode] table {
+body.data-dark-mode table {
   @extend .table-dark;
 }
 
-body[data-dark-mode] .copy-status::after {
+body.data-dark-mode .copy-status::after {
   content: "Copy";
   display: block;
   color: $body-color-dark;
 }
 
-body[data-dark-mode] .copy-status:hover::after {
+body.data-dark-mode .copy-status:hover::after {
   content: "Copy";
   display: block;
   color: $link-color-dark;
 }
 
-body[data-dark-mode] .copy-status:focus::after,
-body[data-dark-mode] .copy-status:active::after {
+body.data-dark-mode .copy-status:focus::after,
+body.data-dark-mode .copy-status:active::after {
   content: "Copied";
   display: block;
   color: $link-color-dark;
 }
 
 /*
-body[data-dark-mode] .dropdown-toggle:focus,
-body[data-dark-mode] .doks-sidebar-toggle:focus {
+body.data-dark-mode .dropdown-toggle:focus,
+body.data-dark-mode .doks-sidebar-toggle:focus {
   box-shadow: 0 0 0 0.2rem $focus-color-dark;
 }
 */
 
-body[data-dark-mode] .offcanvas {
+body.data-dark-mode .offcanvas {
   background-color: $body-bg-dark;
 }
 
-body[data-dark-mode] .btn-close {
+body.data-dark-mode .btn-close {
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNkZWUyZTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLXgiPjxsaW5lIHgxPSIxOCIgeTE9IjYiIHgyPSI2IiB5Mj0iMTgiPjwvbGluZT48bGluZSB4MT0iNiIgeTE9IjYiIHgyPSIxOCIgeTI9IjE4Ij48L2xpbmU+PC9zdmc+");
   background-size: 1.5rem;
 }
 
 @include media-breakpoint-up(md) {
-  body[data-dark-mode] .alert-dismissible .btn-close {
+  body.data-dark-mode .alert-dismissible .btn-close {
     background-size: 1.25rem;
   }
 }
 
 /*
-body[data-dark-mode] .btn-close:focus {
+body.data-dark-mode .btn-close:focus {
   box-shadow: 0 0 0 0.2rem $focus-color-dark;
 }
 */
@@ -474,16 +474,16 @@ body[data-dark-mode] .btn-close:focus {
   color: $body-bg-dark;
 }
 
-body[data-dark-mode] hr.text-black-50 {
+body.data-dark-mode hr.text-black-50 {
   color: $gray-600 !important;
 }
 
-body[data-dark-mode] .email-form .form-control {
+body.data-dark-mode .email-form .form-control {
   background: $body-overlay-dark;
   border: 1px solid transparent;
 }
 
-body[data-dark-mode] .email-form .form-control:focus {
+body.data-dark-mode .email-form .form-control:focus {
   border: 1px solid $link-color-dark;
 }
 
