@@ -8,12 +8,12 @@ if (mode !== null) {
     if (event.matches) {
 
       localStorage.setItem('theme', 'dark');
-      body.setAttribute('data-dark-mode', '');
+      body.setAttribute('data-dark-mode', 'true');
 
     } else {
 
       localStorage.setItem('theme', 'light');
-      body.setAttribute('data-light-mode', '');
+      body.setAttribute('data-light-mode', 'true');
 
     }
 
@@ -24,12 +24,12 @@ if (mode !== null) {
     if (event.matches) {
 
       localStorage.setItem('theme', 'sepia');
-      body.setAttribute('data-sepia-mode', '');
+      body.setAttribute('data-sepia-mode', 'true');
 
     } else {
 
       localStorage.setItem('theme', 'light');
-      body.setAttribute('data-light-mode', '');
+      body.setAttribute('data-light-mode', 'true');
 
     }
 
@@ -54,11 +54,11 @@ if (mode !== null) {
     body.removeAttribute('data-sepia-mode');
     body.removeAttribute('data-light-mode');
     if (localStorage.getItem('theme') === 'dark') {
-      body.setAttribute('data-dark-mode', '');
+      body.setAttribute('data-dark-mode', 'true');
     } else if(localStorage.getItem('theme') === 'sepia') {
-      body.setAttribute('data-sepia-mode', '');
+      body.setAttribute('data-sepia-mode', 'true');
     } else if(localStorage.getItem('theme') === 'light') {
-      body.setAttribute('data-light-mode', '');
+      body.setAttribute('data-light-mode', 'true');
     }
   });
 
@@ -66,11 +66,11 @@ if (mode !== null) {
   body.removeAttribute('data-sepia-mode');
   body.removeAttribute('data-light-mode');
   if (localStorage.getItem('theme') === 'dark') {
-    body.setAttribute('data-dark-mode', '');
+    body.setAttribute('data-dark-mode', 'true');
   } else if(localStorage.getItem('theme') === 'sepia') {
-    body.setAttribute('data-sepia-mode', '');
+    body.setAttribute('data-sepia-mode', 'true');
   } else if(localStorage.getItem('theme') === 'light') {
-    body.setAttribute('data-light-mode', '');
+    body.setAttribute('data-light-mode', 'true');
   }
 
 }
