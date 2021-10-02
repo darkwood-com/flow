@@ -27,8 +27,8 @@ Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://ww
 - Implementation in Elixir : [https://github.com/antonmi/flowex](https://github.com/antonmi/flowex)
 - Implementation in Elixir with multiple programming languages : [https://github.com/antonmi/multi_flowex](https://github.com/antonmi/multi_flowex)
 
-## Flow Based Programming
-- [J. Paul Rodker Morrison](https://jpaulm.github.io) concept : [https://jpaulm.github.io/fbp](https://jpaulm.github.io/fbp)
+## Flow Based Programming from [J. Paul Rodker Morrison](https://jpaulm.github.io)
+- concept : [https://jpaulm.github.io/fbp](https://jpaulm.github.io/fbp)
 - Implementation in javascript from [Henri Bergius](https://github.com/bergie) : [https://noflojs.org](https://noflojs.org)
 - Implementation in PHP from [Henri Bergius](https://github.com/bergie) : [https://github.com/phpflo/phpflo](https://github.com/phpflo/phpflo)
 
@@ -47,10 +47,10 @@ Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://ww
 - Differences between Multiprocessing, Multithreading and Coroutines execution in PHP : [https://divinglaravel.com/asynchronous-php](https://divinglaravel.com/asynchronous-php)
 
 ## Monads and PHP
+- What is a monad from [Sean Riley](https://twitter.com/seanski44) : [https://www.youtube.com/watch?v=t1e8gqXLbsU](https://www.youtube.com/watch?v=t1e8gqXLbsU)
 - Why monads are useful : [https://jameswestby.net/tech/why-monads-are-useful.html](https://jameswestby.net/tech/why-monads-are-useful.html)
 - Promise is neither a Functor nor an Applicative nor a Monad [https://stackoverflow.com/questions/45712106/why-are-promises-monads](https://stackoverflow.com/questions/45712106/why-are-promises-monads)
 - Monads and Monoids : [https://bartoszmilewski.com/2017/09/06/monads-monoids-and-categories](https://bartoszmilewski.com/2017/09/06/monads-monoids-and-categories)
-- What is a monad : [https://www.youtube.com/watch?v=t1e8gqXLbsU](https://www.youtube.com/watch?v=t1e8gqXLbsU)
 - go mad for monads : [https://www.youtube.com/watch?v=F5fUgXFSH0Q](https://www.youtube.com/watch?v=F5fUgXFSH0Q)
 - functional PHP : [https://www.youtube.com/watch?v=M3_xnTK6-pA](https://www.youtube.com/watch?v=M3_xnTK6-pA)
 - Douglas Crockford: Monads and Gonads : [https://www.youtube.com/watch?v=dkZFtimgAcM](https://www.youtube.com/watch?v=dkZFtimgAcM)
