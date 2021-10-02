@@ -2,20 +2,24 @@
 <html lang="{{ .Site.LanguageCode | default "en" }}">
   {{ partial "head/head.html" . }}
   {{ if eq .Kind "home" -}}
-    {{ .Scratch.Set "class" "home" -}}
+    {{ .Scratch.Set "class" "home vh-100 d-flex flex-column" -}}
+    {{ .Scratch.Set "class-container" "flex-grow-1 d-flex" -}}
   {{ else if eq .Kind "404" -}}
     {{ .Scratch.Set "class" "error404" -}}
+    {{ .Scratch.Set "class-container" "" -}}
   {{ else if eq .Kind "page" -}}
     {{ .Scratch.Set "class" .Type -}}
     {{ .Scratch.Add "class" " single" -}}
+    {{ .Scratch.Set "class-container" "" -}}
   {{ else -}}
     {{ .Scratch.Set "class" .Type -}}
     {{ .Scratch.Add "class" " list" -}}
+    {{ .Scratch.Set "class-container" "" -}}
   {{ end -}}
   <body class="{{ .Scratch.Get "class" }}">
     {{ partial "header/header.html" . }}
-    <div class="wrap container-xxl" role="document">
-      <div class="content">
+    <div class="wrap container-xxl {{ .Scratch.Get "class-container" }}" role="document">
+      <div class="content align-self-center">
         {{ block "main" . }}{{ end }}
       </div>
     </div>
