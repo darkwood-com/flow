@@ -17,7 +17,7 @@ toc: true
 
 Article of this project : [https://blog.darkwood.fr/article/php-railway-flow-based-programming](https://blog.darkwood.fr/article/php-railway-flow-based-programming)  
 Slides of this project : [https://speakerdeck.com/matyo91/php-railway-flow-based-programming](https://speakerdeck.com/matyo91/php-railway-flow-based-programming)  
-Video of this project : [https://www.youtube.com/watch?v=u7LTuBRlITA](https://www.youtube.com/watch?v=u7LTuBRlITA)
+Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://www.youtube.com/watch?v=mxxdhGsaIjY)
 
 ## Railway Flow Based Programming with Elixir from [Anton Mishchuk](https://twitter.com/anton_mishchuk)
 - Presentation in an article : [https://anton-mishchuk.medium.com/railway-flow-based-programming-with-flowex-ef04fd338e41](https://anton-mishchuk.medium.com/railway-flow-based-programming-with-flowex-ef04fd338e41)
