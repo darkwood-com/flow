@@ -1,4 +1,5 @@
 const mode = document.getElementById('mode');
+const body = document.querySelector('body')
 
 if (mode !== null) {
 
@@ -7,12 +8,12 @@ if (mode !== null) {
     if (event.matches) {
 
       localStorage.setItem('theme', 'dark');
-      document.documentElement.setAttribute('data-dark-mode', '');
+      body.setAttribute('data-dark-mode', '');
 
     } else {
 
       localStorage.setItem('theme', 'light');
-      document.documentElement.setAttribute('data-light-mode', '');
+      body.setAttribute('data-light-mode', '');
 
     }
 
@@ -23,12 +24,12 @@ if (mode !== null) {
     if (event.matches) {
 
       localStorage.setItem('theme', 'sepia');
-      document.documentElement.setAttribute('data-sepia-mode', '');
+      body.setAttribute('data-sepia-mode', '');
 
     } else {
 
       localStorage.setItem('theme', 'light');
-      document.documentElement.setAttribute('data-light-mode', '');
+      body.setAttribute('data-light-mode', '');
 
     }
 
@@ -36,9 +37,9 @@ if (mode !== null) {
 
   mode.addEventListener('click', () => {
 
-    var isDark = document.documentElement.hasAttribute('data-dark-mode')
-    var isSepia = document.documentElement.hasAttribute('data-sepia-mode')
-    var isLight = document.documentElement.hasAttribute('data-light-mode')
+    var isDark = body.hasAttribute('data-dark-mode')
+    var isSepia = body.hasAttribute('data-sepia-mode')
+    var isLight = body.hasAttribute('data-light-mode')
     if(isDark) {
       localStorage.setItem('theme', 'sepia');
     }
@@ -49,27 +50,27 @@ if (mode !== null) {
       localStorage.setItem('theme', 'dark');
     }
 
-    document.documentElement.removeAttribute('data-dark-mode');
-    document.documentElement.removeAttribute('data-sepia-mode');
-    document.documentElement.removeAttribute('data-light-mode');
+    body.removeAttribute('data-dark-mode');
+    body.removeAttribute('data-sepia-mode');
+    body.removeAttribute('data-light-mode');
     if (localStorage.getItem('theme') === 'dark') {
-      document.documentElement.setAttribute('data-dark-mode', '');
+      body.setAttribute('data-dark-mode', '');
     } else if(localStorage.getItem('theme') === 'sepia') {
-      document.documentElement.setAttribute('data-sepia-mode', '');
+      body.setAttribute('data-sepia-mode', '');
     } else if(localStorage.getItem('theme') === 'light') {
-      document.documentElement.setAttribute('data-light-mode', '');
+      body.setAttribute('data-light-mode', '');
     }
   });
 
-  document.documentElement.removeAttribute('data-dark-mode');
-  document.documentElement.removeAttribute('data-sepia-mode');
-  document.documentElement.removeAttribute('data-light-mode');
+  body.removeAttribute('data-dark-mode');
+  body.removeAttribute('data-sepia-mode');
+  body.removeAttribute('data-light-mode');
   if (localStorage.getItem('theme') === 'dark') {
-    document.documentElement.setAttribute('data-dark-mode', '');
+    body.setAttribute('data-dark-mode', '');
   } else if(localStorage.getItem('theme') === 'sepia') {
-    document.documentElement.setAttribute('data-sepia-mode', '');
+    body.setAttribute('data-sepia-mode', '');
   } else if(localStorage.getItem('theme') === 'light') {
-    document.documentElement.setAttribute('data-light-mode', '');
+    body.setAttribute('data-light-mode', '');
   }
 
 }
