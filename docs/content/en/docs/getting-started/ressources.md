@@ -58,6 +58,7 @@ Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://ww
 - PHP-Option [https://github.com/schmittjoh/php-option](https://github.com/schmittjoh/php-option)
 - Result-Type [https://github.com/GrahamCampbell/Result-Type](https://github.com/GrahamCampbell/Result-Type)
 - Functional [https://github.com/whsv26/functional](https://github.com/whsv26/functional)
+- Errors and monads in PHP by [Baptiste LANGLADE](https://twitter.com/Baptouuuu): video [https://www.youtube.com/watch?v=YfoLM0vWALM](https://www.youtube.com/watch?v=YfoLM0vWALM), Github : [https://github.com/Innmind/Immutable](https://github.com/Innmind/Immutable)
 
 ## Messaging approach with East oriented code from [Frédéric Hardy](https://twitter.com/mageekguy)
 - Article : [http://blog.est.voyage/phpTour2015](http://blog.est.voyage/phpTour2015)
