@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace RFBP\Driver;
 
 use Closure;
-use React\EventLoop\Factory;
+use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\TimerInterface;
 use RFBP\DriverInterface;
@@ -28,7 +28,7 @@ class ReactDriver implements DriverInterface
         }
 
         if (null === $eventLoop) {
-            $this->eventLoop = Factory::create();
+            $this->eventLoop = Loop::get();
         } else {
             $this->eventLoop = $eventLoop;
         }

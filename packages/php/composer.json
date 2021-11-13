@@ -17,7 +17,8 @@
         "monad"
     ],
     "require": {
-        "php": "^8.0"
+        "php": "^8.0",
+        "loophp/combinator": "^2.0"
     },
     "require-dev": {
         "amphp/amp": "^2.6",
