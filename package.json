@@ -3,7 +3,7 @@
   "description": "Railway FBP",
   "author": {
     "name": "Mathieu Ledru",
-    "email": "matyo91@gmail.com"
+    "email": "matyo91@darkwood.fr"
   },
   "bugs": {
     "url": "https://github.com/darkwood-fr/railway-fbp"
@@ -12,7 +12,7 @@
   "keywords": [
     "railway-fbp"
   ],
-  "version": "1.0.8",
+  "version": "1.0.9",
   "browserslist": [
     "defaults"
   ],
