@@ -61,6 +61,7 @@ Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://ww
 - Monad PHP : [https://github.com/ircmaxell/monad-php](https://github.com/ircmaxell/monad-php)
 - PHP-Option : [https://github.com/schmittjoh/php-option](https://github.com/schmittjoh/php-option)
 - Result-Type : [https://github.com/GrahamCampbell/Result-Type](https://github.com/GrahamCampbell/Result-Type)
+- Monad PHP [https://github.com/ircmaxell/monad-php](https://github.com/ircmaxell/monad-php)
 
 ## Y-Combinator and PHP
 - [Lambda Calculus - Wikipedia](http://en.wikipedia.org/wiki/Lambda_calculus)
