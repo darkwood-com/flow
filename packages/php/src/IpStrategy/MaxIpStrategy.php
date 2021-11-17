@@ -9,9 +9,11 @@ use RFBP\IpStrategyInterface;
 
 class MaxIpStrategy implements IpStrategyInterface
 {
+    private IpStrategyInterface $ipStrategy;
+
     private int $processing = 0;
 
-    public function __construct(private int $max = 1, private ?IpStrategyInterface $ipStrategy = null)
+    public function __construct(private int $max = 1, ?IpStrategyInterface $ipStrategy = null)
     {
         $this->ipStrategy = $ipStrategy ?? new LinearIpStrategy();
     }

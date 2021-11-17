@@ -18,7 +18,7 @@ class SequenceRail implements RailInterface
     private SplObjectStorage $ips;
 
     /**
-     * @param array<RailInterface> $rails
+     * @param array<int, RailInterface> $rails
      */
     public function __construct(private array $rails)
     {
@@ -39,7 +39,7 @@ class SequenceRail implements RailInterface
     {
         foreach ($this->rails as $index => $rail) {
             if ($index + 1 < count($this->rails)) {
-                $rail->pipe(function ($ip, Throwable $exception = null) use ($index, $callback) {
+                $rail->pipe(function (Ip $ip, Throwable $exception = null) use ($index, $callback) {
                     if ($exception) {
                         $this->ips->offsetUnset($ip);
                         $callback($ip, $exception);
@@ -48,7 +48,7 @@ class SequenceRail implements RailInterface
                     }
                 });
             } else {
-                $rail->pipe(function ($ip, Throwable $exception = null) use ($callback) {
+                $rail->pipe(function (Ip $ip, Throwable $exception = null) use ($callback) {
                     $this->ips->offsetUnset($ip);
                     $callback($ip, $exception);
                 });
