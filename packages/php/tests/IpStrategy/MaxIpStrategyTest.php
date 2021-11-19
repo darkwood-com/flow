@@ -36,7 +36,7 @@ class MaxIpStrategyTest extends TestCase
     }
 
     /**
-     * @return array<array>
+     * @return array<array<mixed>>
      */
     public function strategyProvider(): array
     {

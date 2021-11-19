@@ -70,7 +70,7 @@ class AmpTransportRailTest extends AsyncTestCase
     }
 
     /**
-     * @return array<array>
+     * @return array<array<mixed>>
      */
     public function jobsProvider(): array
     {

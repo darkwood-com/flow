@@ -82,7 +82,7 @@ class CollectionReceiverTest extends TestCase
     }
 
     /**
-     * @return array<array>
+     * @return array<array<mixed>>
      */
     public function receiverProvider(): array
     {

@@ -33,7 +33,7 @@ class LambdaRailTest extends AbstractRailTest
     }
 
     /**
-     * @return array<array>
+     * @return array<array<mixed>>
      */
     public function jobProvider(): array
     {

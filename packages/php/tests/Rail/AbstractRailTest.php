@@ -15,10 +15,10 @@ use RFBP\IpStrategy\StackIpStrategy;
 abstract class AbstractRailTest extends TestCase
 {
     /**
-     * @param array<array>      $datas
-     * @param array<mixed>|null $mix
+     * @param array<array<mixed>> $datas
+     * @param array<mixed>|null   $mix
      *
-     * @return array<array>
+     * @return array<array<mixed>>
      */
     protected function matrix(array $datas, ?array $mix = null): array
     {
