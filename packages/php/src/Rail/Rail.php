@@ -18,6 +18,15 @@ use Throwable;
 class Rail implements RailInterface
 {
     /**
+     * @var array<Closure>
+     */
+    private array $jobs;
+
+    private IpStrategyInterface $ipStrategy;
+
+    private DriverInterface $driver;
+
+    /**
      * @var SplObjectStorage<Ip, mixed>
      */
     private SplObjectStorage $contexts;
@@ -27,9 +36,9 @@ class Rail implements RailInterface
      * @param Closure|array<Closure> $jobs
      */
     public function __construct(
-        private Closure|array $jobs,
-        private ?IpStrategyInterface $ipStrategy = null,
-        private ?DriverInterface $driver = null
+        Closure|array $jobs,
+        IpStrategyInterface $ipStrategy = null,
+        DriverInterface $driver = null
     ) {
         $this->jobs = is_array($jobs) ? $jobs : [$jobs];
         $this->ipStrategy = $ipStrategy ?? new LinearIpStrategy();

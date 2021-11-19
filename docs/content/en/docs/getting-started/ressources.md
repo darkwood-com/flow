@@ -55,7 +55,7 @@ Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://ww
 - Functional PHP : [https://www.youtube.com/watch?v=M3_xnTK6-pA](https://www.youtube.com/watch?v=M3_xnTK6-pA)
 - Douglas Crockford: Monads and Gonads : [https://www.youtube.com/watch?v=dkZFtimgAcM](https://www.youtube.com/watch?v=dkZFtimgAcM)
 - Monoids view as Matematical theory for Monads : [https://en.wikipedia.org/wiki/Monoid](https://en.wikipedia.org/wiki/Monoid)
-- Lamphpda : [https://github.com/marcosh/lamphpda](https://github.com/marcosh/lamphpda)
+- Lamphpda, PHP Lambda translation from Haskel : [https://github.com/marcosh/lamphpda](https://github.com/marcosh/lamphpda)
 - Errors and monads in PHP by [Baptiste LANGLADE](https://twitter.com/Baptouuuu): video [https://www.youtube.com/watch?v=YfoLM0vWALM](https://www.youtube.com/watch?v=YfoLM0vWALM), Github : [https://github.com/Innmind/Immutable](https://github.com/Innmind/Immutable)
 - Functional : [https://github.com/whsv26/functional](https://github.com/whsv26/functional)
 - Monad PHP : [https://github.com/ircmaxell/monad-php](https://github.com/ircmaxell/monad-php)

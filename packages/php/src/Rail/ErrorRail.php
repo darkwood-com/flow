@@ -27,7 +27,7 @@ class ErrorRail implements RailInterface
 
     public function pipe(Closure $callback): void
     {
-        $this->rail->pipe(function ($ip, Throwable $exception = null) use ($callback) {
+        $this->rail->pipe(function (Ip $ip, Throwable $exception = null) use ($callback) {
             if ($exception) {
                 ($this->errorRail)($ip, $exception);
             } else {
