@@ -117,6 +117,22 @@ class CollectionReceiverTest extends TestCase
                     }
                 }
 
+                /**
+                 * @return array<mixed, ReceiverInterface>
+                 */
+                public function getExpectedAckIpsReceivers()
+                {
+                    return $this->expectedAckIpsReceivers;
+                }
+
+                /**
+                 * @return array<mixed, ReceiverInterface>
+                 */
+                public function getExpectedRejectIpsReceivers()
+                {
+                    return $this->expectedRejectIpsReceivers;
+                }
+
                 public function ack(Envelope $envelope): void
                 {
                     $id = $this->getEnvelopeId($envelope);

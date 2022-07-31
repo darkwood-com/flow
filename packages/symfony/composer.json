@@ -6,7 +6,7 @@
     "authors": [
         {
             "name": "Mathieu Ledru",
-            "email": "matyo91@darkwood.fr"
+            "email": "matyo91@gmail.com"
         }
     ],
     "keywords": [
@@ -22,17 +22,17 @@
     },
     "require-dev": {
         "amphp/amp": "^2.6",
-        "amphp/phpunit-util": "^1.4",
+        "amphp/phpunit-util": "^2.0",
         "edgedesign/phpqa": "^1.25",
         "friendsofphp/php-cs-fixer": "^3.1",
-        "phpstan/phpstan": "^0.12.99",
+        "phpstan/phpstan": "^1.8",
         "phpunit/phpunit": "^9.5",
         "react/event-loop": "^1.2",
-        "symfony/messenger": "^5.3",
-        "symfony/doctrine-messenger": "^5.3",
-        "symfony/orm-pack": "^2.1",
-        "swoole/ide-helper": "^4.7",
-        "vimeo/psalm": "^4.10"
+        "symfony/messenger": "^6.1",
+        "symfony/doctrine-messenger": "^6.1",
+        "symfony/orm-pack": "^2.2",
+        "swoole/ide-helper": "^4.8",
+        "vimeo/psalm": "^4.25"
     },
     "suggest": {
         "symfony/messenger": "Provide symfony messenger support"

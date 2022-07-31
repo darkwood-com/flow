@@ -1,3 +1,6 @@
+#ide
+.vscode/
+
 node_modules
 public
 resources
