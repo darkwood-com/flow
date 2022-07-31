@@ -13,6 +13,11 @@ weight: 60
 toc: true
 ---
 
+### 1.0.10
+
+- Release MIT License
+- Update dependencies to PHP 8.1
+
 ### 1.0.9
 
 - Add RFBP\Rail\LambdaRail that allows introduce recursivity into Railway-FBP language approach.
