@@ -19,7 +19,7 @@ class SwooleDriver implements DriverInterface
     private $ticks;
 
     /**
-     * @var array<string>
+     * @var array<int>
      */
     private array $ticksIds;
 

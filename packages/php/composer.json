@@ -2,11 +2,11 @@
     "name": "darkwood/railway-fbp",
     "description": "Railway Flow Based Programming implementation in PHP",
     "type": "library",
-    "license": "AGPL-3.0-or-later",
+    "license": "MIT",
     "authors": [
         {
             "name": "Mathieu Ledru",
-            "email": "matyo91@darkwood.fr"
+            "email": "matyo91@gmail.com"
         }
     ],
     "keywords": [
@@ -17,19 +17,19 @@
         "monad"
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "loophp/combinator": "^2.0"
     },
     "require-dev": {
         "amphp/amp": "^2.6",
-        "amphp/phpunit-util": "^1.4",
-        "edgedesign/phpqa": "^1.25",
-        "friendsofphp/php-cs-fixer": "^3.3",
-        "phpstan/phpstan": "^1.1",
+        "amphp/phpunit-util": "^2.0",
+        "edgedesign/phpqa": "^1.26",
+        "friendsofphp/php-cs-fixer": "^3.9",
+        "phpstan/phpstan": "^1.8",
         "phpunit/phpunit": "^9.5",
-        "react/event-loop": "^1.2",
+        "react/event-loop": "^1.3",
         "swoole/ide-helper": "^4.8",
-        "vimeo/psalm": "^4.12"
+        "vimeo/psalm": "^4.25"
     },
     "suggest": {
         "amphp/amp": "Provide asynchronous with AMP",

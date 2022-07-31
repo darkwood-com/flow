@@ -27,24 +27,6 @@ class AmpTransportRailTest extends AsyncTestCase
      *
      * @param array<Closure> $jobs
      */
-    public function testIpWithoutId(array $jobs, DriverInterface $driver): void
-    {
-        $transport1 = new InMemoryTransport();
-        $transport2 = new InMemoryTransport();
-        $rail = new SequenceRail(array_map(static function ($job) use ($driver) { return new Rail($job, null, $driver); }, $jobs));
-
-        new TransportRail($rail, $transport1, $transport2);
-        $envelope = new Envelope(new stdClass());
-        $transport1->send($envelope);
-        $this->expectException(RuntimeException::class);
-        $driver->run();
-    }
-
-    /**
-     * @dataProvider jobsProvider
-     *
-     * @param array<Closure> $jobs
-     */
     public function testJobs(array $jobs, DriverInterface $driver, int $resultNumber): void
     {
         $transport1 = new InMemoryTransport();
@@ -63,7 +45,7 @@ class AmpTransportRailTest extends AsyncTestCase
             }
         });
 
-        $envelope = Envelope::wrap(new ArrayObject(['number' => 0]), [new TransportMessageIdStamp('envelope_id')]);
+        $envelope = new Envelope(new ArrayObject(['number' => 0]));
         $transport1->send($envelope);
 
         $driver->run();
