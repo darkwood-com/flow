@@ -16,7 +16,7 @@
   "browserslist": [
     "defaults"
   ],
-  "license": "AGPL-3.0-or-later",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/darkwood-fr/railway-fbp.git"

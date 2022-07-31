@@ -2,7 +2,7 @@
     "name": "darkwood/railway-fbp-symfony",
     "description": "Railway Flow Based Programming implementation for Symfony",
     "type": "library",
-    "license": "AGPL-3.0-or-later",
+    "license": "MIT",
     "authors": [
         {
             "name": "Mathieu Ledru",

@@ -6,4 +6,4 @@
 
 ## License
 
-_Railway Flow Based Programming_ is released under the AGPL-3.0 License.
+_Railway Flow Based Programming_ is released under the MIT License.

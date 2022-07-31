@@ -1,5 +1,5 @@
 name = "Railway FBP"
-license = "AGPL-3.0"
+license = "MIT"
 licenselink = "https://github.com/darkwood-fr/railway-fbp/blob/1.x/LICENSE"
 description = "Assemble your code by adopting asynchronous as native implementation and build with functional programming and monads."
 source = "docs"

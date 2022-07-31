@@ -33,4 +33,4 @@ A working script is available in the bundled `examples` directory
 
 ## License
 
-_darkwood/railway-fbp_ is released under the AGPL-3.0 License.
+_darkwood/railway-fbp_ is released under the MIT License.
