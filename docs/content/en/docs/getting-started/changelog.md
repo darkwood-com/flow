@@ -13,7 +13,7 @@ weight: 60
 toc: true
 ---
 
-### 1.0.10
+### 1.1.0
 
 - Release MIT License
 - Update dependencies to PHP 8.1
