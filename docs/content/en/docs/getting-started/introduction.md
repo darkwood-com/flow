@@ -25,7 +25,7 @@ Railway Flow Based Programming concept aims to solve
 
 ## Installation
 
-PHP 8.0 is the minimal version to use _Railway Flow Based Programming_ is 8.0  
+PHP 8.1 is the minimal version to use _Railway Flow Based Programming_ is 8.1  
 The recommended way to install it through [Composer](http://getcomposer.org/) and execute
 
 ```bash
