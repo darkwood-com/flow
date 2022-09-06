@@ -52,7 +52,7 @@ Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://ww
 - Promise is neither a Functor nor an Applicative nor a Monad [https://stackoverflow.com/questions/45712106/why-are-promises-monads](https://stackoverflow.com/questions/45712106/why-are-promises-monads)
 - Monads and Monoids : [https://bartoszmilewski.com/2017/09/06/monads-monoids-and-categories](https://bartoszmilewski.com/2017/09/06/monads-monoids-and-categories)
 - Go mad for monads : [https://www.youtube.com/watch?v=F5fUgXFSH0Q](https://www.youtube.com/watch?v=F5fUgXFSH0Q)
-- Functional PHP : [https://www.youtube.com/watch?v=M3_xnTK6-pA](https://www.youtube.com/watch?v=M3_xnTK6-pA)
+- Functional PHP : [https://www.youtube.com/watch?v=M3_xnTK6-pA](https://www.youtube.com/watch?v=M3_xnTK6-pA), [Crell](https://twitter.com/Crell) Functional utilities : [https://github.com/Crell/fp](https://github.com/Crell/fp) and the very updated version of the talk, now as a book: [https://leanpub.com/thinking-functionally-in-php/](https://leanpub.com/thinking-functionally-in-php/)
 - Douglas Crockford: Monads and Gonads : [https://www.youtube.com/watch?v=dkZFtimgAcM](https://www.youtube.com/watch?v=dkZFtimgAcM)
 - Monoids view as Matematical theory for Monads : [https://en.wikipedia.org/wiki/Monoid](https://en.wikipedia.org/wiki/Monoid)
 - Lamphpda, PHP Lambda translation from Haskel : [https://github.com/marcosh/lamphpda](https://github.com/marcosh/lamphpda)
