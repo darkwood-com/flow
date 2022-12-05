@@ -19,7 +19,7 @@ Article of this project : [https://blog.darkwood.fr/article/php-railway-flow-bas
 Slides of this project : [https://speakerdeck.com/matyo91/php-railway-flow-based-programming](https://speakerdeck.com/matyo91/php-railway-flow-based-programming)  
 Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://www.youtube.com/watch?v=mxxdhGsaIjY)
 
-## Railway Flow Based Programming with Elixir from [Anton Mishchuk](https://twitter.com/anton_mishchuk)
+## Flow with Elixir from [Anton Mishchuk](https://twitter.com/anton_mishchuk)
 - Presentation in an article : [https://anton-mishchuk.medium.com/railway-flow-based-programming-with-flowex-ef04fd338e41](https://anton-mishchuk.medium.com/railway-flow-based-programming-with-flowex-ef04fd338e41)
 - Presentation with video : [https://www.youtube.com/watch?v=TLvbP8bt2HA](https://www.youtube.com/watch?v=TLvbP8bt2HA)
 - Advanced implementation with multiple programming languages : [https://medium.com/@anton.mishchuk/multi-language-flowex-components-fdda11d34744](https://medium.com/@anton.mishchuk/multi-language-flowex-components-fdda11d34744)
@@ -32,10 +32,10 @@ Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://ww
 - Implementation in javascript from [Henri Bergius](https://github.com/bergie) : [https://noflojs.org](https://noflojs.org)
 - Implementation in PHP from [Henri Bergius](https://github.com/bergie) : [https://github.com/phpflo/phpflo](https://github.com/phpflo/phpflo)
 
-## Railway Oriented Programming
+## Flow Oriented Programming
 - Presentation from [Sarmiento Calle](https://twitter.com/rrramiro) : [https://www.youtube.com/watch?v=RNTo7Y2wMyI](https://www.youtube.com/watch?v=RNTo7Y2wMyI)
 - Presentation from [Scott Wlaschin](https://fr.slideshare.net/scottwlaschin) : [https://fr.slideshare.net/ScottWlaschin/railway-oriented-programming](https://fr.slideshare.net/ScottWlaschin/railway-oriented-programming)
-- Railway Oriented Programming: C# Edition - Tama Waddell : [https://www.youtube.com/watch?v=45yk2nuRjj8](https://www.youtube.com/watch?v=45yk2nuRjj8)
+- Flow Oriented Programming: C# Edition - Tama Waddell : [https://www.youtube.com/watch?v=45yk2nuRjj8](https://www.youtube.com/watch?v=45yk2nuRjj8)
 - Implementation in PHP from [Turanct](https://github.com/turanct) : [https://github.com/turanct/railway](https://github.com/turanct/railway)
 - Implementation in PHP from [Monsieur Luge](https://github.com/monsieurluge) : [https://github.com/monsieurluge/result](https://github.com/monsieurluge/result)
 

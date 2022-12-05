@@ -22,7 +22,7 @@ This provide integration with Symfony
 The recommended way to install it through [Composer](http://getcomposer.org/) and execute
 
 ```bash
-composer require darkwood/railway-fbp-symfony
+composer require darkwood/flow-symfony
 ```
 
 ## Messaging support
@@ -44,4 +44,4 @@ Messaging part require to install [Docker](https://www.docker.com) and execute `
 
 ## License
 
-_darkwood/railway-fbp-symfony_ is released under the MIT License.
+_darkwood/flow-symfony_ is released under the MIT License.

@@ -7,7 +7,7 @@
     <div class="col-lg-9 col-xl-8 text-center">
       <p class="lead">{{ .Params.lead | safeHTML }}</p>
       <a class="btn btn-primary btn-lg px-4 mb-2" href="{{ "docs/getting-started/introduction/" | relLangURL }}" role="button">{{ i18n "get-started" }}</a>
-      <p class="meta">Open-source MIT Licensed. <a href="https://github.com/darkwood-fr/railway-fbp">GitHub v{{ $data := getJSON "https://raw.githubusercontent.com/darkwood-fr/railway-fbp/1.x/package.json" }}{{ $data.version }}</a></p>
+      <p class="meta">Open-source MIT Licensed. <a href="https://github.com/darkwood-fr/flow">GitHub v{{ $data := getJSON "https://raw.githubusercontent.com/darkwood-fr/flow/1.x/package.json" }}{{ $data.version }}</a></p>
     </div>
   </div>
 </section>

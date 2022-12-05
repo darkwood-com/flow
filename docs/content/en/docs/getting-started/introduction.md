@@ -13,11 +13,11 @@ weight: 10
 toc: true
 ---
 
-# Railway FBP
+# Flow
 
 ## Why ?
 
-Railway Flow Based Programming concept aims to solve
+Flow concept aims to solve
 
 - Adopt asynchronous as native implementation
 - Build your code with functional programming and monoids
@@ -25,23 +25,23 @@ Railway Flow Based Programming concept aims to solve
 
 ## Installation
 
-PHP 8.1 is the minimal version to use _Railway Flow Based Programming_ is 8.1  
+PHP 8.1 is the minimal version to use _Flow_ is 8.1  
 The recommended way to install it through [Composer](http://getcomposer.org/) and execute
 
 ```bash
-composer require darkwood/railway-fbp
+composer require darkwood/flow
 ```
 
 ## Usage
 
 A working script is available in the bundled `examples` directory
 
-- Run Rail : `php examples/rail.php`
+- Run Flow : `php examples/rail.php`
 
 ## Documentation
 
-[https://darkwood-fr.github.io/railway-fbp](https://darkwood-fr.github.io/railway-fbp)
+[https://darkwood-fr.github.io/flow](https://darkwood-fr.github.io/flow)
 
 ## License
 
-_Railway Flow Based Programming_ is released under the MIT License.
+_Flow_ is released under the MIT License.

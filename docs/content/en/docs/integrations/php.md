@@ -22,15 +22,15 @@ This provide integration in PHP
 The recommended way to install it through [Composer](http://getcomposer.org/) and execute
 
 ```bash
-composer require darkwood/railway-fbp
+composer require darkwood/flow
 ```
 
 ## Usage
 
 A working script is available in the bundled `examples` directory
 
-- Run Rail : `php examples/rail.php`
+- Run Flow : `php examples/rail.php`
 
 ## License
 
-_darkwood/railway-fbp_ is released under the MIT License.
+_darkwood/flow_ is released under the MIT License.

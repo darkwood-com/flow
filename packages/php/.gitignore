@@ -1,6 +1,0 @@
-/.phpunit.result.cache
-/.php-cs-fixer.cache
-/.php_cs.cache
-/build/
-/composer.lock
-/vendor/

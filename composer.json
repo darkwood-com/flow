@@ -1,0 +1,69 @@
+{
+    "name": "darkwood/flow",
+    "description": "Flow",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mathieu Ledru",
+            "email": "matyo91@gmail.com"
+        }
+    ],
+    "keywords": [
+        "php",
+        "coroutine",
+        "amphp",
+        "monad"
+    ],
+    "require": {
+        "php": "^8.1"
+    },
+    "require-dev": {
+        "amphp/amp": "^2.6",
+        "amphp/phpunit-util": "^2.0",
+        "edgedesign/phpqa": "^1.26",
+        "friendsofphp/php-cs-fixer": "^3.9",
+        "phpstan/phpstan": "^1.8",
+        "phpunit/phpunit": "^9.5",
+        "react/event-loop": "^1.3",
+        "swoole/ide-helper": "^4.8",
+        "vimeo/psalm": "^4.25",
+        "loophp/combinator": "^2.0",
+        "symfony/messenger": "^6.1",
+        "symfony/doctrine-messenger": "^6.1",
+        "symfony/orm-pack": "^2.2"
+    },
+    "suggest": {
+        "loophp/combinator": "^2.0",
+        "amphp/amp": "Provide asynchronous with AMP",
+        "ext-swoole": "Provide asynchronous with Swoole",
+        "react/event-loop": "Provide asynchronous with ReactPHP",
+        "symfony/messenger": "Provide symfony messenger support"
+    },
+    "autoload": {
+        "psr-4": {
+            "Flow\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Flow\\Examples\\": "examples",
+            "Flow\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "cs-fix": "@php ./vendor/bin/php-cs-fixer fix",
+        "phpqa": "@php ./vendor/bin/phpqa --report --tools phpcs:0,phpmd:0,phpmetrics,phploc,pdepend,security-checker:0,parallel-lint:0 --ignoredDirs vendor",
+        "phpstan": "@php ./vendor/bin/phpstan analyse",
+        "psalm": "@php ./vendor/bin/psalm --threads=8 --diff",
+        "test": "@php ./vendor/bin/phpunit"
+    },
+    "scripts-descriptions": {
+        "cs-fix": "Check and fix coding styles using PHP CS Fixer",
+        "phpqa": "Execute PHQA toolsuite analysis",
+        "phpstan": "Execute PHPStan analysis",
+        "psalm": "Execute Psalm analysis",
+        "test": "Launch PHPUnit test suite"
+    },
+    "minimum-stability": "stable"
+}

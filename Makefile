@@ -2,6 +2,24 @@
 ##Dev
 ##-------------
 
+dev: ## Start dev server
+	docker-compose up -d
+
+cs-fix: ## Check and fix coding styles using PHP CS Fixer
+	composer cs-fix
+
+phpqa: ## Execute PHQA toolsuite analysis
+	composer phpqa
+
+phpstan: ## Execute PHPStan analysis
+	composer phpstan
+
+psalm: ## Execute Psalm analysis
+	composer psalm
+
+test: ## Launch PHPUnit test suite
+	composer test
+
 docs-serve: ## Start documentation server locally
 	./node_modules/.bin/hugo/hugo server -s docs -D
 
