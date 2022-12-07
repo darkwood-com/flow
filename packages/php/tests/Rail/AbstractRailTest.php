@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RFBP\Test\Rail;
 
-use PHPUnit\Framework\TestCase;
+use Amp\PHPUnit\AsyncTestCase;
 use RFBP\Driver\AmpDriver;
 use RFBP\Driver\ReactDriver;
 use RFBP\Driver\SwooleDriver;
@@ -12,7 +12,7 @@ use RFBP\IpStrategy\LinearIpStrategy;
 use RFBP\IpStrategy\MaxIpStrategy;
 use RFBP\IpStrategy\StackIpStrategy;
 
-abstract class AbstractRailTest extends TestCase
+abstract class AbstractRailTest extends AsyncTestCase
 {
     /**
      * @param array<array<mixed>> $datas
