@@ -27,8 +27,7 @@ A working script is available in the bundled `examples` directory
 
 - in `packages/php`  
   Run Rail : `php examples/rail.php`
-- in `packages/symfony`  
-  Start Server : `php examples/server.php`  
+- Start Server : `php examples/server.php`  
   Start Client(s) : `php examples/client.php`
 
 Messaging part require to install [Docker](https://www.docker.com) and execute `docker-compose up -d`
