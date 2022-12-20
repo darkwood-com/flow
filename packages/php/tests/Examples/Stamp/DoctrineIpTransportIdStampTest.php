@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Test\Examples\Stamp;
+namespace Flow\Test\Examples\Stamp;
 
 use PHPUnit\Framework\TestCase;
-use RFBP\Examples\Stamp\DoctrineIpTransportIdStamp;
+use Flow\Examples\Stamp\DoctrineIpTransportIdStamp;
 
 class DoctrineIpTransportIdStampTest extends TestCase
 {

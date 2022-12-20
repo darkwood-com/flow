@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace RFBP\IpStrategy;
+namespace Flow\IpStrategy;
 
-use RFBP\Ip;
-use RFBP\IpStrategyInterface;
+use Flow\Ip;
+use Flow\IpStrategyInterface;
 
 class LinearIpStrategy implements IpStrategyInterface
 {

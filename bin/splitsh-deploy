@@ -18,8 +18,6 @@ function remote()
 
 git pull origin $CURRENT_BRANCH
 
-remote php git@github.com:darkwood-fr/railway-fbp-php.git
-remote symfony git@github.com:darkwood-fr/railway-fbp-symfony.git
+remote php git@github.com:darkwood-fr/flow-php.git
 
 split 'packages/php' php
-split 'packages/symfony' symfony

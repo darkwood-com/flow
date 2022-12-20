@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Test;
+namespace Flow\Test;
 
 use PHPUnit\Framework\TestCase;
-use RFBP\EnvelopeTrait;
+use Flow\EnvelopeTrait;
 use RuntimeException;
 use stdClass;
 use Symfony\Component\Messenger\Envelope;

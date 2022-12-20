@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Test\Driver;
+namespace Flow\Test\Driver;
 
-use RFBP\Driver\ReactDriver;
-use RFBP\DriverInterface;
+use Flow\Driver\ReactDriver;
+use Flow\DriverInterface;
 
 class ReactDriverTest extends DriverTest
 {

@@ -1,12 +1,12 @@
 <p align="center">
-  <a href="https://github.com/darkwood-fr/railway-fbp">
-    <img src="docs/images/concept.png" width="auto" height="128px" alt="Railway Flow Based Programming">
+  <a href="https://github.com/darkwood-fr/flow">
+    <img src="docs/images/logo.png" width="auto" height="128px" alt="Flow">
   </a>
 </p>
 
 ## Why ?
 
-Railway Flow Based Programming concept aims to solve
+Flow concept aims to solve
 
 - Adopt asynchronous as native implementation
 - Build your code with functional programming and monads
@@ -14,19 +14,18 @@ Railway Flow Based Programming concept aims to solve
 
 ## Installation
 
-PHP 8.1 is the minimal version to use _Railway Flow Based Programming_ is 8.1  
+PHP 8.1 is the minimal version to use _Flow_ is 8.1  
 The recommended way to install it through [Composer](http://getcomposer.org/) and execute
 
 ```bash
-composer require darkwood/railway-fbp
+composer require darkwood/flow
 ```
 
 ## Usage
 
-A working script is available in the bundled `examples` directory
+A working script is available in the bundled `examples` directory in `packages/php`
 
-- in `packages/php`  
-  Run Rail : `php examples/rail.php`
+- Run Flow : `php examples/flow.php`
 - Start Server : `php examples/server.php`  
   Start Client(s) : `php examples/client.php`
 
@@ -34,8 +33,8 @@ Messaging part require to install [Docker](https://www.docker.com) and execute `
 
 ## Documentation
 
-[https://darkwood-fr.github.io/railway-fbp](https://darkwood-fr.github.io/railway-fbp)
+[https://darkwood-fr.github.io/flow](https://darkwood-fr.github.io/flow)
 
 ## License
 
-_Railway Flow Based Programming_ is released under the MIT License.
+_Flow_ is released under the MIT License.

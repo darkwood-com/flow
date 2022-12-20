@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Examples\Transport;
+namespace Flow\Examples\Transport;
 
 use Doctrine\DBAL\Connection as DbalConnection;
-use RFBP\Examples\Stamp\DoctrineIpTransportIdStamp;
+use Flow\Examples\Stamp\DoctrineIpTransportIdStamp;
 use RuntimeException;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\Connection;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineReceiver;

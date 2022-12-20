@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Driver;
+namespace Flow\Driver;
 
 use Closure;
 use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\TimerInterface;
-use RFBP\DriverInterface;
+use Flow\DriverInterface;
 use RuntimeException;
 use Throwable;
 
@@ -59,7 +59,7 @@ class ReactDriver implements DriverInterface
         $this->ticksIds[] = $this->eventLoop->addPeriodicTimer($interval, $callback);
     }
 
-    public function run(): void
+    public function start(): void
     {
         $this->eventLoop->run();
     }

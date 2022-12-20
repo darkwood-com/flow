@@ -6,15 +6,13 @@ require __DIR__.'/../vendor/autoload.php';
 
 use function Amp\delay;
 use Doctrine\DBAL\DriverManager;
-use RFBP\Driver\AmpDriver;
-use RFBP\Driver\ReactDriver;
-use RFBP\Driver\SwooleDriver;
-use RFBP\Examples\Transport\DoctrineIpTransport;
-use RFBP\IpStrategy\MaxIpStrategy;
-use RFBP\Rail\ErrorRail;
-use RFBP\Rail\Rail;
-use RFBP\Rail\SequenceRail;
-use RFBP\Rail\TransportRail;
+use Flow\Driver\AmpDriver;
+use Flow\Driver\ReactDriver;
+use Flow\Driver\SwooleDriver;
+use Flow\Examples\Transport\DoctrineIpTransport;
+use Flow\IpStrategy\MaxIpStrategy;
+use Flow\Flow\Flow;
+use Flow\Flow\TransportFlow;
 use Swoole\Coroutine;
 
 $randomDriver = random_int(1, 3);
@@ -112,22 +110,18 @@ $errorJob = static function (object $data, Throwable $exception): void {
     $data['number'] = null;
 };
 
-$rail = new SequenceRail([
-    new Rail($addOneJob, new MaxIpStrategy(1), $driver),
-    new Rail($multbyTwoJob, new MaxIpStrategy(3), $driver),
-    new Rail($minusThreeJob, new MaxIpStrategy(2), $driver),
-]);
+$flow = (new Flow($addOneJob, $errorJob, new MaxIpStrategy(1), $driver))
+    ->fn(new Flow($multbyTwoJob, $errorJob, new MaxIpStrategy(3), $driver))
+    ->fn(new Flow($minusThreeJob, $errorJob, new MaxIpStrategy(2), $driver));
 
-$rail = new ErrorRail($rail, $errorJob, new MaxIpStrategy(2), $driver);
-
-$connection = DriverManager::getConnection(['url' => 'mysql://root:root@127.0.0.1:3306/rfbp?serverVersion=5.7']);
+$connection = DriverManager::getConnection(['url' => 'mysql://root:root@127.0.0.1:3306/flow?serverVersion=8.0.31']);
 $transport = new DoctrineIpTransport($connection);
 
-new TransportRail(
-    $rail,
+new TransportFlow(
+    $flow,
     $transport,
     $transport,
     $driver
 );
 
-$driver->run();
+$driver->start();

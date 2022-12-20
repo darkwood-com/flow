@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Test\IpStrategy;
+namespace Flow\Test\IpStrategy;
 
 use PHPUnit\Framework\TestCase;
-use RFBP\Ip;
-use RFBP\IpStrategy\StackIpStrategy;
+use Flow\Ip;
+use Flow\IpStrategy\StackIpStrategy;
 
 class StackIpStrategyTest extends TestCase
 {

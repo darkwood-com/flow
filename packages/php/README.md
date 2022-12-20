@@ -1,9 +1,9 @@
-## Railway Flow Based Programming implementation in PHP
+## Flow implementation in PHP
 
 ## Documentation
 
-[https://darkwood-fr.github.io/railway-fbp](https://darkwood-fr.github.io/railway-fbp)
+[https://darkwood-fr.github.io/flow](https://darkwood-fr.github.io/flow)
 
 ## License
 
-_Railway Flow Based Programming_ is released under the MIT License.
+_Flow_ is released under the MIT License.

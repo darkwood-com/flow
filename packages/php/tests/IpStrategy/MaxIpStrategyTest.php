@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Test\IpStrategy;
+namespace Flow\Test\IpStrategy;
 
 use PHPUnit\Framework\TestCase;
-use RFBP\Ip;
-use RFBP\IpStrategy\MaxIpStrategy;
+use Flow\Ip;
+use Flow\IpStrategy\MaxIpStrategy;
 
 class MaxIpStrategyTest extends TestCase
 {

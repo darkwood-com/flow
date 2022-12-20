@@ -5,10 +5,10 @@ declare(strict_types=1);
 require __DIR__.'/../vendor/autoload.php';
 
 use Doctrine\DBAL\DriverManager;
-use RFBP\Client;
-use RFBP\Examples\Transport\DoctrineIpTransport;
+use Flow\Client;
+use Flow\Examples\Transport\DoctrineIpTransport;
 
-$connection = DriverManager::getConnection(['url' => 'mysql://root:root@127.0.0.1:3306/rfbp?serverVersion=5.7']);
+$connection = DriverManager::getConnection(['url' => 'mysql://root:root@127.0.0.1:3306/flow?serverVersion=8.0.31']);
 $transport = new DoctrineIpTransport($connection, uniqid('transport_', true));
 
 $client = new Client($transport, $transport);

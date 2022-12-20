@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Test\Driver;
+namespace Flow\Test\Driver;
 
-use RFBP\Driver\AmpDriver;
-use RFBP\DriverInterface;
+use Flow\Driver\AmpDriver;
+use Flow\DriverInterface;
 
 class AmpDriverTest extends DriverTest
 {
