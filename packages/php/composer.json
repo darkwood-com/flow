@@ -1,16 +1,15 @@
 {
-    "name": "darkwood/railway-fbp",
-    "description": "Railway Flow Based Programming implementation in PHP",
+    "name": "darkwood/flow",
+    "description": "Flow",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "Mathieu Ledru",
-            "email": "matyo91@gmail.com"
+            "email": "mathieu@darkwood.fr"
         }
     ],
     "keywords": [
-        "railway flow based programming",
         "php",
         "symfony",
         "coroutine",
@@ -25,7 +24,6 @@
         "amphp/phpunit-util": "^2.0",
         "edgedesign/phpqa": "^1.26",
         "friendsofphp/php-cs-fixer": "^3.9",
-        "loophp/combinator": "^2.0",
         "phpstan/phpstan": "^1.8",
         "phpunit/phpunit": "^9.5",
         "react/event-loop": "^1.3",
@@ -39,18 +37,17 @@
         "amphp/amp": "Provide asynchronous with AMP",
         "ext-swoole": "Provide asynchronous with Swoole",
         "react/event-loop": "Provide asynchronous with ReactPHP",
-        "loophp/combinator": "Provide Lambda Rail",
         "symfony/messenger": "Provide symfony messenger support"
     },
     "autoload": {
         "psr-4": {
-            "RFBP\\": "src"
+            "Flow\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "RFBP\\Examples\\": "examples",
-            "RFBP\\Test\\": "tests"
+            "Flow\\Examples\\": "examples",
+            "Flow\\Test\\": "tests"
         }
     },
     "scripts": {

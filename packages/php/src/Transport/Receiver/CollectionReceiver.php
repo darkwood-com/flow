@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Transport\Receiver;
+namespace Flow\Transport\Receiver;
 
-use RFBP\EnvelopeTrait;
+use Flow\EnvelopeTrait;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 

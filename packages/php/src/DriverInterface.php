@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RFBP;
+namespace Flow;
 
 use Closure;
 
@@ -12,7 +12,7 @@ interface DriverInterface
 
     public function tick(int $interval, Closure $callback): void;
 
-    public function run(): void;
+    public function start(): void;
 
     public function stop(): void;
 }

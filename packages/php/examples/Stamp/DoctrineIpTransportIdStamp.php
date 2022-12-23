@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Examples\Stamp;
+namespace Flow\Examples\Stamp;
 
 use Symfony\Component\Messenger\Stamp\StampInterface;
 

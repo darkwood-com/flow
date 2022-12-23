@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Test\Transport\Receiver;
+namespace Flow\Test\Transport\Receiver;
 
 use ArrayObject;
 use PHPUnit\Framework\TestCase;
-use RFBP\EnvelopeTrait;
-use RFBP\Transport\Receiver\CollectionReceiver;
+use Flow\EnvelopeTrait;
+use Flow\Transport\Receiver\CollectionReceiver;
 use SplObjectStorage;
 use stdClass;
 use Symfony\Component\Messenger\Envelope;

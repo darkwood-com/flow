@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Test\Examples\Transport;
+namespace Flow\Test\Examples\Transport;
 
 use ArrayObject;
 use Doctrine\DBAL\DriverManager;
 use PHPUnit\Framework\TestCase;
-use RFBP\Examples\Stamp\DoctrineIpTransportIdStamp;
-use RFBP\Examples\Transport\DoctrineIpTransport;
+use Flow\Examples\Stamp\DoctrineIpTransportIdStamp;
+use Flow\Examples\Transport\DoctrineIpTransport;
 use Symfony\Component\Messenger\Envelope;
 
 class DoctrineIpTransportTest extends TestCase

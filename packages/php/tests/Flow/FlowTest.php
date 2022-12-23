@@ -2,35 +2,34 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Test\Rail;
+namespace Flow\Test\Flow;
 
 use ArrayObject;
 use Closure;
-use RFBP\DriverInterface;
-use RFBP\Ip;
-use RFBP\IpStrategyInterface;
-use RFBP\Rail\Rail;
+use Flow\DriverInterface;
+use Flow\Ip;
+use Flow\IpStrategyInterface;
+use Flow\Flow\Flow;
 use RuntimeException;
 use Throwable;
 
-class RailTest extends AbstractRailTest
+class FlowTest extends AbstractFlowTest
 {
     /**
      * @dataProvider jobProvider
      */
-    public function testJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, Closure $job, int $resultNumber, ?Throwable $resultException): void
+    public function testJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, Closure $job, int $resultNumber): void
     {
         $ip = new Ip(new ArrayObject(['number' => 0]));
-        $rail = new Rail($job, $ipStrategy, $driver);
-        $rail->pipe(function (Ip $ip, ?Throwable $exception) use ($driver, $resultNumber, $resultException) {
+        $errorJob = function() {};
+        $flow = new Flow($job, $errorJob, $ipStrategy, $driver);
+        ($flow)($ip, function (Ip $ip) use ($driver, $resultNumber) {
             $driver->stop();
-            self::assertSame(ArrayObject::class, $ip->getData()::class);
-            self::assertSame($resultNumber, $ip->getData()['number']);
-            self::assertSame($resultException, $exception);
+            self::assertSame(ArrayObject::class, $ip->data::class);
+            self::assertSame($resultNumber, $ip->data['number']);
         });
-        ($rail)($ip);
 
-        $driver->run();
+        $driver->start();
     }
 
     /**
@@ -46,27 +45,33 @@ class RailTest extends AbstractRailTest
         }, function (object $data): void {
             $data['n2'] *= 4;
         }];
-        $rail = new Rail($jobs, null, $driver);
+        $errorJobs = [function() {
+
+        }, function() {
+
+        }];
+        $flow = new Flow($jobs, $errorJobs, null, $driver);
 
         $ips = [];
-        $rail->pipe(function (Ip $ip) use ($driver, &$ips, $ip1, $ip2) {
+
+        $callback = function (Ip $ip) use ($driver, &$ips, $ip1, $ip2) {
             $ips[] = $ip;
             if(count($ips) === 2) {
                 $this->assertSame($ip1, $ips[0]);
                 $this->assertSame($ip2, $ips[1]);
-                self::assertSame(6, $ip1->getData()['n1']);
-                self::assertSame(16, $ip1->getData()['n2']);
-                self::assertSame(4, $ip2->getData()['n1']);
-                self::assertSame(20, $ip2->getData()['n2']);
+                self::assertSame(6, $ip1->data['n1']);
+                self::assertSame(16, $ip1->data['n2']);
+                self::assertSame(4, $ip2->data['n1']);
+                self::assertSame(20, $ip2->data['n2']);
 
                 $driver->stop();
             }
-        });
+        };
 
-        ($rail)($ip1);
-        ($rail)($ip2);
+        ($flow)($ip1, $callback);
+        ($flow)($ip2, $callback);
 
-        $driver->run();
+        $driver->start();
     }
 
     /**
@@ -79,10 +84,10 @@ class RailTest extends AbstractRailTest
         return $this->matrix([
             'job' => [static function (ArrayObject $data) {
                 $data['number'] = 5;
-            }, 5, null],
+            }, 5],
             'exceptionJob' => [static function () use ($exception) {
                 throw $exception;
-            }, 0, $exception],
+            }, 0],
         ]);
     }
 }

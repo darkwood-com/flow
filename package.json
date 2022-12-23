@@ -1,16 +1,16 @@
 {
-  "name": "@darkwood-fr/railway-fbp",
-  "description": "Railway FBP",
+  "name": "@darkwood-fr/flow",
+  "description": "Flow",
   "author": {
     "name": "Mathieu Ledru",
-    "email": "matyo91@gmail.com"
+    "email": "mathieu@darkwood.fr"
   },
   "bugs": {
-    "url": "https://github.com/darkwood-fr/railway-fbp"
+    "url": "https://github.com/darkwood-fr/flow"
   },
-  "homepage": "https://github.com/darkwood-fr/railway-fbp/tree/1.x#readme",
+  "homepage": "https://github.com/darkwood-fr/flow/tree/1.x#readme",
   "keywords": [
-    "railway-fbp"
+    "flow"
   ],
   "version": "1.1.0",
   "browserslist": [
@@ -19,7 +19,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/darkwood-fr/railway-fbp.git"
+    "url": "https://github.com/darkwood-fr/flow.git"
   },
   "publishConfig": {
     "access": "public"

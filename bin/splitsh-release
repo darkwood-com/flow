@@ -54,14 +54,14 @@ git push origin --tags
 bash bin/splitsh-deploy
 
 # Tag Components
-for REMOTE in php symfony
+for REMOTE in php
 do
     echo ""
     echo ""
     echo "Releasing $REMOTE";
 
-    TMP_DIR="../railway-fbp-split"
-    REMOTE_URL="git@github.com:darkwood-fr/railway-fbp-$REMOTE.git"
+    TMP_DIR="../flow-split"
+    REMOTE_URL="git@github.com:darkwood-fr/flow-$REMOTE.git"
 
     rm -rf $TMP_DIR;
     mkdir $TMP_DIR;

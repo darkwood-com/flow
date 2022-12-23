@@ -2,34 +2,33 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Test\Rail;
+namespace Flow\Test\Flow;
 
 use ArrayObject;
 use Closure;
-use RFBP\DriverInterface;
-use RFBP\Ip;
-use RFBP\IpStrategyInterface;
-use RFBP\Rail\LambdaRail;
+use Flow\DriverInterface;
+use Flow\Ip;
+use Flow\IpStrategyInterface;
+use Flow\Flow\YFlow;
 use Throwable;
 
-class LambdaRailTest extends AbstractRailTest
+class YFlowTest extends AbstractFlowTest
 {
     /**
      * @dataProvider jobProvider
      */
-    public function testJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, Closure $job, int $resultNumber, ?Throwable $resultException): void
+    public function testJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, Closure $job, int $resultNumber): void
     {
         $ip = new Ip(new ArrayObject(['number' => 6]));
-        $lambdaRail = new LambdaRail($job, $ipStrategy, $driver);
-        $lambdaRail->pipe(function (Ip $ip, ?Throwable $exception) use ($driver, $resultNumber, $resultException) {
+        $errorJob = static function() {};
+        $yFlow = new YFlow($job, $errorJob, $ipStrategy, $driver);
+        ($yFlow)($ip, function (Ip $ip) use ($driver, $resultNumber) {
             $driver->stop();
-            self::assertSame(ArrayObject::class, $ip->getData()::class);
-            self::assertSame($resultNumber, $ip->getData()['number']);
-            self::assertSame($resultException, $exception);
+            self::assertSame(ArrayObject::class, $ip->data::class);
+            self::assertSame($resultNumber, $ip->data['number']);
         });
-        ($lambdaRail)($ip);
 
-        $driver->run();
+        $driver->start();
     }
 
     /**
@@ -48,7 +47,7 @@ class LambdaRailTest extends AbstractRailTest
                         $data['number'] = 1;
                     }
                 };
-            }, 720, null],
+            }, 720],
         ]);
     }
 }

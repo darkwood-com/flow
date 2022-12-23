@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Test\Transport\Sender;
+namespace Flow\Test\Transport\Sender;
 
 use ArrayObject;
 use PHPUnit\Framework\TestCase;
-use RFBP\Transport\Sender\CollectionSender;
+use Flow\Transport\Sender\CollectionSender;
 use stdClass;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;

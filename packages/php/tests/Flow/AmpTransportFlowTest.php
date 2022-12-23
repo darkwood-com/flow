@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Test;
+namespace Flow\Test;
 
 use function Amp\delay;
 use Amp\Loop;
 use Amp\PHPUnit\AsyncTestCase;
 use ArrayObject;
 use Closure;
-use RFBP\Driver\AmpDriver;
-use RFBP\DriverInterface;
-use RFBP\Rail\Rail;
-use RFBP\Rail\SequenceRail;
-use RFBP\Rail\TransportRail;
+use Flow\Driver\AmpDriver;
+use Flow\DriverInterface;
+use Flow\Flow\Flow;
+use Flow\Flow\SequenceFlow;
+use Flow\Flow\TransportFlow;
 use RuntimeException;
 use stdClass;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
 use Symfony\Component\Messenger\Transport\InMemoryTransport;
 
-class AmpTransportRailTest extends AsyncTestCase
+class AmpTransportFlowTest extends AsyncTestCase
 {
     /**
      * @dataProvider jobsProvider
@@ -31,9 +31,18 @@ class AmpTransportRailTest extends AsyncTestCase
     {
         $transport1 = new InMemoryTransport();
         $transport2 = new InMemoryTransport();
-        $rail = new SequenceRail(array_map(static function ($job) use ($driver) { return new Rail($job, null, $driver); }, $jobs));
+        $flow = array_reduce($jobs, static function($flow, $job) use ($driver) {
+            $jobFlow = new Flow($job, static function() {}, null, $driver);
+            if($flow === null) {
+                $flow = $jobFlow;
+            } else {
+                $flow->fn($jobFlow);
+            }
 
-        new TransportRail($rail, $transport1, $transport2);
+            return $flow;
+        }, null);
+
+        new TransportFlow($flow, $transport1, $transport2);
 
         Loop::repeat(1, static function () use ($driver, $transport2, $resultNumber) {
             $ips = $transport2->get();
@@ -48,7 +57,7 @@ class AmpTransportRailTest extends AsyncTestCase
         $envelope = new Envelope(new ArrayObject(['number' => 0]));
         $transport1->send($envelope);
 
-        $driver->run();
+        $driver->start();
     }
 
     /**

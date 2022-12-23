@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Transport;
+namespace Flow\Transport;
 
-use RFBP\Transport\Receiver\CollectionReceiver;
-use RFBP\Transport\Sender\CollectionSender;
+use Flow\Transport\Receiver\CollectionReceiver;
+use Flow\Transport\Sender\CollectionSender;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 

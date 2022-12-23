@@ -29,7 +29,7 @@ GitHub.
 Then clone your fork:
 
 ```bash
-$ git clone git@github.com:darkwood-fr/railway-fbp.git
+$ git clone git@github.com:darkwood-fr/flow.git
 $ git checkout -b bug-or-feature-description
 ```
 

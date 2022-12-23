@@ -15,7 +15,7 @@ toc: true
 
 # Ip Strategy
 
-When processing Rail with one or multiple Ips, you can choose a strategy that will sequence the order of processing Ip.
+When processing Flow with one or multiple Ips, you can choose a strategy that will sequence the order of processing Ip.
 
 ## LinearIpStrategy
 
@@ -32,4 +32,4 @@ You can embed it by a custom strategy with is `LinearIpStrategy` by default.
 
 ## Make your Ip Strategy
 
-You can make your custom Ip strategy by implementing `RFBP\IpStrategyInterface`
+You can make your custom Ip strategy by implementing `Flow\IpStrategyInterface`

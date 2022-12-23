@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RFBP;
+namespace Flow;
 
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Handler\HandlerDescriptor;

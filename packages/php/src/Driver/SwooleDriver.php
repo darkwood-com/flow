@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Driver;
+namespace Flow\Driver;
 
 use Closure;
-use RFBP\DriverInterface;
+use Flow\DriverInterface;
 use RuntimeException;
 use Swoole\Coroutine;
 use Swoole\Timer;
@@ -56,7 +56,7 @@ class SwooleDriver implements DriverInterface
         $this->ticks[] = [$interval, $callback];
     }
 
-    public function run(): void
+    public function start(): void
     {
         foreach ($this->ticks as $tick) {
             [$interval, $callback] = $tick;

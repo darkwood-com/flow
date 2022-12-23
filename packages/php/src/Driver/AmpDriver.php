@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Driver;
+namespace Flow\Driver;
 
 use function Amp\call;
 use Amp\Loop;
 use Closure;
-use RFBP\DriverInterface;
+use Flow\DriverInterface;
 use RuntimeException;
 
 class AmpDriver implements DriverInterface
@@ -41,7 +41,7 @@ class AmpDriver implements DriverInterface
         $this->ticksIds[] = Loop::repeat($interval, $callback);
     }
 
-    public function run(): void
+    public function start(): void
     {
         Loop::run();
     }

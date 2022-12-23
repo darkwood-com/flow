@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace RFBP\Test\Rail;
+namespace Flow\Test\Flow;
 
 use Amp\PHPUnit\AsyncTestCase;
-use RFBP\Driver\AmpDriver;
-use RFBP\Driver\ReactDriver;
-use RFBP\Driver\SwooleDriver;
-use RFBP\IpStrategy\LinearIpStrategy;
-use RFBP\IpStrategy\MaxIpStrategy;
-use RFBP\IpStrategy\StackIpStrategy;
+use Flow\Driver\AmpDriver;
+use Flow\Driver\ReactDriver;
+use Flow\Driver\SwooleDriver;
+use Flow\IpStrategy\LinearIpStrategy;
+use Flow\IpStrategy\MaxIpStrategy;
+use Flow\IpStrategy\StackIpStrategy;
 
-abstract class AbstractRailTest extends AsyncTestCase
+abstract class AbstractFlowTest extends AsyncTestCase
 {
     /**
      * @param array<array<mixed>> $datas
