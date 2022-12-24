@@ -14,7 +14,6 @@ jobs:
     strategy:
       matrix:
         php: [ '8.1' ]
-        package: [ 'php' ]
 
     steps:
       - name: 'Init repository'
@@ -29,19 +28,19 @@ jobs:
           coverage: none # disable XDebug for tests
 
       - name: 'Install dependencies'
-        run: composer  --working-dir=packages/${{ matrix.package }} install
+        run: composer install
 
       - name: 'PHPStan'
-        run: composer  --working-dir=packages/${{ matrix.package }} phpstan
+        run: composer phpstan
 
       - name: 'PHP-CS-Fixer'
-        run: composer  --working-dir=packages/${{ matrix.package }} cs-fix
+        run: composer cs-fix
 
       #- name: 'Psalm'
-      #  run: composer  --working-dir=packages/${{ matrix.package }} psalm
+      #  run: composer psalm
 
       #- name: 'PHPQA'
-      #  run: composer  --working-dir=packages/${{ matrix.package }} phpqa
+      #  run: composer phpqa
 
       - name: 'Test suite'
-        run: composer  --working-dir=packages/${{ matrix.package }} test
+        run: composer test

@@ -23,7 +23,7 @@ composer require darkwood/flow
 
 ## Usage
 
-A working script is available in the bundled `examples` directory in `packages/php`
+A working script is available in the bundled `examples` directory
 
 - Run Flow : `php examples/flow.php`
 - Start Server : `php examples/server.php`  

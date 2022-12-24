@@ -4,12 +4,6 @@
   identifier = "getting-started"
   url = "/docs/getting-started/"
 
-[[docs]]
-  name = "Integrations"
-  weight = 60
-  identifier = "integrations"
-  url = "/docs/integrations/"
-
 [[main]]
   name = "Docs"
   url = "/docs/getting-started/introduction/"

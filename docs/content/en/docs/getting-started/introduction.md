@@ -37,6 +37,10 @@ composer require darkwood/flow
 A working script is available in the bundled `examples` directory
 
 - Run Flow : `php examples/flow.php`
+- Start Server : `php examples/server.php`
+- Start Client(s) : `php examples/client.php`
+
+Messaging part require to install [Docker](https://www.docker.com) and execute `docker-compose up -d`
 
 ## Documentation
 

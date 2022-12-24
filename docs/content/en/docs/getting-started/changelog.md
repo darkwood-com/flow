@@ -16,6 +16,7 @@ toc: true
 ### 1.1.1
 
 - Rename entire project from `Railway FBP` to `Flow`
+- Bundle `Flow` to PHP monorepository
 - Merge from `packages/symfony` to `packages/php` and make Flow [Symfony](https://symfony.com) friendly
 - New DX interface `Flow\FlowInterface`
 - Error managment is now integrated to Flow
