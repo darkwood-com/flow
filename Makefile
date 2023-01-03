@@ -11,14 +11,8 @@ dev: ## Start dev server
 cs-fix: ## Check and fix coding styles using PHP CS Fixer
 	composer cs-fix
 
-phpqa: ## Execute PHQA toolsuite analysis
-	composer phpqa
-
 phpstan: ## Execute PHPStan analysis
 	composer phpstan
-
-psalm: ## Execute Psalm analysis
-	composer psalm
 
 test: ## Launch PHPUnit test suite
 	composer test

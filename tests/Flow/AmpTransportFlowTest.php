@@ -5,22 +5,18 @@ declare(strict_types=1);
 namespace Flow\Test;
 
 use function Amp\delay;
-use Amp\Loop;
-use Amp\PHPUnit\AsyncTestCase;
+
 use ArrayObject;
 use Closure;
 use Flow\Driver\AmpDriver;
 use Flow\DriverInterface;
 use Flow\Flow\Flow;
-use Flow\Flow\SequenceFlow;
 use Flow\Flow\TransportFlow;
-use RuntimeException;
-use stdClass;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
 use Symfony\Component\Messenger\Transport\InMemoryTransport;
 
-class AmpTransportFlowTest extends AsyncTestCase
+class AmpTransportFlowTest extends TestCase
 {
     /**
      * @dataProvider jobsProvider
@@ -31,9 +27,9 @@ class AmpTransportFlowTest extends AsyncTestCase
     {
         $transport1 = new InMemoryTransport();
         $transport2 = new InMemoryTransport();
-        $flow = array_reduce($jobs, static function($flow, $job) use ($driver) {
-            $jobFlow = new Flow($job, static function() {}, null, $driver);
-            if($flow === null) {
+        $flow = array_reduce($jobs, static function ($flow, $job) use ($driver) {
+            $jobFlow = new Flow($job, static function () {}, null, $driver);
+            if ($flow === null) {
                 $flow = $jobFlow;
             } else {
                 $flow->fn($jobFlow);
@@ -42,9 +38,9 @@ class AmpTransportFlowTest extends AsyncTestCase
             return $flow;
         }, null);
 
-        new TransportFlow($flow, $transport1, $transport2);
+        new TransportFlow($flow, $transport1, $transport2, $driver);
 
-        Loop::repeat(1, static function () use ($driver, $transport2, $resultNumber) {
+        $driver->tick(1, static function () use ($driver, $transport2, $resultNumber) {
             $ips = $transport2->get();
             foreach ($ips as $ip) {
                 $data = $ip->getMessage();
@@ -68,23 +64,23 @@ class AmpTransportFlowTest extends AsyncTestCase
         $driver = new AmpDriver();
 
         return [
-            'oneJob' => [[static function (ArrayObject $data) {
+            'oneJob' => [[static function (ArrayObject $data): void {
                 $data['number'] = 1;
             }], $driver, 1],
-            'oneAsyncJob' => [[static function (ArrayObject $data) {
-                yield delay(10);
+            'oneAsyncJob' => [[static function (ArrayObject $data): void {
+                delay(1 / 1000);
                 $data['number'] = 5;
             }], $driver, 5],
-            'twoJob' => [[static function (ArrayObject $data) {
+            'twoJob' => [[static function (ArrayObject $data): void {
                 $data['number'] += 2;
             }, static function (ArrayObject $data) {
                 $data['number'] *= 3;
             }], $driver, 6],
-            'twoAsyncJob' => [[static function (ArrayObject $data) {
-                yield delay(10);
+            'twoAsyncJob' => [[static function (ArrayObject $data): void {
+                delay(1 / 1000);
                 $data['number'] += 5;
-            }, static function (ArrayObject $data) {
-                yield delay(10);
+            }, static function (ArrayObject $data): void {
+                delay(1 / 1000);
                 $data['number'] *= 2;
             }], $driver, 10],
         ];

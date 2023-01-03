@@ -9,14 +9,14 @@ use Exception;
 use Flow\Driver\AmpDriver;
 use Flow\DriverInterface;
 use Flow\EnvelopeTrait;
-use Flow\Ip;
 use Flow\FlowInterface;
+use Flow\Ip;
 use SplObjectStorage;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 
-class TransportFlow implements FlowInterface
+class TransportFlow extends FlowDecorator
 {
     use EnvelopeTrait;
 
@@ -43,6 +43,8 @@ class TransportFlow implements FlowInterface
         ?DriverInterface $driver = null,
         array $options = []
     ) {
+        parent::__construct($flow);
+
         $this->envelopePool = new SplObjectStorage();
         $this->driver = $driver ?? new AmpDriver();
 
@@ -68,7 +70,7 @@ class TransportFlow implements FlowInterface
             $this->envelopePool->offsetSet($ip, $envelope);
             try {
                 $self = $this;
-                ($this->flow)($ip, static function($ip) use ($self) {
+                ($this->flow)($ip, static function ($ip) use ($self) {
                     $envelope = $self->envelopePool->offsetGet($ip);
                     $self->consumer->send(Envelope::wrap($ip->data, array_reduce($envelope->all(), static function (array $all, array $stamps) {
                         foreach ($stamps as $stamp) {
@@ -91,15 +93,5 @@ class TransportFlow implements FlowInterface
                 unset($this->envelopeIds[$id]);
             }
         }
-    }
-
-    public function __invoke(Ip $ip, ?Closure $callback = null): void
-    {
-        ($this->flow)($ip);
-    }
-
-    public function fn(FlowInterface $flow): FlowInterface
-    {
-        return $this->flow->fn($flow);
     }
 }

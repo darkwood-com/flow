@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Flow\Driver;
 
-use function Amp\call;
-use Amp\Loop;
 use Closure;
 use Flow\DriverInterface;
+use Revolt\EventLoop;
 use RuntimeException;
+use Throwable;
 
 class AmpDriver implements DriverInterface
 {
@@ -19,7 +19,7 @@ class AmpDriver implements DriverInterface
 
     public function __construct()
     {
-        if (!function_exists('Amp\\call')) {
+        if (!function_exists('Amp\\async')) {
             throw new RuntimeException('Amp is not loaded. Suggest install it with composer require amphp/amp');
         }
 
@@ -29,30 +29,40 @@ class AmpDriver implements DriverInterface
     public function coroutine(Closure $callback, ?Closure $onResolved = null): Closure
     {
         return static function (...$args) use ($callback, $onResolved): void {
-            $promise = call($callback, ...$args);
-            if ($onResolved) {
-                $promise->onResolve($onResolved);
-            }
+            EventLoop::queue(static function (Closure $callback, array $args, ?Closure $onResolved = null) {
+                try {
+                    $callback(...$args, ...($args = []));
+                    if ($onResolved) {
+                        $onResolved(null);
+                    }
+                } catch (Throwable $exception) {
+                    if ($onResolved) {
+                        $onResolved($exception);
+                    }
+                }
+            }, $callback, $args, $onResolved);
         };
     }
 
     public function tick(int $interval, Closure $callback): void
     {
-        $this->ticksIds[] = Loop::repeat($interval, $callback);
+        $this->ticksIds[] = EventLoop::repeat($interval / 1000, $callback);
     }
 
     public function start(): void
     {
-        Loop::run();
+        if (!EventLoop::getDriver()->isRunning()) {
+            EventLoop::run();
+        }
     }
 
     public function stop(): void
     {
         foreach ($this->ticksIds as $tickId) {
-            Loop::cancel($tickId);
+            EventLoop::cancel($tickId);
         }
         $this->ticksIds = [];
 
-        Loop::stop();
+        EventLoop::getDriver()->stop();
     }
 }

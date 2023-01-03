@@ -38,7 +38,7 @@ class SwooleDriver implements DriverInterface
         return static function (...$args) use ($callback, $onResolved): void {
             Coroutine::create(function (Closure $callback, ?Closure $onResolved, ...$args) {
                 try {
-                    $callback(...$args);
+                    $callback(...$args, ...($args = []));
                     if ($onResolved) {
                         $onResolved(null);
                     }

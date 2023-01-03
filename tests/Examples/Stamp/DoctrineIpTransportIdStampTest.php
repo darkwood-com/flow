@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Flow\Test\Examples\Stamp;
 
-use PHPUnit\Framework\TestCase;
 use Flow\Examples\Stamp\DoctrineIpTransportIdStamp;
+use PHPUnit\Framework\TestCase;
 
 class DoctrineIpTransportIdStampTest extends TestCase
 {

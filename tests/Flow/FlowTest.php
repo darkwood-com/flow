@@ -7,11 +7,10 @@ namespace Flow\Test\Flow;
 use ArrayObject;
 use Closure;
 use Flow\DriverInterface;
+use Flow\Flow\Flow;
 use Flow\Ip;
 use Flow\IpStrategyInterface;
-use Flow\Flow\Flow;
 use RuntimeException;
-use Throwable;
 
 class FlowTest extends AbstractFlowTest
 {
@@ -21,7 +20,7 @@ class FlowTest extends AbstractFlowTest
     public function testJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, Closure $job, int $resultNumber): void
     {
         $ip = new Ip(new ArrayObject(['number' => 0]));
-        $errorJob = function() {};
+        $errorJob = function () {};
         $flow = new Flow($job, $errorJob, $ipStrategy, $driver);
         ($flow)($ip, function (Ip $ip) use ($driver, $resultNumber) {
             $driver->stop();
@@ -45,10 +44,8 @@ class FlowTest extends AbstractFlowTest
         }, function (object $data): void {
             $data['n2'] *= 4;
         }];
-        $errorJobs = [function() {
-
-        }, function() {
-
+        $errorJobs = [function () {
+        }, function () {
         }];
         $flow = new Flow($jobs, $errorJobs, null, $driver);
 
@@ -56,7 +53,7 @@ class FlowTest extends AbstractFlowTest
 
         $callback = function (Ip $ip) use ($driver, &$ips, $ip1, $ip2) {
             $ips[] = $ip;
-            if(count($ips) === 2) {
+            if (count($ips) === 2) {
                 $this->assertSame($ip1, $ips[0]);
                 $this->assertSame($ip2, $ips[1]);
                 self::assertSame(6, $ip1->data['n1']);

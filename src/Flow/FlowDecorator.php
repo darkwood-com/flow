@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Flow\Flow;
 
 use Closure;
-use Flow\Ip;
 use Flow\FlowInterface;
+use Flow\Ip;
 
 abstract class FlowDecorator implements FlowInterface
 {

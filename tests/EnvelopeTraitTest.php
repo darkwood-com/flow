@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Flow\Test;
 
-use PHPUnit\Framework\TestCase;
 use Flow\EnvelopeTrait;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
 use Symfony\Component\Messenger\Envelope;

@@ -16,6 +16,8 @@ toc: true
 ### 1.1.2
 
 - Update to PHP 8.2
+- Upgrade from amphp/amp v2 to amphp/amp v3 that use Fibers
+- Upgrade from react/event-loop v1 to reactphp/async v4 that use Fibers
 
 ### 1.1.1
 

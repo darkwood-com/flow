@@ -5,14 +5,15 @@ declare(strict_types=1);
 require __DIR__.'/../vendor/autoload.php';
 
 use function Amp\delay;
+
 use Doctrine\DBAL\DriverManager;
 use Flow\Driver\AmpDriver;
 use Flow\Driver\ReactDriver;
 use Flow\Driver\SwooleDriver;
 use Flow\Examples\Transport\DoctrineIpTransport;
-use Flow\IpStrategy\MaxIpStrategy;
 use Flow\Flow\Flow;
 use Flow\Flow\TransportFlow;
+use Flow\IpStrategy\MaxIpStrategy;
 use Swoole\Coroutine;
 
 $randomDriver = random_int(1, 3);
@@ -31,21 +32,21 @@ if (1 === $randomDriver) {
 }
 
 if (1 === $randomDriver) {
-    $addOneJob = static function (object $data): Generator {
+    $addOneJob = static function (object $data): void {
         printf("Client %s #%d : Calculating %d + 1\n", $data['client'], $data['id'], $data['number']);
 
-        // simulating calculating some "light" operation from 10 to 90 milliseconds as async generator
+        // simulating calculating some "light" operation from 10 to 90 milliseconds
         $delay = random_int(1, 9) * 10;
-        yield delay($delay);
-        ++$data['number'];
+        delay($delay);
+        $data['number']++;
     };
 
-    $multbyTwoJob = static function (object $data): Generator {
+    $multbyTwoJob = static function (object $data): void {
         printf("Client %s #%d : Calculating %d * 2\n", $data['client'], $data['id'], $data['number']);
 
-        // simulating calculating some "heavy" operation from 4 to 6 seconds as async generator
+        // simulating calculating some "heavy" operation from 4 to 6 seconds
         $delay = random_int(4, 6) * 1000;
-        yield delay($delay);
+        delay($delay);
         $data['number'] *= 2;
 
         // simulating 1 chance on 3 to produce an exception from the "heavy" operation
@@ -60,7 +61,7 @@ if (1 === $randomDriver) {
         // simulating calculating some "light" operation from 10 to 90 milliseconds as async generator
         $delay = random_int(1, 9) * 10;
         Coroutine::sleep($delay / 1000);
-        ++$data['number'];
+        $data['number']++;
     };
 
     $multbyTwoJob = static function (object $data): void {
@@ -81,7 +82,7 @@ if (1 === $randomDriver) {
         printf("Client %s #%d : Calculating %d + 1\n", $data['client'], $data['id'], $data['number']);
 
         // simulating calculating some "light" operation
-        ++$data['number'];
+        $data['number']++;
     };
 
     $multbyTwoJob = static function (object $data): void {

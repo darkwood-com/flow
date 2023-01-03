@@ -14,13 +14,13 @@ $transport = new DoctrineIpTransport($connection, uniqid('transport_', true));
 $client = new Client($transport, $transport);
 
 $ip = long2ip(random_int(ip2long('10.0.0.0'), ip2long('10.255.255.255')));
-for ($i = 0; $i < 3; ++$i) {
+for ($i = 0; $i < 3; $i++) {
     $data = new ArrayObject([
         'client' => $ip,
         'id' => $i,
         'number' => random_int(1, 9),
     ]);
-    $delay = random_int(1, 10); //simulating 1 and 10 second delay
+    $delay = random_int(1, 10); // simulating 1 and 10 second delay
 
     printf("Client %s #%d: call for number %d with delay %d seconds\n", $data['client'], $data['id'], $data['number'], $delay);
     $client->call($data, $delay * 1000);

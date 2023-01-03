@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Flow\Driver;
 
 use Closure;
+use Flow\DriverInterface;
+
+use function React\Async\async;
+
 use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\TimerInterface;
-use Flow\DriverInterface;
 use RuntimeException;
 use Throwable;
 
@@ -23,25 +26,20 @@ class ReactDriver implements DriverInterface
 
     public function __construct(?LoopInterface $eventLoop = null)
     {
-        if (!interface_exists('React\\EventLoop\\LoopInterface')) {
+        if (!function_exists('React\\Async\\async')) {
             throw new RuntimeException('ReactPHP is not loaded. Suggest install it with composer require react/event-loop');
         }
 
-        if (null === $eventLoop) {
-            $this->eventLoop = Loop::get();
-        } else {
-            $this->eventLoop = $eventLoop;
-        }
-
+        $this->eventLoop = $eventLoop ?? Loop::get();
         $this->ticksIds = [];
     }
 
     public function coroutine(Closure $callback, ?Closure $onResolved = null): Closure
     {
-        return function (...$args) use ($callback, $onResolved): void {
-            $this->eventLoop->futureTick(static function () use ($callback, $onResolved, $args) {
+        return static function (...$args) use ($callback, $onResolved): void {
+            async(static function () use ($callback, $onResolved, $args) {
                 try {
-                    $callback(...$args);
+                    $callback(...$args, ...($args = []));
                     if ($onResolved) {
                         $onResolved(null);
                     }
@@ -50,7 +48,7 @@ class ReactDriver implements DriverInterface
                         $onResolved($e);
                     }
                 }
-            });
+            })();
         };
     }
 

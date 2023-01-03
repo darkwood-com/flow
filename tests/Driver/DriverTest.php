@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Flow\Test\Driver;
 
 use Exception;
-use PHPUnit\Framework\TestCase;
 use Flow\DriverInterface;
+use PHPUnit\Framework\TestCase;
 use Throwable;
 
 abstract class DriverTest extends TestCase
@@ -41,7 +41,7 @@ abstract class DriverTest extends TestCase
         $i = 0;
         $driver = $this->createDriver();
         $driver->tick(1, function () use (&$i) {
-            ++$i;
+            $i++;
         });
         $driver->coroutine(function () use ($driver, &$i) {
             usleep(3000);

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Flow\Test\Flow;
 
-use Amp\PHPUnit\AsyncTestCase;
 use Flow\Driver\AmpDriver;
 use Flow\Driver\ReactDriver;
 use Flow\Driver\SwooleDriver;
 use Flow\IpStrategy\LinearIpStrategy;
 use Flow\IpStrategy\MaxIpStrategy;
 use Flow\IpStrategy\StackIpStrategy;
+use PHPUnit\Framework\TestCase;
 
-abstract class AbstractFlowTest extends AsyncTestCase
+abstract class AbstractFlowTest extends TestCase
 {
     /**
      * @param array<array<mixed>> $datas
