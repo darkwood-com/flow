@@ -13,6 +13,10 @@ weight: 60
 toc: true
 ---
 
+### 1.1.2
+
+- Update to PHP 8.2
+
 ### 1.1.1
 
 - Rename entire project from `Railway FBP` to `Flow`
