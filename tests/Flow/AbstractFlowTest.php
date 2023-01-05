@@ -16,9 +16,6 @@ use PHPUnit\Framework\TestCase;
 abstract class AbstractFlowTest extends TestCase
 {
     /**
-     * @param array<array<mixed>> $datas
-     * @param array<mixed>|null   $mix
-     *
      * @return array<array<mixed>>
      */
     protected function matrix(Closure $datas): array
@@ -26,7 +23,7 @@ abstract class AbstractFlowTest extends TestCase
         $drivers = [
             'amp' => fn (): AmpDriver => new AmpDriver(),
             'react' => fn (): ReactDriver => new ReactDriver(),
-            //'swoole' => fn (): SwooleDriver => new SwooleDriver(),
+            // 'swoole' => fn (): SwooleDriver => new SwooleDriver(),
         ];
 
         $strategies = [
@@ -36,12 +33,12 @@ abstract class AbstractFlowTest extends TestCase
         ];
 
         $matrixDatas = [];
-        foreach($drivers as $keyDriver => $driverBuilder) {
+        foreach ($drivers as $keyDriver => $driverBuilder) {
             $driver = $driverBuilder();
             $dataValues = $datas($driver);
-            foreach($strategies as $keyStrategy => $strategyBuilder) {
+            foreach ($strategies as $keyStrategy => $strategyBuilder) {
                 $strategy = $strategyBuilder();
-                foreach($dataValues as $key => $values) {
+                foreach ($dataValues as $key => $values) {
                     $matrixDatas["$keyDriver.$keyStrategy.$key"] = [$driver, $strategy, ...$values];
                 }
             }

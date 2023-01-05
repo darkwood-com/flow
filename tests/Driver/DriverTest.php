@@ -36,6 +36,18 @@ abstract class DriverTest extends TestCase
         $driver->start();
     }
 
+    public function testDelay(): void
+    {
+        $driver = $this->createDriver();
+        $driver->async(static function () use ($driver) {
+            $driver->delay(1 / 1000);
+        }, function (?Throwable $e) use ($driver) {
+            $driver->stop();
+            $this->assertNull($e);
+        })();
+        $driver->start();
+    }
+
     public function testTick(): void
     {
         $i = 0;
@@ -44,7 +56,7 @@ abstract class DriverTest extends TestCase
             $i++;
         });
         $driver->async(function () use ($driver, &$i) {
-            usleep(3000);
+            $driver->delay(3 / 1000);
             $driver->stop();
 
             $this->assertGreaterThan(3, $i);

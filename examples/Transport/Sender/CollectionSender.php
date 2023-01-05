@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Flow\Transport\Sender;
+namespace Flow\Examples\Transport\Sender;
 
 use Flow\EnvelopeTrait;
 use Symfony\Component\Messenger\Envelope;

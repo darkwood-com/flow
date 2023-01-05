@@ -13,4 +13,14 @@ class SwooleDriverTest extends DriverTest
     {
         return new SwooleDriver();
     }
+
+    public function testDelay(): void
+    {
+        parent::testAsync();
+    }
+
+    public function testTick(): void
+    {
+        parent::testAsync();
+    }
 }

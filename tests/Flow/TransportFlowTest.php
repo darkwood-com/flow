@@ -26,7 +26,7 @@ class TransportFlowTest extends AbstractFlowTest
         $transport2 = new InMemoryTransport();
         $flow = array_reduce(
             array_map(fn ($job) => new Flow($job, static function () {}, $ipStrategy, $driver), $jobs),
-            fn($flow, $flowIt) => $flow ? $flow->fn($flowIt) : $flowIt
+            fn ($flow, $flowIt) => $flow ? $flow->fn($flowIt) : $flowIt
         );
 
         new TransportFlow($flow, $transport1, $transport2, $driver);

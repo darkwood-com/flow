@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Flow\Flow;
 
-use Closure;
 use Exception;
 use Flow\Driver\AmpDriver;
 use Flow\DriverInterface;

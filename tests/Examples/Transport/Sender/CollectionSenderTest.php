@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Flow\Test\Transport\Sender;
+namespace Flow\Test\Examples\Transport\Sender;
 
 use ArrayObject;
-use Flow\Transport\Sender\CollectionSender;
+use Flow\Examples\Transport\Sender\CollectionSender;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Symfony\Component\Messenger\Envelope;

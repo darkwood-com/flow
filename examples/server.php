@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 require __DIR__.'/../vendor/autoload.php';
 
-use function Amp\delay;
-
 use Doctrine\DBAL\DriverManager;
 use Flow\Driver\AmpDriver;
 use Flow\Driver\ReactDriver;
@@ -46,7 +44,7 @@ $multbyTwoJob = static function (object $data) use ($driver): void {
     // simulating calculating some "heavy" operation from from 1 to 3 seconds
     $delay = random_int(1, 3);
     $driver->delay($delay);
-    
+
     // simulating 1 chance on 3 to produce an exception from the "heavy" operation
     if (1 === random_int(1, 3)) {
         throw new Error('Failure when processing "Mult by two"');

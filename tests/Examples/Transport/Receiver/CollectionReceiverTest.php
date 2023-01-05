@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Flow\Test\Transport\Receiver;
+namespace Flow\Test\Examples\Transport\Receiver;
 
 use ArrayObject;
 use Flow\EnvelopeTrait;
-use Flow\Transport\Receiver\CollectionReceiver;
+use Flow\Examples\Transport\Receiver\CollectionReceiver;
 use PHPUnit\Framework\TestCase;
 use SplObjectStorage;
 use stdClass;

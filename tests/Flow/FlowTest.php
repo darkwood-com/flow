@@ -16,13 +16,15 @@ class FlowTest extends AbstractFlowTest
 {
     /**
      * @dataProvider jobProvider
+     *
+     * @param array<Closure> $jobs
      */
     public function testJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, array $jobs, int $resultNumber): void
     {
         $ip = new Ip(new ArrayObject(['number' => 0]));
         $flow = array_reduce(
             array_map(fn ($job) => new Flow($job, static function () {}, $ipStrategy, $driver), $jobs),
-            fn($flow, $flowIt) => $flow ? $flow->fn($flowIt) : $flowIt
+            fn ($flow, $flowIt) => $flow ? $flow->fn($flowIt) : $flowIt
         );
         ($flow)($ip, function (Ip $ip) use ($driver, $resultNumber) {
             $driver->stop();

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Flow\Driver;
 
 use function Amp\delay;
+
 use Closure;
 use Flow\DriverInterface;
 use Revolt\EventLoop;
