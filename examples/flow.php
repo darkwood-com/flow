@@ -4,99 +4,63 @@ declare(strict_types=1);
 
 require __DIR__.'/../vendor/autoload.php';
 
-use function Amp\delay as amp_delay;
-use function React\Async\delay as react_delay;
-
 use Flow\Driver\AmpDriver;
 use Flow\Driver\ReactDriver;
 use Flow\Driver\SwooleDriver;
 use Flow\Flow\Flow;
 use Flow\Ip;
 use Flow\IpStrategy\MaxIpStrategy;
-use Swoole\Coroutine;
 
 $randomDriver = random_int(1, 3);
 
-if (1 === $randomDriver) {
+if ($randomDriver === 1) {
     printf("Use AmpDriver\n");
 
     $driver = new AmpDriver();
-
-    $job1 = static function (object $data): void {
-        printf("*. #%d - Job 1 : Calculating %d + %d\n", $data['id'], $data['number'], $data['number']);
-
-        // simulating calculating some "light" operation from 100 to 900 milliseconds
-        $delay = random_int(1, 9) * 100;
-        amp_delay($delay / 1000);
-        $result = $data['number'];
-        $result += $result;
-
-        if (1 === random_int(1, 5)) {
-            throw new Error('Failure when processing "Job1"');
-        }
-
-        printf("*. #%d - Job 1 : Result for %d + %d = %d and took %d milliseconds\n", $data['id'], $data['number'], $data['number'], $result, $delay);
-
-        $data['number'] = $result;
-    };
-} elseif (2 === $randomDriver) {
-    printf("Use SwooleDriver\n");
-
-    $driver = new SwooleDriver();
-
-    $job1 = static function (object $data): void {
-        printf("*. #%d - Job 1 : Calculating %d + %d\n", $data['id'], $data['number'], $data['number']);
-
-        // simulating calculating some "light" operation from 100 to 900 milliseconds
-        $delay = random_int(1, 9) * 100;
-        Coroutine::sleep($delay / 1000);
-        $result = $data['number'];
-        $result += $result;
-
-        if (1 === random_int(1, 5)) {
-            throw new Error('Failure when processing "Job1"');
-        }
-
-        printf("*. #%d - Job 1 : Result for %d + %d = %d and took %d milliseconds\n", $data['id'], $data['number'], $data['number'], $result, $delay);
-
-        $data['number'] = $result;
-    };
-} else {
+} elseif ($randomDriver === 2) {
     printf("Use ReactDriver\n");
 
     $driver = new ReactDriver();
+} else {
+    printf("Use SwooleDriver\n");
 
-    $job1 = static function (object $data): void {
-        printf("*. #%d - Job 1 : Calculating %d + %d\n", $data['id'], $data['number'], $data['number']);
-
-        // simulating calculating some "light" operation from 100 to 900 milliseconds
-        $delay = random_int(1, 9) * 100;
-        react_delay($delay / 1000);
-        $result = $data['number'];
-        $result += $result;
-
-        if (1 === random_int(1, 5)) {
-            throw new Error('Failure when processing "Job1"');
-        }
-
-        printf("*. #%d - Job 1 : Result for %d + %d = %d and took %d milliseconds\n", $data['id'], $data['number'], $data['number'], $result, $delay);
-
-        $data['number'] = $result;
-    };
+    $driver = new SwooleDriver();
 }
 
-$job2 = static function (object $data): void {
+$job1 = static function (object $data) use ($driver): void {
+    printf("*. #%d - Job 1 : Calculating %d + %d\n", $data['id'], $data['number'], $data['number']);
+
+    // simulating calculating some "light" operation from 0.1 to 1 seconds
+    $delay = random_int(1, 10) / 10;
+    $driver->delay($delay);
+    $result = $data['number'];
+    $result += $result;
+
+    // simulating 1 chance on 5 to produce an exception from the "light" operation
+    if (1 === random_int(1, 5)) {
+        throw new Error('Failure when processing "Job1"');
+    }
+
+    printf("*. #%d - Job 1 : Result for %d + %d = %d and took %.01f seconds\n", $data['id'], $data['number'], $data['number'], $result, $delay);
+
+    $data['number'] = $result;
+};
+
+$job2 = static function (object $data) use ($driver): void {
     printf(".* #%d - Job 2 : Calculating %d * %d\n", $data['id'], $data['number'], $data['number']);
 
-    // simulating calculating some "light" operation as anonymous function
+    // simulating calculating some "heavy" operation from from 1 to 3 seconds
+    $delay = random_int(1, 3);
+    $driver->delay($delay);
     $result = $data['number'];
     $result *= $result;
 
+    // simulating 1 chance on 5 to produce an exception from the "heavy" operation
     if (1 === random_int(1, 5)) {
         throw new Error('Failure when processing "Job2"');
     }
 
-    printf(".* #%d - Job 2 : Result for %d * %d = %d\n", $data['id'], $data['number'], $data['number'], $result);
+    printf(".* #%d - Job 2 : Result for %d * %d = %d and took %.01f seconds\n", $data['id'], $data['number'], $data['number'], $result, $delay);
 
     $data['number'] = $result;
 };
@@ -119,7 +83,7 @@ for ($i = 1; $i <= 5; $i++) {
 }
 
 $driver->tick(1, function () use ($driver, $ipPool) {
-    if (0 === $ipPool->count()) {
+    if ($ipPool->count() === 0) {
         $driver->stop();
     }
 });

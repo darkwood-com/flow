@@ -9,7 +9,7 @@
 Flow concept aims to solve
 
 - Adopt asynchronous as native implementation
-- Build your code with functional programming and monads
+- Build your code with functional programming
 - Assemble your code visually
 
 ## Installation

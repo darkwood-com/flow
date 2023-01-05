@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Flow\Driver;
 
+use function Amp\delay;
 use Closure;
 use Flow\DriverInterface;
 use Revolt\EventLoop;
@@ -26,7 +27,7 @@ class AmpDriver implements DriverInterface
         $this->ticksIds = [];
     }
 
-    public function coroutine(Closure $callback, ?Closure $onResolved = null): Closure
+    public function async(Closure $callback, ?Closure $onResolved = null): Closure
     {
         return static function (...$args) use ($callback, $onResolved): void {
             EventLoop::queue(static function (Closure $callback, array $args, ?Closure $onResolved = null) {
@@ -42,6 +43,11 @@ class AmpDriver implements DriverInterface
                 }
             }, $callback, $args, $onResolved);
         };
+    }
+
+    public function delay(float $seconds): void
+    {
+        delay($seconds);
     }
 
     public function tick(int $interval, Closure $callback): void

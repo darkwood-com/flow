@@ -35,7 +35,7 @@ class YFlowTest extends AbstractFlowTest
      */
     public function jobProvider(): array
     {
-        return $this->matrix([
+        return $this->matrix(fn (DriverInterface $driver) => [
             'job' => [static function (callable $function): Closure {
                 return static function (ArrayObject $data) use ($function) {
                     if ($data['number'] > 1) {

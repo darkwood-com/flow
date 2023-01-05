@@ -65,7 +65,7 @@ class Flow implements FlowInterface
 
         $count = count($this->jobs);
         foreach ($this->jobs as $i => $job) {
-            $this->driver->coroutine($job, function (Throwable $exception = null) use ($ip, &$count, $i, $callback) {
+            $this->driver->async($job, function (Throwable $exception = null) use ($ip, &$count, $i, $callback) {
                 $count--;
                 if ($count === 0 || $exception !== null) {
                     $count = 0;

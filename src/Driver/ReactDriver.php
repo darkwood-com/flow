@@ -8,6 +8,7 @@ use Closure;
 use Flow\DriverInterface;
 
 use function React\Async\async;
+use function React\Async\delay;
 
 use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
@@ -34,7 +35,7 @@ class ReactDriver implements DriverInterface
         $this->ticksIds = [];
     }
 
-    public function coroutine(Closure $callback, ?Closure $onResolved = null): Closure
+    public function async(Closure $callback, ?Closure $onResolved = null): Closure
     {
         return static function (...$args) use ($callback, $onResolved): void {
             async(static function () use ($callback, $onResolved, $args) {
@@ -50,6 +51,11 @@ class ReactDriver implements DriverInterface
                 }
             })();
         };
+    }
+
+    public function delay(float $seconds): void
+    {
+        delay($seconds);
     }
 
     public function tick(int $interval, Closure $callback): void

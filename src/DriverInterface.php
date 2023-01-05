@@ -8,7 +8,9 @@ use Closure;
 
 interface DriverInterface
 {
-    public function coroutine(Closure $callback, ?Closure $onResolved = null): Closure;
+    public function async(Closure $callback, ?Closure $onResolved = null): Closure;
+
+    public function delay(float $seconds): void;
 
     public function tick(int $interval, Closure $callback): void;
 

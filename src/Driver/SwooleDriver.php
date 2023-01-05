@@ -33,7 +33,7 @@ class SwooleDriver implements DriverInterface
         $this->ticksIds = [];
     }
 
-    public function coroutine(Closure $callback, ?Closure $onResolved = null): Closure
+    public function async(Closure $callback, ?Closure $onResolved = null): Closure
     {
         return static function (...$args) use ($callback, $onResolved): void {
             Coroutine::create(function (Closure $callback, ?Closure $onResolved, ...$args) {
@@ -49,6 +49,11 @@ class SwooleDriver implements DriverInterface
                 }
             }, $callback, $onResolved, ...$args);
         };
+    }
+
+    public function delay(float $seconds): void
+    {
+        Coroutine::sleep($seconds);
     }
 
     public function tick(int $interval, Closure $callback): void

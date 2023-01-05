@@ -45,6 +45,7 @@ Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://ww
 - Générateurs et Programmation Asynchrone: Mode d’emploi - [Benoit Viguier](https://twitter.com/b_viguier) - Forum PHP 2018 : [https://www.youtube.com/watch?v=7TvIIt4c8uY](https://www.youtube.com/watch?v=7TvIIt4c8uY)
 - En route vers le multi-tâche ! - Julien Bianchi - PHP Tour 2016 [https://www.youtube.com/watch?v=FOeGfSbKkuY](https://www.youtube.com/watch?v=FOeGfSbKkuY)
 - Differences between Multiprocessing, Multithreading and Coroutines execution in PHP : [https://divinglaravel.com/asynchronous-php](https://divinglaravel.com/asynchronous-php)
+- Differences between PHP Fibers RFC in PHP 8.1 vs Swoole Fibers and Coroutines : [https://openswoole.com/article/php-fibers-rfc-vs-swoole-co](https://openswoole.com/article/php-fibers-rfc-vs-swoole-co)
 
 ## Monads and PHP
 - What is a monad from [Sean Riley](https://twitter.com/seanski44) : [https://www.youtube.com/watch?v=t1e8gqXLbsU](https://www.youtube.com/watch?v=t1e8gqXLbsU)

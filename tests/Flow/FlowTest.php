@@ -17,11 +17,13 @@ class FlowTest extends AbstractFlowTest
     /**
      * @dataProvider jobProvider
      */
-    public function testJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, Closure $job, int $resultNumber): void
+    public function testJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, array $jobs, int $resultNumber): void
     {
         $ip = new Ip(new ArrayObject(['number' => 0]));
-        $errorJob = function () {};
-        $flow = new Flow($job, $errorJob, $ipStrategy, $driver);
+        $flow = array_reduce(
+            array_map(fn ($job) => new Flow($job, static function () {}, $ipStrategy, $driver), $jobs),
+            fn($flow, $flowIt) => $flow ? $flow->fn($flowIt) : $flowIt
+        );
         ($flow)($ip, function (Ip $ip) use ($driver, $resultNumber) {
             $driver->stop();
             self::assertSame(ArrayObject::class, $ip->data::class);
@@ -78,13 +80,24 @@ class FlowTest extends AbstractFlowTest
     {
         $exception = new RuntimeException('job error');
 
-        return $this->matrix([
-            'job' => [static function (ArrayObject $data) {
+        return $this->matrix(fn (DriverInterface $driver) => [
+            'oneJob' => [[static function (ArrayObject $data) {
                 $data['number'] = 5;
-            }, 5],
-            'exceptionJob' => [static function () use ($exception) {
+            }], 5],
+            'oneAsyncJob' => [[static function (ArrayObject $data) use ($driver): void {
+                $driver->delay(1 / 1000);
+                $data['number'] = 5;
+            }], 5],
+            'twoAsyncJob' => [[static function (ArrayObject $data) use ($driver): void {
+                $driver->delay(1 / 1000);
+                $data['number'] += 5;
+            }, static function (ArrayObject $data) use ($driver): void {
+                $driver->delay(1 / 1000);
+                $data['number'] *= 2;
+            }], 10],
+            'exceptionJob' => [[static function () use ($exception) {
                 throw $exception;
-            }, 0],
+            }], 0],
         ]);
     }
 }

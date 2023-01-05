@@ -13,10 +13,10 @@ abstract class DriverTest extends TestCase
 {
     abstract protected function createDriver(): DriverInterface;
 
-    public function testCoroutine(): void
+    public function testAsync(): void
     {
         $driver = $this->createDriver();
-        $driver->coroutine(static function () {
+        $driver->async(static function () {
         }, function (?Throwable $e) use ($driver) {
             $driver->stop();
             $this->assertNull($e);
@@ -24,10 +24,10 @@ abstract class DriverTest extends TestCase
         $driver->start();
     }
 
-    public function testCoroutineError(): void
+    public function testAsyncError(): void
     {
         $driver = $this->createDriver();
-        $driver->coroutine(static function () {
+        $driver->async(static function () {
             throw new Exception();
         }, function (?Throwable $e) use ($driver) {
             $driver->stop();
@@ -43,7 +43,7 @@ abstract class DriverTest extends TestCase
         $driver->tick(1, function () use (&$i) {
             $i++;
         });
-        $driver->coroutine(function () use ($driver, &$i) {
+        $driver->async(function () use ($driver, &$i) {
             usleep(3000);
             $driver->stop();
 

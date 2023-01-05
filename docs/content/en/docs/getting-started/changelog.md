@@ -16,8 +16,10 @@ toc: true
 ### 1.1.2
 
 - Update to PHP 8.2
-- Upgrade from amphp/amp v2 to amphp/amp v3 that use Fibers
-- Upgrade from react/event-loop v1 to reactphp/async v4 that use Fibers
+- Upgrade from amphp/amp v2 to amphp/amp v3 that use PHP Fibers
+- Upgrade from react/event-loop v1 to reactphp/async v4 that use PHP Fibers
+- Renamed function `corouting` to `async` in Flow\DriverInterface
+- Added function `sleep` in Flow\DriverInterface
 
 ### 1.1.1
 

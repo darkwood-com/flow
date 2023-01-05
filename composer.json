@@ -12,8 +12,10 @@
     "keywords": [
         "php",
         "symfony",
-        "coroutine",
+        "async",
         "amphp",
+        "reactphp",
+        "swoole",
         "monad"
     ],
     "require": {
