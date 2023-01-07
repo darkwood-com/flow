@@ -18,6 +18,7 @@ toc: true
 - Update to PHP 8.2
 - Upgrade from amphp/amp v2 to amphp/amp v3 that use PHP Fibers
 - Upgrade from react/event-loop v1 to reactphp/async v4 that use PHP Fibers
+- Upgrade from Swoole v5 to Openswoole v22
 - Rename function `corouting` to `async` in Flow\DriverInterface
 - Add function `sleep` in Flow\DriverInterface
 

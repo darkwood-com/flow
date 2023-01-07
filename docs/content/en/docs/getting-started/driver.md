@@ -53,10 +53,10 @@ More documentation can be found [https://reactphp.org](https://reactphp.org)
 To use Swoole Driver, you have to add the extension with your current running PHP
 
 ```bash
-pecl install swoole
+pecl install openswoole-22.0.0
 ```
 
-More documentation can be found [https://www.swoole.co.uk](https://www.swoole.co.uk)
+More documentation can be found [https://openswoole.com](https://openswoole.com)
 
 ## Make your custom driver
 
