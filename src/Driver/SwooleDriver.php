@@ -6,9 +6,9 @@ namespace Flow\Driver;
 
 use Closure;
 use Flow\DriverInterface;
+use OpenSwoole\Coroutine;
+use OpenSwoole\Timer;
 use RuntimeException;
-use Swoole\Coroutine;
-use Swoole\Timer;
 use Throwable;
 
 class SwooleDriver implements DriverInterface
@@ -25,8 +25,8 @@ class SwooleDriver implements DriverInterface
 
     public function __construct()
     {
-        if (!extension_loaded('swoole')) {
-            throw new RuntimeException('Swoole extension is not loaded. Suggest install it with pecl install swoole');
+        if (!extension_loaded('openswoole')) {
+            throw new RuntimeException('Swoole extension is not loaded. Suggest install it with pecl install openswoole');
         }
 
         $this->ticks = [];
@@ -36,24 +36,27 @@ class SwooleDriver implements DriverInterface
     public function async(Closure $callback, ?Closure $onResolved = null): Closure
     {
         return static function (...$args) use ($callback, $onResolved): void {
-            Coroutine::create(function (Closure $callback, ?Closure $onResolved, ...$args) {
-                try {
-                    $callback(...$args, ...($args = []));
-                    if ($onResolved) {
-                        $onResolved(null);
+            Coroutine::run(static function () use ($callback, $onResolved, $args) {
+                Coroutine::create(static function (Closure $callback, array $args, ?Closure $onResolved = null) {
+                    try {
+                        $callback(...$args, ...($args = []));
+                        if ($onResolved) {
+                            $onResolved(null);
+                        }
+                    } catch (Throwable $e) {
+                        if ($onResolved) {
+                            $onResolved($e);
+                        }
                     }
-                } catch (Throwable $e) {
-                    if ($onResolved) {
-                        $onResolved($e);
-                    }
-                }
-            }, $callback, $onResolved, ...$args);
+                }, $callback, $args, $onResolved);
+            });
         };
     }
 
     public function delay(float $seconds): void
     {
-        Coroutine::sleep($seconds);
+        Coroutine::sleep((int) $seconds);
+        // Coroutine::usleep((int) $seconds * 1000);
     }
 
     public function tick(int $interval, Closure $callback): void
@@ -72,7 +75,7 @@ class SwooleDriver implements DriverInterface
     public function stop(): void
     {
         foreach ($this->ticksIds as $tickId) {
-            Timer::clear($tickId);
+            Timer::clear($tickId); // @phpstan-ignore-line
         }
         $this->ticks = [];
         $this->ticksIds = [];
