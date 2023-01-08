@@ -14,7 +14,7 @@ Flow concept aims to solve
 
 ## Installation
 
-PHP 8.2 is the minimal version to use _Flow_  
+PHP 8.2 is the minimal version to use Flow  
 The recommended way to install it through [Composer](http://getcomposer.org/) and execute
 
 ```bash
@@ -22,6 +22,21 @@ composer require darkwood/flow
 ```
 
 ## Usage
+
+```php
+<?php
+
+use Flow\Flow\Flow;
+use Flow\Ip;
+
+$flow = (new Flow(fn (object $data) => $data['number'] += 1))
+    ->fn(new Flow(fn (object $data) => $data['number'] *= 2));
+
+$ip = new Ip(new ArrayObject(['number' => 4]));
+$flow($ip, fn ($ip) => printf("my number %d\n", $ip->data['number'])); // display 'my number 10'
+```
+
+## Examples
 
 A working script is available in the bundled `examples` directory
 
@@ -37,4 +52,4 @@ Messaging part require to install [Docker](https://www.docker.com) and execute `
 
 ## License
 
-_Flow_ is released under the MIT License.
+Flow is released under the MIT License.

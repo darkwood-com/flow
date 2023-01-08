@@ -10,7 +10,7 @@ use Flow\IpStrategyInterface;
 
 class YFlow extends FlowDecorator
 {
-    public function __construct(Closure $job, Closure $errorJob, ?IpStrategyInterface $ipStrategy = null, ?DriverInterface $driver = null)
+    public function __construct(Closure $job, Closure $errorJob = null, ?IpStrategyInterface $ipStrategy = null, ?DriverInterface $driver = null)
     {
         $U = fn (Closure $f) => $f($f);
         $Y = fn (Closure $f) => $U(fn (Closure $x) => $f(fn ($y) => $U($x)($y)));

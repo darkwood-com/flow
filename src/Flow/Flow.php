@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Flow\Flow;
 
 use Closure;
-use Flow\Driver\AmpDriver;
+use Flow\Driver\ReactDriver;
 use Flow\DriverInterface;
 use Flow\FlowInterface;
 use Flow\Ip;
@@ -42,14 +42,14 @@ class Flow implements FlowInterface
      */
     public function __construct(
         Closure|array $jobs,
-        Closure|array $errorJobs,
+        Closure|array $errorJobs = null,
         IpStrategyInterface $ipStrategy = null,
         DriverInterface $driver = null
     ) {
         $this->jobs = is_array($jobs) ? $jobs : [$jobs];
-        $this->errorJobs = is_array($errorJobs) ? $errorJobs : [$errorJobs];
+        $this->errorJobs = $errorJobs ? (is_array($errorJobs) ? $errorJobs : [$errorJobs]) : [];
         $this->ipStrategy = $ipStrategy ?? new LinearIpStrategy();
-        $this->driver = $driver ?? new AmpDriver();
+        $this->driver = $driver ?? new ReactDriver();
         $this->callbacks = new SplObjectStorage();
     }
 
