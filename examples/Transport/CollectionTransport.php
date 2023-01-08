@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Flow\Transport;
+namespace Flow\Examples\Transport;
 
-use Flow\Transport\Receiver\CollectionReceiver;
-use Flow\Transport\Sender\CollectionSender;
+use Flow\Examples\Transport\Receiver\CollectionReceiver;
+use Flow\Examples\Transport\Sender\CollectionSender;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 

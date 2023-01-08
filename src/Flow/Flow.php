@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Flow\Flow;
 
 use Closure;
-use Flow\Driver\AmpDriver;
+use Flow\Driver\ReactDriver;
 use Flow\DriverInterface;
+use Flow\FlowInterface;
 use Flow\Ip;
 use Flow\IpStrategy\LinearIpStrategy;
 use Flow\IpStrategyInterface;
-use Flow\FlowInterface;
 use SplObjectStorage;
 use Throwable;
 
@@ -42,14 +42,14 @@ class Flow implements FlowInterface
      */
     public function __construct(
         Closure|array $jobs,
-        Closure|array $errorJobs,
+        Closure|array $errorJobs = null,
         IpStrategyInterface $ipStrategy = null,
         DriverInterface $driver = null
     ) {
         $this->jobs = is_array($jobs) ? $jobs : [$jobs];
-        $this->errorJobs = is_array($errorJobs) ? $errorJobs : [$errorJobs];
+        $this->errorJobs = $errorJobs ? (is_array($errorJobs) ? $errorJobs : [$errorJobs]) : [];
         $this->ipStrategy = $ipStrategy ?? new LinearIpStrategy();
-        $this->driver = $driver ?? new AmpDriver();
+        $this->driver = $driver ?? new ReactDriver();
         $this->callbacks = new SplObjectStorage();
     }
 
@@ -57,7 +57,7 @@ class Flow implements FlowInterface
     {
         $ip = $this->ipStrategy->pop();
         if (!$ip) {
-            return ;
+            return;
         }
 
         $callback = $this->callbacks->offsetGet($ip);
@@ -65,21 +65,21 @@ class Flow implements FlowInterface
 
         $count = count($this->jobs);
         foreach ($this->jobs as $i => $job) {
-            $this->driver->coroutine($job, function (Throwable $exception = null) use ($ip, &$count, $i, $callback) {
+            $this->driver->async($job, function (Throwable $exception = null) use ($ip, &$count, $i, $callback) {
                 $count--;
-                if($count === 0 || $exception !== null) {
+                if ($count === 0 || $exception !== null) {
                     $count = 0;
                     $this->ipStrategy->done($ip);
                     $this->nextIpJob();
 
-                    if($exception) {
-                        if(isset($this->errorJobs[$i])) {
+                    if ($exception) {
+                        if (isset($this->errorJobs[$i])) {
                             $this->errorJobs[$i]($ip->data, $exception);
                         } else {
                             throw $exception;
                         }
                     }
-                    
+
                     if ($this->fnFlow) {
                         ($this->fnFlow)($ip, $callback);
                     } else {
@@ -99,7 +99,7 @@ class Flow implements FlowInterface
 
     public function fn(FlowInterface $flow): FlowInterface
     {
-        if($this->fnFlow) {
+        if ($this->fnFlow) {
             $this->fnFlow->fn($flow);
         } else {
             $this->fnFlow = $flow;

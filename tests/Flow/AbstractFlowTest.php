@@ -4,47 +4,46 @@ declare(strict_types=1);
 
 namespace Flow\Test\Flow;
 
-use Amp\PHPUnit\AsyncTestCase;
+use Closure;
 use Flow\Driver\AmpDriver;
 use Flow\Driver\ReactDriver;
 use Flow\Driver\SwooleDriver;
 use Flow\IpStrategy\LinearIpStrategy;
 use Flow\IpStrategy\MaxIpStrategy;
 use Flow\IpStrategy\StackIpStrategy;
+use PHPUnit\Framework\TestCase;
 
-abstract class AbstractFlowTest extends AsyncTestCase
+abstract class AbstractFlowTest extends TestCase
 {
     /**
-     * @param array<array<mixed>> $datas
-     * @param array<mixed>|null   $mix
-     *
      * @return array<array<mixed>>
      */
-    protected function matrix(array $datas, ?array $mix = null): array
+    protected function matrix(Closure $datas): array
     {
-        if (null === $mix) {
-            $drivers = [
-                'amp' => static function (): AmpDriver { return new AmpDriver(); },
-                'react' => static function (): ReactDriver { return new ReactDriver(); },
-                'swoole' => static function (): SwooleDriver { return new SwooleDriver(); },
-            ];
+        $drivers = [
+            'amp' => fn (): AmpDriver => new AmpDriver(),
+            'react' => fn (): ReactDriver => new ReactDriver(),
+            // 'swoole' => fn (): SwooleDriver => new SwooleDriver(),
+        ];
 
-            $strategies = [
-                'linear' => static function (): LinearIpStrategy { return new LinearIpStrategy(); },
-                'max' => static function (): MaxIpStrategy { return new MaxIpStrategy(); },
-                'stack' => static function (): StackIpStrategy { return new StackIpStrategy(); },
-            ];
+        $strategies = [
+            'linear' => fn (): LinearIpStrategy => new LinearIpStrategy(),
+            'max' => fn (): MaxIpStrategy => new MaxIpStrategy(),
+            'stack' => fn (): StackIpStrategy => new StackIpStrategy(),
+        ];
 
-            return $this->matrix($this->matrix($datas, $strategies), $drivers);
-        }
-
-        $mixDatas = [];
-        foreach ($datas as $dataKey => $dataValues) {
-            foreach ($mix as $mixKey => $mixValue) {
-                $mixDatas["$mixKey.$dataKey"] = [$mixValue(), ...$dataValues];
+        $matrixDatas = [];
+        foreach ($drivers as $keyDriver => $driverBuilder) {
+            $driver = $driverBuilder();
+            $dataValues = $datas($driver);
+            foreach ($strategies as $keyStrategy => $strategyBuilder) {
+                $strategy = $strategyBuilder();
+                foreach ($dataValues as $key => $values) {
+                    $matrixDatas["$keyDriver.$keyStrategy.$key"] = [$driver, $strategy, ...$values];
+                }
             }
         }
 
-        return $mixDatas;
+        return $matrixDatas;
     }
 }

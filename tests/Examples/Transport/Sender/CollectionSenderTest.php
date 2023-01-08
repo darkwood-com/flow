@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Flow\Test\Transport\Sender;
+namespace Flow\Test\Examples\Transport\Sender;
 
 use ArrayObject;
+use Flow\Examples\Transport\Sender\CollectionSender;
 use PHPUnit\Framework\TestCase;
-use Flow\Transport\Sender\CollectionSender;
 use stdClass;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
@@ -27,7 +27,7 @@ class CollectionSenderTest extends TestCase
 
                 public function send(Envelope $envelope): Envelope
                 {
-                    ++$this->counter['send'];
+                    $this->counter['send']++;
 
                     return $envelope;
                 }

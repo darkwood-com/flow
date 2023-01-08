@@ -6,9 +6,9 @@ namespace Flow\Test\Examples\Transport;
 
 use ArrayObject;
 use Doctrine\DBAL\DriverManager;
-use PHPUnit\Framework\TestCase;
 use Flow\Examples\Stamp\DoctrineIpTransportIdStamp;
 use Flow\Examples\Transport\DoctrineIpTransport;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 
 class DoctrineIpTransportTest extends TestCase
@@ -19,11 +19,11 @@ class DoctrineIpTransportTest extends TestCase
         $supervisorTransport = new DoctrineIpTransport($connection);
 
         $clientTransports = [];
-        for ($i = 0; $i < 5; ++$i) {
+        for ($i = 0; $i < 5; $i++) {
             $clientTransports[] = new DoctrineIpTransport($connection, uniqid('transport_', true));
         }
 
-        for ($i = 0; $i < 20; ++$i) {
+        for ($i = 0; $i < 20; $i++) {
             $data = new ArrayObject(['number' => 1]);
             $clientTransports[$i % 5]->send(new Envelope($data));
         }

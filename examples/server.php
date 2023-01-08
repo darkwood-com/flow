@@ -4,103 +4,59 @@ declare(strict_types=1);
 
 require __DIR__.'/../vendor/autoload.php';
 
-use function Amp\delay;
 use Doctrine\DBAL\DriverManager;
 use Flow\Driver\AmpDriver;
 use Flow\Driver\ReactDriver;
 use Flow\Driver\SwooleDriver;
 use Flow\Examples\Transport\DoctrineIpTransport;
-use Flow\IpStrategy\MaxIpStrategy;
 use Flow\Flow\Flow;
 use Flow\Flow\TransportFlow;
-use Swoole\Coroutine;
+use Flow\IpStrategy\MaxIpStrategy;
 
 $randomDriver = random_int(1, 3);
-if (1 === $randomDriver) {
+
+if ($randomDriver === 1) {
     printf("Use AmpDriver\n");
 
     $driver = new AmpDriver();
-} elseif (2 === $randomDriver) {
-    printf("Use SwooleDriver\n");
-
-    $driver = new SwooleDriver();
-} else {
+} elseif ($randomDriver === 2) {
     printf("Use ReactDriver\n");
 
     $driver = new ReactDriver();
-}
-
-if (1 === $randomDriver) {
-    $addOneJob = static function (object $data): Generator {
-        printf("Client %s #%d : Calculating %d + 1\n", $data['client'], $data['id'], $data['number']);
-
-        // simulating calculating some "light" operation from 10 to 90 milliseconds as async generator
-        $delay = random_int(1, 9) * 10;
-        yield delay($delay);
-        ++$data['number'];
-    };
-
-    $multbyTwoJob = static function (object $data): Generator {
-        printf("Client %s #%d : Calculating %d * 2\n", $data['client'], $data['id'], $data['number']);
-
-        // simulating calculating some "heavy" operation from 4 to 6 seconds as async generator
-        $delay = random_int(4, 6) * 1000;
-        yield delay($delay);
-        $data['number'] *= 2;
-
-        // simulating 1 chance on 3 to produce an exception from the "heavy" operation
-        if (1 === random_int(1, 3)) {
-            throw new Error('Failure when processing "Mult by two"');
-        }
-    };
-} elseif (2 === $randomDriver) {
-    $addOneJob = static function (object $data): void {
-        printf("Client %s #%d : Calculating %d + 1\n", $data['client'], $data['id'], $data['number']);
-
-        // simulating calculating some "light" operation from 10 to 90 milliseconds as async generator
-        $delay = random_int(1, 9) * 10;
-        Coroutine::sleep($delay / 1000);
-        ++$data['number'];
-    };
-
-    $multbyTwoJob = static function (object $data): void {
-        printf("Client %s #%d : Calculating %d * 2\n", $data['client'], $data['id'], $data['number']);
-
-        // simulating calculating some "heavy" operation from 4 to 6 seconds as async generator
-        $delay = random_int(4, 6) * 1000;
-        Coroutine::sleep($delay / 1000);
-        $data['number'] *= 2;
-
-        // simulating 1 chance on 3 to produce an exception from the "heavy" operation
-        if (1 === random_int(1, 3)) {
-            throw new Error('Failure when processing "Mult by two"');
-        }
-    };
 } else {
-    $addOneJob = static function (object $data): void {
-        printf("Client %s #%d : Calculating %d + 1\n", $data['client'], $data['id'], $data['number']);
+    printf("Use SwooleDriver\n");
 
-        // simulating calculating some "light" operation
-        ++$data['number'];
-    };
-
-    $multbyTwoJob = static function (object $data): void {
-        printf("Client %s #%d : Calculating %d * 2\n", $data['client'], $data['id'], $data['number']);
-
-        // simulating calculating some "heavy" operation
-        $data['number'] *= 2;
-
-        // simulating 1 chance on 3 to produce an exception from the "heavy" operation
-        if (1 === random_int(1, 3)) {
-            throw new Error('Failure when processing "Mult by two"');
-        }
-    };
+    $driver = new SwooleDriver();
 }
+
+$addOneJob = static function (object $data) use ($driver): void {
+    printf("Client %s #%d : Calculating %d + 1\n", $data['client'], $data['id'], $data['number']);
+
+    // simulating calculating some "light" operation from 0.1 to 1 seconds
+    $delay = random_int(1, 10) / 10;
+    $driver->delay($delay);
+    $data['number']++;
+};
+
+$multbyTwoJob = static function (object $data) use ($driver): void {
+    printf("Client %s #%d : Calculating %d * 2\n", $data['client'], $data['id'], $data['number']);
+
+    // simulating calculating some "heavy" operation from from 1 to 3 seconds
+    $delay = random_int(1, 3);
+    $driver->delay($delay);
+
+    // simulating 1 chance on 3 to produce an exception from the "heavy" operation
+    if (1 === random_int(1, 3)) {
+        throw new Error('Failure when processing "Mult by two"');
+    }
+
+    $data['number'] *= 2;
+};
 
 $minusThreeJob = static function (object $data): void {
     printf("Client %s #%d : Calculating %d - 3\n", $data['client'], $data['id'], $data['number']);
 
-    // simulating calculating some "light" operation as anonymous function
+    // simulating calculating some "instant" operation
     $data['number'] -= 3;
 };
 

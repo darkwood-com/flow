@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Flow\Test\Transport\Receiver;
+namespace Flow\Test\Examples\Transport\Receiver;
 
 use ArrayObject;
-use PHPUnit\Framework\TestCase;
 use Flow\EnvelopeTrait;
-use Flow\Transport\Receiver\CollectionReceiver;
+use Flow\Examples\Transport\Receiver\CollectionReceiver;
+use PHPUnit\Framework\TestCase;
 use SplObjectStorage;
 use stdClass;
 use Symfony\Component\Messenger\Envelope;
@@ -21,6 +21,7 @@ class CollectionReceiverTest extends TestCase
     /**
      * @param array<ReceiverInterface>                             $receivers
      * @param SplObjectStorage<ReceiverInterface, array<Envelope>> $expectedReceiversIps
+     *
      * @dataProvider receiverProvider
      */
     public function testGet($receivers, $expectedReceiversIps): void
@@ -47,6 +48,7 @@ class CollectionReceiverTest extends TestCase
      * @param SplObjectStorage<ReceiverInterface, array<Envelope>> $expectedReceiversIps
      * @param array<mixed, ReceiverInterface>                      $expectedAckIpsReceivers
      * @param array<mixed, ReceiverInterface>                      $expectedRejectIpsReceivers
+     *
      * @dataProvider receiverProvider
      */
     public function testAckAndReject($receivers, $expectedReceiversIps, $expectedAckIpsReceivers, $expectedRejectIpsReceivers): void
@@ -92,9 +94,9 @@ class CollectionReceiverTest extends TestCase
         /** @var array<mixed, ReceiverInterface> $expectedRejectIpsReceivers */
         $expectedRejectIpsReceivers = new ArrayObject();
         $receivers = [];
-        for ($i = 0; $i < 10; ++$i) {
+        for ($i = 0; $i < 10; $i++) {
             $envelopes = [];
-            for ($j = 0; $j < 3; ++$j) {
+            for ($j = 0; $j < 3; $j++) {
                 $envelopes[] = Envelope::wrap(new stdClass(), [new TransportMessageIdStamp(uniqid('envelope_', true))]);
             }
 

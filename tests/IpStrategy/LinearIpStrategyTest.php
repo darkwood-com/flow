@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Flow\Test\IpStrategy;
 
-use PHPUnit\Framework\TestCase;
 use Flow\Ip;
 use Flow\IpStrategy\LinearIpStrategy;
+use PHPUnit\Framework\TestCase;
 
 class LinearIpStrategyTest extends TestCase
 {

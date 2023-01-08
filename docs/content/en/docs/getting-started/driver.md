@@ -38,25 +38,25 @@ composer require amphp/amp
 
 More documentation can be found [https://amphp.org](https://amphp.org)
 
-## Swoole Driver
-
-To use Swoole Driver, you have to add the extension with your current running PHP
-
-```bash
-pecl install swoole
-```
-
-More documentation can be found [https://www.swoole.co.uk](https://www.swoole.co.uk)
-
 ## ReactPHP Driver
 
 To use ReactPHP Driver, you have to require the library with composer
 
 ```bash
-composer require react/event-loop
+composer require react/async
 ```
 
 More documentation can be found [https://reactphp.org](https://reactphp.org)
+
+## Swoole Driver
+
+To use Swoole Driver, you have to add the extension with your current running PHP
+
+```bash
+pecl install openswoole-22.0.0
+```
+
+More documentation can be found [https://openswoole.com](https://openswoole.com)
 
 ## Make your custom driver
 

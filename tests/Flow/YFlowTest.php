@@ -7,10 +7,9 @@ namespace Flow\Test\Flow;
 use ArrayObject;
 use Closure;
 use Flow\DriverInterface;
+use Flow\Flow\YFlow;
 use Flow\Ip;
 use Flow\IpStrategyInterface;
-use Flow\Flow\YFlow;
-use Throwable;
 
 class YFlowTest extends AbstractFlowTest
 {
@@ -20,7 +19,7 @@ class YFlowTest extends AbstractFlowTest
     public function testJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, Closure $job, int $resultNumber): void
     {
         $ip = new Ip(new ArrayObject(['number' => 6]));
-        $errorJob = static function() {};
+        $errorJob = static function () {};
         $yFlow = new YFlow($job, $errorJob, $ipStrategy, $driver);
         ($yFlow)($ip, function (Ip $ip) use ($driver, $resultNumber) {
             $driver->stop();
@@ -36,10 +35,10 @@ class YFlowTest extends AbstractFlowTest
      */
     public function jobProvider(): array
     {
-        return $this->matrix([
+        return $this->matrix(fn (DriverInterface $driver) => [
             'job' => [static function (callable $function): Closure {
                 return static function (ArrayObject $data) use ($function) {
-                    if($data['number'] > 1) {
+                    if ($data['number'] > 1) {
                         $calcData = new ArrayObject(['number' => $data['number'] - 1]);
                         $function($calcData);
                         $data['number'] = $data['number'] * $calcData['number'];

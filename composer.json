@@ -12,31 +12,30 @@
     "keywords": [
         "php",
         "symfony",
-        "coroutine",
+        "async",
         "amphp",
+        "reactphp",
+        "swoole",
         "monad"
     ],
     "require": {
-        "php": "^8.1"
+        "php": "^8.2"
     },
     "require-dev": {
-        "amphp/amp": "^2.6",
-        "amphp/phpunit-util": "^2.0",
-        "edgedesign/phpqa": "^1.26",
-        "friendsofphp/php-cs-fixer": "^3.9",
-        "phpstan/phpstan": "^1.8",
+        "amphp/amp": "^3.0",
+        "friendsofphp/php-cs-fixer": "^3.13",
+        "openswoole/ide-helper": "^22.0",
+        "phpstan/phpstan": "^1.9",
         "phpunit/phpunit": "^9.5",
-        "react/event-loop": "^1.3",
-        "swoole/ide-helper": "^4.8",
+        "react/async": "4.x-dev",
         "symfony/doctrine-messenger": "^6.2",
         "symfony/messenger": "^6.2",
-        "symfony/orm-pack": "^2.3",
-        "vimeo/psalm": "^4.25"
+        "symfony/orm-pack": "^2.3"
     },
     "suggest": {
         "amphp/amp": "Provide asynchronous with AMP",
-        "ext-swoole": "Provide asynchronous with Swoole",
-        "react/event-loop": "Provide asynchronous with ReactPHP",
+        "ext-openswoole": "Provide asynchronous with OpenSwoole",
+        "react/async": "Provide asynchronous with ReactPHP",
         "symfony/messenger": "Provide symfony messenger support"
     },
     "autoload": {
@@ -51,17 +50,13 @@
         }
     },
     "scripts": {
-        "cs-fix": "@php ./vendor/bin/php-cs-fixer fix",
-        "phpqa": "@php ./vendor/bin/phpqa --report --tools phpcs:0,phpmd:0,phpmetrics,phploc,pdepend,security-checker:0,parallel-lint:0 --ignoredDirs vendor",
+        "cs-fix": "PHP_CS_FIXER_IGNORE_ENV=true php ./vendor/bin/php-cs-fixer fix",
         "phpstan": "@php ./vendor/bin/phpstan analyse",
-        "psalm": "@php ./vendor/bin/psalm --threads=8 --diff",
         "test": "@php ./vendor/bin/phpunit"
     },
     "scripts-descriptions": {
         "cs-fix": "Check and fix coding styles using PHP CS Fixer",
-        "phpqa": "Execute PHQA toolsuite analysis",
         "phpstan": "Execute PHPStan analysis",
-        "psalm": "Execute Psalm analysis",
         "test": "Launch PHPUnit test suite"
     },
     "minimum-stability": "stable"

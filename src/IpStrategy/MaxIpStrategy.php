@@ -28,7 +28,7 @@ class MaxIpStrategy implements IpStrategyInterface
         if ($this->processing < $this->max) {
             $ip = $this->ipStrategy->pop();
             if ($ip) {
-                ++$this->processing;
+                $this->processing++;
             }
 
             return $ip;
@@ -40,6 +40,6 @@ class MaxIpStrategy implements IpStrategyInterface
     public function done(Ip $ip): void
     {
         $this->ipStrategy->done($ip);
-        --$this->processing;
+        $this->processing--;
     }
 }
