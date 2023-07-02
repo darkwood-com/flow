@@ -16,6 +16,7 @@ toc: true
 ### 1.1.3
 
 - Upgrade to Symfony 6.3
+- Refactor docs structure
 
 ### 1.1.2
 
@@ -90,5 +91,3 @@ toc: true
 - Add `Flow\Transport\CollectionTransport`
 
 # 1.0.0
-
-- Initial release : Flow, Supervisor, Client

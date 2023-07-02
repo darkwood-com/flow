@@ -1,9 +1,6 @@
-EXEC_PHP        = php -d memory_limit=-1
-COMPOSER        = composer
-
 ##
 ##Dev
-##-------------
+##----------
 
 dev: ## Start dev server
 	docker-compose up -d
@@ -18,7 +15,7 @@ test: ## Launch PHPUnit test suite
 	composer test
 
 docs-serve: ## Start documentation server locally
-	./node_modules/.bin/hugo/hugo server -s docs -D
+	./docs/node_modules/.bin/hugo/hugo server -s docs -D
 
 # DEFAULT
 .DEFAULT_GOAL := help

@@ -1,17 +1,14 @@
-# IDS
+# IDE
 .vscode/
 
 # PHP
 /.phpunit.result.cache
 /.php-cs-fixer.cache
 /.php_cs.cache
-/build/
 /composer.lock
 /vendor/
 
-# HUGO
-node_modules
-public
-resources
-TODO
-site
+# Docs
+/docs/node_modules
+/docs/src/public
+/docs/src/resources
