@@ -90,7 +90,7 @@ class Flow implements FlowInterface
         }
     }
 
-    public function __invoke(Ip $ip, ?Closure $callback = null): void
+    public function __invoke(Ip $ip, Closure $callback = null): void
     {
         $this->callbacks->offsetSet($ip, $callback);
         $this->ipStrategy->push($ip);

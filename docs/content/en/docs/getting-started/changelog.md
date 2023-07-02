@@ -13,6 +13,10 @@ weight: 60
 toc: true
 ---
 
+### 1.1.3
+
+- Upgrade to Symfony 6.3
+
 ### 1.1.2
 
 - Update to PHP 8.2

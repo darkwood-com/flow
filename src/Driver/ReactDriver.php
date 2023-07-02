@@ -6,15 +6,14 @@ namespace Flow\Driver;
 
 use Closure;
 use Flow\DriverInterface;
-
-use function React\Async\async;
-use function React\Async\delay;
-
 use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\TimerInterface;
 use RuntimeException;
 use Throwable;
+
+use function React\Async\async;
+use function React\Async\delay;
 
 class ReactDriver implements DriverInterface
 {
@@ -25,7 +24,7 @@ class ReactDriver implements DriverInterface
      */
     private array $ticksIds;
 
-    public function __construct(?LoopInterface $eventLoop = null)
+    public function __construct(LoopInterface $eventLoop = null)
     {
         if (!function_exists('React\\Async\\async')) {
             throw new RuntimeException('ReactPHP is not loaded. Suggest install it with composer require react/event-loop');
@@ -35,7 +34,7 @@ class ReactDriver implements DriverInterface
         $this->ticksIds = [];
     }
 
-    public function async(Closure $callback, ?Closure $onResolved = null): Closure
+    public function async(Closure $callback, Closure $onResolved = null): Closure
     {
         return static function (...$args) use ($callback, $onResolved): void {
             async(static function () use ($callback, $onResolved, $args) {

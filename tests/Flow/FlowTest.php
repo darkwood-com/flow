@@ -53,13 +53,13 @@ class FlowTest extends AbstractFlowTest
         }];
         $flow = new Flow($jobs, $errorJobs, null, $driver);
 
-        $ips = [];
+        $ips = new ArrayObject();
 
-        $callback = function (Ip $ip) use ($driver, &$ips, $ip1, $ip2) {
-            $ips[] = $ip;
-            if (count($ips) === 2) {
-                $this->assertSame($ip1, $ips[0]);
-                $this->assertSame($ip2, $ips[1]);
+        $callback = function (Ip $ip) use ($driver, $ips, $ip1, $ip2) {
+            $ips->append($ip);
+            if ($ips->count() === 2) {
+                $this->assertSame($ip1, $ips->offsetGet(0));
+                $this->assertSame($ip2, $ips->offsetGet(1));
                 self::assertSame(6, $ip1->data['n1']);
                 self::assertSame(16, $ip1->data['n2']);
                 self::assertSame(4, $ip2->data['n1']);

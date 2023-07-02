@@ -39,7 +39,7 @@ class TransportFlow extends FlowDecorator
         private FlowInterface $flow,
         private ReceiverInterface $producer,
         private SenderInterface $consumer,
-        ?DriverInterface $driver = null,
+        DriverInterface $driver = null,
         array $options = []
     ) {
         parent::__construct($flow);

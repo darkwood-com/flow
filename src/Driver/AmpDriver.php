@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Flow\Driver;
 
-use function Amp\delay;
-
 use Closure;
 use Flow\DriverInterface;
 use Revolt\EventLoop;
 use RuntimeException;
 use Throwable;
+
+use function Amp\delay;
 
 class AmpDriver implements DriverInterface
 {
@@ -28,10 +28,10 @@ class AmpDriver implements DriverInterface
         $this->ticksIds = [];
     }
 
-    public function async(Closure $callback, ?Closure $onResolved = null): Closure
+    public function async(Closure $callback, Closure $onResolved = null): Closure
     {
         return static function (...$args) use ($callback, $onResolved): void {
-            EventLoop::queue(static function (Closure $callback, array $args, ?Closure $onResolved = null) {
+            EventLoop::queue(static function (Closure $callback, array $args, Closure $onResolved = null) {
                 try {
                     $callback(...$args, ...($args = []));
                     if ($onResolved) {

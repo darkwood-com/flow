@@ -8,7 +8,7 @@ use Closure;
 
 interface DriverInterface
 {
-    public function async(Closure $callback, ?Closure $onResolved = null): Closure;
+    public function async(Closure $callback, Closure $onResolved = null): Closure;
 
     public function delay(float $seconds): void;
 

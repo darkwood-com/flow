@@ -33,11 +33,11 @@ class SwooleDriver implements DriverInterface
         $this->ticksIds = [];
     }
 
-    public function async(Closure $callback, ?Closure $onResolved = null): Closure
+    public function async(Closure $callback, Closure $onResolved = null): Closure
     {
         return static function (...$args) use ($callback, $onResolved): void {
             Coroutine::run(static function () use ($callback, $onResolved, $args) {
-                Coroutine::create(static function (Closure $callback, array $args, ?Closure $onResolved = null) {
+                Coroutine::create(static function (Closure $callback, array $args, Closure $onResolved = null) {
                     try {
                         $callback(...$args, ...($args = []));
                         if ($onResolved) {

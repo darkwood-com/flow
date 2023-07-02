@@ -28,8 +28,8 @@
         "phpstan/phpstan": "^1.9",
         "phpunit/phpunit": "^9.5",
         "react/async": "4.x-dev",
-        "symfony/doctrine-messenger": "^6.2",
-        "symfony/messenger": "^6.2",
+        "symfony/doctrine-messenger": "^6.3",
+        "symfony/messenger": "^6.3",
         "symfony/orm-pack": "^2.3"
     },
     "suggest": {

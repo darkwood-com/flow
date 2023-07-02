@@ -13,7 +13,7 @@ class MaxIpStrategy implements IpStrategyInterface
 
     private int $processing = 0;
 
-    public function __construct(private int $max = 1, ?IpStrategyInterface $ipStrategy = null)
+    public function __construct(private int $max = 1, IpStrategyInterface $ipStrategy = null)
     {
         $this->ipStrategy = $ipStrategy ?? new LinearIpStrategy();
     }

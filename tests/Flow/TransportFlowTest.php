@@ -11,7 +11,7 @@ use Flow\Flow\Flow;
 use Flow\Flow\TransportFlow;
 use Flow\IpStrategyInterface;
 use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Transport\InMemoryTransport;
+use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 
 class TransportFlowTest extends AbstractFlowTest
 {
