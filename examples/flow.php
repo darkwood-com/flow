@@ -5,13 +5,14 @@ declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 
 use Flow\Driver\AmpDriver;
+use Flow\Driver\FiberDriver;
 use Flow\Driver\ReactDriver;
 use Flow\Driver\SwooleDriver;
 use Flow\Flow\Flow;
 use Flow\Ip;
 use Flow\IpStrategy\MaxIpStrategy;
 
-$randomDriver = random_int(1, 3);
+$randomDriver = random_int(1, 4);
 
 if ($randomDriver === 1) {
     printf("Use AmpDriver\n");
@@ -21,6 +22,10 @@ if ($randomDriver === 1) {
     printf("Use ReactDriver\n");
 
     $driver = new ReactDriver();
+} elseif ($randomDriver === 3) {
+    printf("Use FiberDriver\n");
+
+    $driver = new FiberDriver();
 } else {
     printf("Use SwooleDriver\n");
 

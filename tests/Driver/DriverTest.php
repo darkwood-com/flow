@@ -26,7 +26,7 @@ abstract class DriverTest extends TestCase
         $driver->async(static function () {
             throw new Exception();
         }, function (?Throwable $e) {
-            $this->assertNotNull($e);
+            $this->assertInstanceOf(Exception::class, $e);
         })();
     }
 
