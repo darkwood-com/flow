@@ -71,14 +71,13 @@ $flow = (new Flow($addOneJob, $errorJob, new MaxIpStrategy(1), $driver))
     ->fn(new Flow($minusThreeJob, $errorJob, new MaxIpStrategy(2), $driver))
 ;
 
-$connection = DriverManager::getConnection(['url' => 'mysql://root:root@127.0.0.1:3306/flow?serverVersion=8.0.31']);
+$connection = DriverManager::getConnection(['url' => 'mysql://flow:flow@127.0.0.1:3306/flow?serverVersion=8.1']);
 $transport = new DoctrineIpTransport($connection);
 
-new TransportFlow(
+$transportFlow = new TransportFlow(
     $flow,
     $transport,
     $transport,
     $driver
 );
-
-$driver->start();
+$transportFlow->pull(1);

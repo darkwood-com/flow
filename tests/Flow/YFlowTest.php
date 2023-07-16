@@ -21,13 +21,10 @@ class YFlowTest extends AbstractFlowTest
         $ip = new Ip(new ArrayObject(['number' => 6]));
         $errorJob = static function () {};
         $yFlow = new YFlow($job, $errorJob, $ipStrategy, $driver);
-        ($yFlow)($ip, function (Ip $ip) use ($driver, $resultNumber) {
-            $driver->stop();
+        ($yFlow)($ip, function (Ip $ip) use ($resultNumber) {
             self::assertSame(ArrayObject::class, $ip->data::class);
             self::assertSame($resultNumber, $ip->data['number']);
         });
-
-        $driver->start();
     }
 
     /**
@@ -35,7 +32,7 @@ class YFlowTest extends AbstractFlowTest
      */
     public function jobProvider(): array
     {
-        return $this->matrix(fn (DriverInterface $driver) => [
+        return $this->matrix(fn () => [
             'job' => [static function (callable $function): Closure {
                 return static function (ArrayObject $data) use ($function) {
                     if ($data['number'] > 1) {

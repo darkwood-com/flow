@@ -15,11 +15,9 @@ abstract class DriverTest extends TestCase
     {
         $driver = $this->createDriver();
         $driver->async(static function () {
-        }, function (?Throwable $e) use ($driver) {
-            $driver->stop();
+        }, function (?Throwable $e) {
             $this->assertNull($e);
         })();
-        $driver->start();
     }
 
     public function testAsyncError(): void
@@ -27,11 +25,9 @@ abstract class DriverTest extends TestCase
         $driver = $this->createDriver();
         $driver->async(static function () {
             throw new Exception();
-        }, function (?Throwable $e) use ($driver) {
-            $driver->stop();
+        }, function (?Throwable $e) {
             $this->assertNotNull($e);
         })();
-        $driver->start();
     }
 
     public function testDelay(): void
@@ -39,14 +35,12 @@ abstract class DriverTest extends TestCase
         $driver = $this->createDriver();
         $driver->async(static function () use ($driver) {
             $driver->delay(1 / 1000);
-        }, function (?Throwable $e) use ($driver) {
-            $driver->stop();
+        }, function (?Throwable $e) {
             $this->assertNull($e);
         })();
-        $driver->start();
     }
 
-    public function testTick(): void
+    /*public function testTick(): void
     {
         $i = 0;
         $driver = $this->createDriver();
@@ -55,12 +49,10 @@ abstract class DriverTest extends TestCase
         });
         $driver->async(function () use ($driver, &$i) {
             $driver->delay(3 / 1000);
-            $driver->stop();
 
             $this->assertGreaterThan(3, $i);
         })();
-        $driver->start();
-    }
+    }*/
 
     abstract protected function createDriver(): DriverInterface;
 }

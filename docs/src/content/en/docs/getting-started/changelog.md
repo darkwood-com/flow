@@ -18,6 +18,7 @@ toc: true
 - Upgrade to Symfony 6.3
 - Refactor docs structure
 - Refactor tooling from https://github.com/jolicode/castor
+- Update `tick` and Remove `start` and `stop` from Flow\DriverInterface
 
 ### 1.1.2
 

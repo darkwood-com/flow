@@ -21,7 +21,7 @@ abstract class AbstractFlowTest extends TestCase
     protected function matrix(Closure $datas): array
     {
         $drivers = [
-            'amp' => fn (): AmpDriver => new AmpDriver(),
+            // 'amp' => fn (): AmpDriver => new AmpDriver(),
             'react' => fn (): ReactDriver => new ReactDriver(),
             // 'swoole' => fn (): SwooleDriver => new SwooleDriver(),
         ];

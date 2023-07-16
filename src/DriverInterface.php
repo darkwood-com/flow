@@ -8,13 +8,15 @@ use Closure;
 
 interface DriverInterface
 {
+    /**
+     * @return Closure when called, this start async $callback
+     */
     public function async(Closure $callback, Closure $onResolved = null): Closure;
 
     public function delay(float $seconds): void;
 
-    public function tick(int $interval, Closure $callback): void;
-
-    public function start(): void;
-
-    public function stop(): void;
+    /**
+     * @return Closure when called, this cleanup tick interval
+     */
+    public function tick(int $interval, Closure $callback): Closure;
 }
