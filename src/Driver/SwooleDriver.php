@@ -15,29 +15,16 @@ use function extension_loaded;
 
 class SwooleDriver implements DriverInterface
 {
-    /**
-     * @var array<mixed>
-     */
-    private $ticks;
-
-    /**
-     * @var array<int>
-     */
-    private array $ticksIds;
-
     public function __construct()
     {
         if (!extension_loaded('openswoole')) {
             throw new RuntimeException('Swoole extension is not loaded. Suggest install it with pecl install openswoole');
         }
-
-        $this->ticks = [];
-        $this->ticksIds = [];
     }
 
     public function async(Closure $callback, Closure $onResolved = null): Closure
     {
-        return static function (...$args) use ($callback, $onResolved): void {
+        return function (...$args) use ($callback, $onResolved): void {
             Coroutine::run(static function () use ($callback, $onResolved, $args) {
                 Coroutine::create(static function (Closure $callback, array $args, Closure $onResolved = null) {
                     try {
@@ -61,25 +48,12 @@ class SwooleDriver implements DriverInterface
         // Coroutine::usleep((int) $seconds * 1000);
     }
 
-    public function tick(int $interval, Closure $callback): void
+    public function tick(int $interval, Closure $callback): Closure
     {
-        $this->ticks[] = [$interval, $callback];
-    }
+        $tickId = Timer::tick($interval, $callback);
 
-    public function start(): void
-    {
-        foreach ($this->ticks as $tick) {
-            [$interval, $callback] = $tick;
-            $this->ticksIds[] = Timer::tick($interval, $callback);
-        }
-    }
-
-    public function stop(): void
-    {
-        foreach ($this->ticksIds as $tickId) {
+        return function () use ($tickId) {
             Timer::clear($tickId); // @phpstan-ignore-line
-        }
-        $this->ticks = [];
-        $this->ticksIds = [];
+        };
     }
 }

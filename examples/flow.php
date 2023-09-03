@@ -82,10 +82,3 @@ for ($i = 1; $i <= 5; $i++) {
     $ipPool->offsetSet($ip, true);
     $flow($ip, fn ($ip) => $ipPool->offsetUnset($ip));
 }
-
-$driver->tick(1, function () use ($driver, $ipPool) {
-    if ($ipPool->count() === 0) {
-        $driver->stop();
-    }
-});
-$driver->start();

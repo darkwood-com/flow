@@ -15,24 +15,19 @@ use function function_exists;
 
 class AmpDriver implements DriverInterface
 {
-    /**
-     * @var array<string>
-     */
-    private array $ticksIds;
+    private int $counter = 0;
 
     public function __construct()
     {
         if (!function_exists('Amp\\async')) {
             throw new RuntimeException('Amp is not loaded. Suggest install it with composer require amphp/amp');
         }
-
-        $this->ticksIds = [];
     }
 
     public function async(Closure $callback, Closure $onResolved = null): Closure
     {
-        return static function (...$args) use ($callback, $onResolved): void {
-            EventLoop::queue(static function (Closure $callback, array $args, Closure $onResolved = null) {
+        return function (...$args) use ($callback, $onResolved): void {
+            EventLoop::queue(function (Closure $callback, array $args, Closure $onResolved = null) {
                 try {
                     $callback(...$args, ...($args = []));
                     if ($onResolved) {
@@ -42,8 +37,11 @@ class AmpDriver implements DriverInterface
                     if ($onResolved) {
                         $onResolved($exception);
                     }
+                } finally {
+                    $this->pop();
                 }
             }, $callback, $args, $onResolved);
+            $this->push();
         };
     }
 
@@ -52,25 +50,30 @@ class AmpDriver implements DriverInterface
         delay($seconds);
     }
 
-    public function tick(int $interval, Closure $callback): void
+    public function tick(int $interval, Closure $callback): Closure
     {
-        $this->ticksIds[] = EventLoop::repeat($interval / 1000, $callback);
+        $tickId = EventLoop::repeat($interval / 1000, $callback);
+        $this->push();
+
+        return function () use ($tickId) {
+            EventLoop::cancel($tickId);
+            $this->pop();
+        };
     }
 
-    public function start(): void
+    private function push(): void
     {
-        if (!EventLoop::getDriver()->isRunning()) {
+        if (/* $this->counter === 0 || */ !EventLoop::getDriver()->isRunning()) {
             EventLoop::run();
         }
+        $this->counter++;
     }
 
-    public function stop(): void
+    private function pop(): void
     {
-        foreach ($this->ticksIds as $tickId) {
-            EventLoop::cancel($tickId);
+        $this->counter--;
+        if ($this->counter === 0) {
+            EventLoop::getDriver()->stop();
         }
-        $this->ticksIds = [];
-
-        EventLoop::getDriver()->stop();
     }
 }
