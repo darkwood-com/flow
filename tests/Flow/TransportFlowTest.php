@@ -10,11 +10,14 @@ use Flow\DriverInterface;
 use Flow\Flow\Flow;
 use Flow\Flow\TransportFlow;
 use Flow\IpStrategyInterface;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 
-class TransportFlowTest extends AbstractFlowTest
+class TransportFlowTest extends TestCase
 {
+    use FlowTrait;
+
     /**
      * @dataProvider jobsProvider
      *
@@ -48,9 +51,9 @@ class TransportFlowTest extends AbstractFlowTest
     /**
      * @return array<array<mixed>>
      */
-    public function jobsProvider(): array
+    public static function jobsProvider(): array
     {
-        return $this->matrix(fn (DriverInterface $driver) => [
+        return self::matrix(fn (DriverInterface $driver) => [
             'oneJob' => [[static function (ArrayObject $data): void {
                 $data['number'] = 1;
             }], 1],

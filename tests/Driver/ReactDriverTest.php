@@ -7,7 +7,7 @@ namespace Flow\Test\Driver;
 use Flow\Driver\ReactDriver;
 use Flow\DriverInterface;
 
-class ReactDriverTest extends DriverTest
+class ReactDriverTest extends DriverTestCase
 {
     protected function createDriver(): DriverInterface
     {

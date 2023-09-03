@@ -10,10 +10,13 @@ use Flow\DriverInterface;
 use Flow\Flow\Flow;
 use Flow\Ip;
 use Flow\IpStrategyInterface;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
-class FlowTest extends AbstractFlowTest
+class FlowTest extends TestCase
 {
+    use FlowTrait;
+
     /**
      * @dataProvider jobProvider
      *
@@ -71,11 +74,11 @@ class FlowTest extends AbstractFlowTest
     /**
      * @return array<array<mixed>>
      */
-    public function jobProvider(): array
+    public static function jobProvider(): array
     {
         $exception = new RuntimeException('job error');
 
-        return $this->matrix(fn (DriverInterface $driver) => [
+        return self::matrix(fn (DriverInterface $driver) => [
             'oneJob' => [[static function (ArrayObject $data) {
                 $data['number'] = 5;
             }], 5],

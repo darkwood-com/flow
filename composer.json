@@ -10,13 +10,14 @@
         }
     ],
     "keywords": [
-        "php",
-        "symfony",
-        "async",
         "amphp",
+        "async",
+        "fiber",
+        "monad",
         "reactphp",
         "swoole",
-        "monad"
+        "symfony",
+        "php"
     ],
     "require": {
         "php": "^8.2"
@@ -24,11 +25,11 @@
     "require-dev": {
         "amphp/amp": "^3.0",
         "openswoole/ide-helper": "^22.0",
-        "phpunit/phpunit": "^9.5",
-        "react/async": "4.x-dev",
+        "phpunit/phpunit": "^10.3",
+        "react/async": "^4.1",
         "symfony/doctrine-messenger": "^6.3",
         "symfony/messenger": "^6.3",
-        "symfony/orm-pack": "^2.3"
+        "symfony/orm-pack": "^2.4"
     },
     "suggest": {
         "amphp/amp": "Provide asynchronous with AMP",

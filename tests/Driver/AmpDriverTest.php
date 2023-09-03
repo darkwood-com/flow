@@ -7,7 +7,7 @@ namespace Flow\Test\Driver;
 use Flow\Driver\AmpDriver;
 use Flow\DriverInterface;
 
-class AmpDriverTest extends DriverTest
+class AmpDriverTest extends DriverTestCase
 {
     protected function createDriver(): DriverInterface
     {
