@@ -6,6 +6,7 @@ namespace Flow\Driver;
 
 use Closure;
 use Flow\DriverInterface;
+use Flow\Exception;
 use Revolt\EventLoop;
 use RuntimeException;
 use Throwable;
@@ -24,23 +25,23 @@ class AmpDriver implements DriverInterface
         }
     }
 
-    public function async(Closure $callback, Closure $onResolved = null): Closure
+    public function async(Closure $callback, Closure $onResolve = null): Closure
     {
-        return function (...$args) use ($callback, $onResolved): void {
-            EventLoop::queue(function (Closure $callback, array $args, Closure $onResolved = null) {
+        return function (...$args) use ($callback, $onResolve): void {
+            EventLoop::queue(function (Closure $callback, array $args, Closure $onResolve = null) {
                 try {
-                    $callback(...$args, ...($args = []));
-                    if ($onResolved) {
-                        $onResolved(null);
+                    $return = $callback(...$args, ...($args = []));
+                    if ($onResolve) {
+                        $onResolve($return);
                     }
                 } catch (Throwable $exception) {
-                    if ($onResolved) {
-                        $onResolved($exception);
+                    if ($onResolve) {
+                        $onResolve(new Exception($exception->getMessage(), $exception->getCode(), $exception));
                     }
                 } finally {
                     $this->pop();
                 }
-            }, $callback, $args, $onResolved);
+            }, $callback, $args, $onResolve);
             $this->push();
         };
     }
