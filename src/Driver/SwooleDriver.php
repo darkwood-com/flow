@@ -6,6 +6,7 @@ namespace Flow\Driver;
 
 use Closure;
 use Flow\DriverInterface;
+use Flow\Exception;
 use OpenSwoole\Coroutine;
 use OpenSwoole\Timer;
 use RuntimeException;
@@ -22,22 +23,22 @@ class SwooleDriver implements DriverInterface
         }
     }
 
-    public function async(Closure $callback, Closure $onResolved = null): Closure
+    public function async(Closure $callback, Closure $onResolve = null): Closure
     {
-        return function (...$args) use ($callback, $onResolved): void {
-            Coroutine::run(static function () use ($callback, $onResolved, $args) {
-                Coroutine::create(static function (Closure $callback, array $args, Closure $onResolved = null) {
+        return function (...$args) use ($callback, $onResolve): void {
+            Coroutine::run(static function () use ($callback, $onResolve, $args) {
+                Coroutine::create(static function (Closure $callback, array $args, Closure $onResolve = null) {
                     try {
                         $callback(...$args, ...($args = []));
-                        if ($onResolved) {
-                            $onResolved(null);
+                        if ($onResolve) {
+                            $onResolve(null);
                         }
-                    } catch (Throwable $e) {
-                        if ($onResolved) {
-                            $onResolved($e);
+                    } catch (Throwable $exception) {
+                        if ($onResolve) {
+                            $onResolve(new Exception($exception->getMessage(), $exception->getCode(), $exception));
                         }
                     }
-                }, $callback, $args, $onResolved);
+                }, $callback, $args, $onResolve);
             });
         };
     }

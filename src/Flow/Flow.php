@@ -7,12 +7,12 @@ namespace Flow\Flow;
 use Closure;
 use Flow\Driver\ReactDriver;
 use Flow\DriverInterface;
+use Flow\Exception;
 use Flow\FlowInterface;
 use Flow\Ip;
 use Flow\IpStrategy\LinearIpStrategy;
 use Flow\IpStrategyInterface;
 use SplObjectStorage;
-use Throwable;
 
 use function count;
 use function is_array;
@@ -86,18 +86,18 @@ class Flow implements FlowInterface
 
         $count = count($this->jobs);
         foreach ($this->jobs as $i => $job) {
-            $this->driver->async($job, function (Throwable $exception = null) use ($ip, &$count, $i, $callback) {
+            $this->driver->async($job, function (mixed $value) use ($ip, &$count, $i, $callback) {
                 $count--;
-                if ($count === 0 || $exception !== null) {
+                if ($count === 0 || $value instanceof Exception) {
                     $count = 0;
                     $this->ipStrategy->done($ip);
                     $this->nextIpJob();
 
-                    if ($exception) {
+                    if ($value instanceof Exception) {
                         if (isset($this->errorJobs[$i])) {
-                            $this->errorJobs[$i]($ip->data, $exception);
+                            $this->errorJobs[$i]($ip->data, $value->getPrevious());
                         } else {
-                            throw $exception;
+                            throw $value->getPrevious();
                         }
                     }
 

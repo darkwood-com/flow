@@ -6,6 +6,7 @@ namespace Flow\Driver;
 
 use Closure;
 use Flow\DriverInterface;
+use Flow\Exception;
 use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
 use RuntimeException;
@@ -30,18 +31,18 @@ class ReactDriver implements DriverInterface
         $this->eventLoop = $eventLoop ?? Loop::get();
     }
 
-    public function async(Closure $callback, Closure $onResolved = null): Closure
+    public function async(Closure $callback, Closure $onResolve = null): Closure
     {
-        return function (...$args) use ($callback, $onResolved): void {
-            async(function () use ($callback, $onResolved, $args) {
+        return function (...$args) use ($callback, $onResolve): void {
+            async(function () use ($callback, $onResolve, $args) {
                 try {
-                    $callback(...$args, ...($args = []));
-                    if ($onResolved) {
-                        $onResolved(null);
+                    $return = $callback(...$args, ...($args = []));
+                    if ($onResolve) {
+                        $onResolve($return);
                     }
-                } catch (Throwable $e) {
-                    if ($onResolved) {
-                        $onResolved($e);
+                } catch (Throwable $exception) {
+                    if ($onResolve) {
+                        $onResolve(new Exception($exception->getMessage(), $exception->getCode(), $exception));
                     }
                 } finally {
                     $this->pop();

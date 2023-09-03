@@ -9,6 +9,7 @@ namespace Flow\Driver;
 use Closure;
 use Fiber;
 use Flow\DriverInterface;
+use Flow\Exception;
 use Throwable;
 
 class FiberDriver implements DriverInterface
@@ -20,21 +21,21 @@ class FiberDriver implements DriverInterface
 
     private bool $isLooping = false;
 
-    public function async(Closure $callback, Closure $onResolved = null): Closure
+    public function async(Closure $callback, Closure $onResolve = null): Closure
     {
-        return function (...$args) use ($callback, $onResolved): void {
+        return function (...$args) use ($callback, $onResolve): void {
             $fiber = new Fiber($callback);
 
             $fiberData = [
                 'fiber' => $fiber,
-                'onResolved' => $onResolved,
-                'error' => null,
+                'onResolve' => $onResolve,
+                'exception' => null,
             ];
 
             try {
                 $fiber->start(...$args);
-            } catch (Throwable $e) {
-                $fiberData['error'] = $e;
+            } catch (Throwable $exception) {
+                $fiberData['exception'] = $exception;
             }
 
             $this->fibers[] = $fiberData;
@@ -75,15 +76,15 @@ class FiberDriver implements DriverInterface
                     if (!$fiber['fiber']->isTerminated() && $fiber['fiber']->isSuspended()) {
                         try {
                             $fiber['fiber']->resume();
-                        } catch (Throwable $e) {
-                            $this->fibers[$i]['error'] = $e;
+                        } catch (Throwable $exception) {
+                            $this->fibers[$i]['exception'] = $exception;
                         }
                     } else {
-                        if ($fiber['onResolved']) {
-                            if ($fiber['error'] === null) {
-                                $fiber['onResolved'](null);
+                        if ($fiber['onResolve']) {
+                            if ($fiber['exception'] === null) {
+                                $fiber['onResolve']($fiber['fiber']->getReturn());
                             } else {
-                                $fiber['onResolved']($fiber['error']);
+                                $fiber['onResolve'](new Exception($fiber['exception']->getMessage(), $fiber['exception']->getCode(), $fiber['exception']));
                             }
                         }
                         unset($this->fibers[$i]);
