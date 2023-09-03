@@ -19,6 +19,7 @@ toc: true
 - Refactor docs structure
 - Refactor tooling from https://github.com/jolicode/castor
 - Update `tick` and Remove `start` and `stop` from Flow\DriverInterface
+- Add Fiber Driver from https://github.com/jolicode/castor/blob/main/src/functions.php
 
 ### 1.1.2
 

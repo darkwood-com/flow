@@ -6,6 +6,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Doctrine\DBAL\DriverManager;
 use Flow\Driver\AmpDriver;
+use Flow\Driver\FiberDriver;
 use Flow\Driver\ReactDriver;
 use Flow\Driver\SwooleDriver;
 use Flow\Examples\Transport\DoctrineIpTransport;
@@ -13,13 +14,17 @@ use Flow\Flow\Flow;
 use Flow\Flow\TransportFlow;
 use Flow\IpStrategy\MaxIpStrategy;
 
-$randomDriver = random_int(1, 3);
+$randomDriver = random_int(1, 4);
 
 if ($randomDriver === 1) {
     printf("Use AmpDriver\n");
 
     $driver = new AmpDriver();
 } elseif ($randomDriver === 2) {
+    printf("Use FiberDriver\n");
+
+    $driver = new FiberDriver();
+} elseif ($randomDriver === 3) {
     printf("Use ReactDriver\n");
 
     $driver = new ReactDriver();

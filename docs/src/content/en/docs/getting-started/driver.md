@@ -38,6 +38,10 @@ composer require amphp/amp
 
 More documentation can be found [https://amphp.org](https://amphp.org)
 
+## Fiber Driver
+
+More documentation can be found [https://www.php.net/manual/fr/language.fibers.php](https://www.php.net/manual/fr/language.fibers.php)
+
 ## ReactPHP Driver
 
 To use ReactPHP Driver, you have to require the library with composer
