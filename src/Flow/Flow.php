@@ -14,6 +14,9 @@ use Flow\IpStrategyInterface;
 use SplObjectStorage;
 use Throwable;
 
+use function count;
+use function is_array;
+
 class Flow implements FlowInterface
 {
     /**
@@ -53,6 +56,24 @@ class Flow implements FlowInterface
         $this->callbacks = new SplObjectStorage();
     }
 
+    public function __invoke(Ip $ip, Closure $callback = null): void
+    {
+        $this->callbacks->offsetSet($ip, $callback);
+        $this->ipStrategy->push($ip);
+        $this->nextIpJob();
+    }
+
+    public function fn(FlowInterface $flow): FlowInterface
+    {
+        if ($this->fnFlow) {
+            $this->fnFlow->fn($flow);
+        } else {
+            $this->fnFlow = $flow;
+        }
+
+        return $this;
+    }
+
     private function nextIpJob(): void
     {
         $ip = $this->ipStrategy->pop();
@@ -88,23 +109,5 @@ class Flow implements FlowInterface
                 }
             })($ip->data);
         }
-    }
-
-    public function __invoke(Ip $ip, Closure $callback = null): void
-    {
-        $this->callbacks->offsetSet($ip, $callback);
-        $this->ipStrategy->push($ip);
-        $this->nextIpJob();
-    }
-
-    public function fn(FlowInterface $flow): FlowInterface
-    {
-        if ($this->fnFlow) {
-            $this->fnFlow->fn($flow);
-        } else {
-            $this->fnFlow = $flow;
-        }
-
-        return $this;
     }
 }

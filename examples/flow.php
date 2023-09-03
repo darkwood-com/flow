@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use Flow\Driver\AmpDriver;
 use Flow\Driver\ReactDriver;
@@ -72,7 +72,8 @@ $errorJob = static function (object $data, Throwable $exception): void {
 };
 
 $flow = (new Flow($job1, $errorJob, new MaxIpStrategy(2), $driver))
-    ->fn(new Flow($job2, $errorJob, new MaxIpStrategy(2), $driver));
+    ->fn(new Flow($job2, $errorJob, new MaxIpStrategy(2), $driver))
+;
 
 $ipPool = new SplObjectStorage();
 

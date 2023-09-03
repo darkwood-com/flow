@@ -1,10 +1,21 @@
-Contributing
-============
+# Contributing
 
-Thank you for contributing to this project!
+First of all, **thank you** for contributing, **you are awesome**!
 
-Bug reports
------------
+Everybody should be able to help. Here's how you can do it:
+
+1. [Fork it](https://github.com/darkwood-fr/flow/fork)
+2. improve it
+3. submit a [pull request](https://help.github.com/articles/creating-a-pull-request)
+
+Here's some tips to make you the best contributor ever:
+
+* [Bug reports](#bug-reports)
+* [Feature requests](#feature-requests)
+* [Creating a pull request](#creating-a-pull-request)
+* [Coding standard](#coding-standard)
+
+## Bug reports
 
 Please search existing issues first to make sure this is not a duplicate.
 Every issue report has a cost for the developers required to field it; be
@@ -13,15 +24,13 @@ submission. Try to be as detailed as possible in your problem description
 to help us fix the bug. Please adhere to
 [sound bug reporting principles](http://www.chiark.greenend.org.uk/~sgtatham/bugs.html).
 
-Feature requests
-----------------
+## Feature requests
 
 If you wish to propose a feature, please submit an issue. Try to explain your
 use case as fully as possible to help us understand why you think the feature
 should be added.
 
-Creating a pull request (PR)
-----------------------------
+## Creating a pull request
 
 First [fork the repository](https://help.github.com/articles/fork-a-repo/) on
 GitHub.
@@ -63,8 +72,7 @@ git rebase -i
 git push origin bug-or-feature-description -f
 ```
 
-Coding standard
----------------
+## Coding standard
 
 This project follows the [Symfony](https://symfony.com/doc/current/contributing/code/standards.html) coding style.
 Please make sure your pull requests adhere to this standard.
@@ -72,5 +80,5 @@ Please make sure your pull requests adhere to this standard.
 To fix, execute this command after [download PHP CS Fixer](https://cs.symfony.com/):
 
 ```shell script
-$ php php-cs-fixer.phar fix
+$ make cs-fix
 ```

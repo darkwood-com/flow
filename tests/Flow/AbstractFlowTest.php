@@ -39,7 +39,7 @@ abstract class AbstractFlowTest extends TestCase
             foreach ($strategies as $keyStrategy => $strategyBuilder) {
                 $strategy = $strategyBuilder();
                 foreach ($dataValues as $key => $values) {
-                    $matrixDatas["$keyDriver.$keyStrategy.$key"] = [$driver, $strategy, ...$values];
+                    $matrixDatas["{$keyDriver}.{$keyStrategy}.{$key}"] = [$driver, $strategy, ...$values];
                 }
             }
         }

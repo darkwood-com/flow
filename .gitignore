@@ -1,14 +1,11 @@
-# IDE
-.vscode/
-
-# PHP
-/.phpunit.result.cache
-/.php-cs-fixer.cache
-/.php_cs.cache
-/composer.lock
-/vendor/
-
 # Docs
 /docs/node_modules
 /docs/src/public
 /docs/src/resources
+
+# PHP
+/.castor.stub.php
+/.php-cs-fixer.cache
+/.phpunit.cache
+/composer.lock
+/vendor/

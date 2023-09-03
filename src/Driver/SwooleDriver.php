@@ -11,6 +11,8 @@ use OpenSwoole\Timer;
 use RuntimeException;
 use Throwable;
 
+use function extension_loaded;
+
 class SwooleDriver implements DriverInterface
 {
     /**

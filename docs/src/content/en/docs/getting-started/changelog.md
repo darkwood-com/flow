@@ -13,10 +13,11 @@ weight: 60
 toc: true
 ---
 
-### 1.1.3
+### 1.1.x
 
 - Upgrade to Symfony 6.3
 - Refactor docs structure
+- Refactor tooling from https://github.com/jolicode/castor
 
 ### 1.1.2
 

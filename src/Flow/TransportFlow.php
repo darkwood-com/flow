@@ -67,6 +67,7 @@ class TransportFlow extends FlowDecorator
             $this->envelopeIds[$id] = $envelope;
             $ip = new Ip($envelope->getMessage());
             $this->envelopePool->offsetSet($ip, $envelope);
+
             try {
                 $self = $this;
                 ($this->flow)($ip, static function ($ip) use ($self) {
