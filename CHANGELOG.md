@@ -1,18 +1,3 @@
----
-title: "Changelog"
-description: "Changelog."
-lead: "Changelog."
-date: 2020-10-13T15:21:01+02:00
-lastmod: 2020-10-13T15:21:01+02:00
-draft: false
-images: []
-menu:
-  docs:
-    parent: "getting-started"
-weight: 60
-toc: true
----
-
 ### 1.1.x
 
 - Upgrade to Symfony 6.3

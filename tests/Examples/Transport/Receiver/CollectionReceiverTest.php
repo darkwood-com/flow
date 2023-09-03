@@ -89,7 +89,7 @@ class CollectionReceiverTest extends TestCase
     /**
      * @return array<array<mixed>>
      */
-    public function receiverProvider(): array
+    public static function receiverProvider(): array
     {
         $expectedReceiversIps = new SplObjectStorage();
         /** @var array<mixed, ReceiverInterface> $expectedAckIpsReceivers */

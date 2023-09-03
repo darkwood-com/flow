@@ -17,7 +17,7 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@PHP82Migration' => true,
         '@PhpCsFixer' => true,
-        '@Symfony' => true,
+        '@Symfony' => true, // https://cs.symfony.com/doc/ruleSets/Symfony.html
         '@Symfony:risky' => true,
         'heredoc_indentation' => false,
         'php_unit_internal_class' => false, // From @PhpCsFixer but we don't want it

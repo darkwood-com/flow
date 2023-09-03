@@ -10,9 +10,12 @@ use Flow\DriverInterface;
 use Flow\Flow\YFlow;
 use Flow\Ip;
 use Flow\IpStrategyInterface;
+use PHPUnit\Framework\TestCase;
 
-class YFlowTest extends AbstractFlowTest
+class YFlowTest extends TestCase
 {
+    use FlowTrait;
+
     /**
      * @dataProvider jobProvider
      */
@@ -30,9 +33,9 @@ class YFlowTest extends AbstractFlowTest
     /**
      * @return array<array<mixed>>
      */
-    public function jobProvider(): array
+    public static function jobProvider(): array
     {
-        return $this->matrix(fn () => [
+        return self::matrix(fn () => [
             'job' => [static function (callable $function): Closure {
                 return static function (ArrayObject $data) use ($function) {
                     if ($data['number'] > 1) {
