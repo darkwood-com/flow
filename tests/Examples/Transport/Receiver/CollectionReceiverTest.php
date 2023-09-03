@@ -14,6 +14,8 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\TransportMessageIdStamp;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 
+use function is_array;
+
 class CollectionReceiverTest extends TestCase
 {
     use EnvelopeTrait;
@@ -65,6 +67,7 @@ class CollectionReceiverTest extends TestCase
                     $expectedIpId = $this->getEnvelopeId($expectedIp);
                     if ($envelopeId === $expectedIpId) {
                         $expectedReceiver = $receiver;
+
                         break 2;
                     }
                 }

@@ -11,6 +11,7 @@ use RuntimeException;
 use Throwable;
 
 use function Amp\delay;
+use function function_exists;
 
 class AmpDriver implements DriverInterface
 {

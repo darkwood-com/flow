@@ -15,7 +15,7 @@ trait EnvelopeTrait
         /** @var ?TransportMessageIdStamp $stamp */
         $stamp = $envelope->last(TransportMessageIdStamp::class);
 
-        if (is_null($stamp) || is_null($stamp->getId())) {
+        if (null === $stamp || null === $stamp->getId()) {
             throw new RuntimeException('Transport does not define id for envelope');
         }
 

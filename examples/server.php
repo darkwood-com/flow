@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use Doctrine\DBAL\DriverManager;
 use Flow\Driver\AmpDriver;
@@ -68,7 +68,8 @@ $errorJob = static function (object $data, Throwable $exception): void {
 
 $flow = (new Flow($addOneJob, $errorJob, new MaxIpStrategy(1), $driver))
     ->fn(new Flow($multbyTwoJob, $errorJob, new MaxIpStrategy(3), $driver))
-    ->fn(new Flow($minusThreeJob, $errorJob, new MaxIpStrategy(2), $driver));
+    ->fn(new Flow($minusThreeJob, $errorJob, new MaxIpStrategy(2), $driver))
+;
 
 $connection = DriverManager::getConnection(['url' => 'mysql://root:root@127.0.0.1:3306/flow?serverVersion=8.0.31']);
 $transport = new DoctrineIpTransport($connection);

@@ -3,7 +3,7 @@
 ##----------
 
 dev: ## Start dev server
-	docker-compose up -d
+	composer dev
 
 cs-fix: ## Check and fix coding styles using PHP CS Fixer
 	composer cs-fix
@@ -15,7 +15,7 @@ test: ## Launch PHPUnit test suite
 	composer test
 
 docs-serve: ## Start documentation server locally
-	./docs/node_modules/.bin/hugo/hugo server -s docs -D
+	composer docs-serve
 
 # DEFAULT
 .DEFAULT_GOAL := help

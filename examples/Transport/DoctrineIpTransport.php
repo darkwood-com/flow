@@ -60,7 +60,7 @@ class DoctrineIpTransport implements TransportInterface
      */
     private function queue(string $queue = 'default'): array
     {
-        return Connection::buildConfiguration('doctrine://default?queue_name='.$queue);
+        return Connection::buildConfiguration('doctrine://default?queue_name=' . $queue);
     }
 
     private function getReceiver(): DoctrineReceiver

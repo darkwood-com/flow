@@ -10,5 +10,5 @@ interface FlowInterface
 {
     public function __invoke(Ip $ip, Closure $callback = null): void;
 
-    public function fn(FlowInterface $flow): FlowInterface;
+    public function fn(self $flow): self;
 }

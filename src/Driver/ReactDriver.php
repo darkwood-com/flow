@@ -12,6 +12,7 @@ use React\EventLoop\TimerInterface;
 use RuntimeException;
 use Throwable;
 
+use function function_exists;
 use function React\Async\async;
 use function React\Async\delay;
 

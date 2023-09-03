@@ -11,6 +11,8 @@ use Flow\Examples\Transport\DoctrineIpTransport;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 
+use function count;
+
 class DoctrineIpTransportTest extends TestCase
 {
     public function testMultipleClientTransport(): void

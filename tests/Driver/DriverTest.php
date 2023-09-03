@@ -11,8 +11,6 @@ use Throwable;
 
 abstract class DriverTest extends TestCase
 {
-    abstract protected function createDriver(): DriverInterface;
-
     public function testAsync(): void
     {
         $driver = $this->createDriver();
@@ -63,4 +61,6 @@ abstract class DriverTest extends TestCase
         })();
         $driver->start();
     }
+
+    abstract protected function createDriver(): DriverInterface;
 }
