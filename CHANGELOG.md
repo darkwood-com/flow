@@ -1,13 +1,13 @@
-### 1.1.x
+### 1.1.3
 
-- Upgrade to Symfony 6.3
-- Refactor docs structure
-- Refactor tooling from https://github.com/jolicode/castor
-- Rework on Flow\DriverInterface
+- Update DX for Flow\DriverInterface
   - Update `async` that now $onResolve get called with async $callback result or Flow\Exception as first argument
   - Update `tick` that now return a Closure to cleanup tick interval
   - Remove `start` and `stop`
 - Add Fiber Driver from https://github.com/jolicode/castor/blob/main/src/functions.php
+- Upgrade to Symfony 6.3 and PHPUnit 10.3
+- Refactor docs structure
+- Refactor tooling from https://github.com/jolicode/castor
 
 ### 1.1.2
 
