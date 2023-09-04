@@ -1,4 +1,10 @@
-### 1.1.3
+# Changelog
+
+## v1.1.x
+
+
+
+## v1.1.3
 
 - Update DX for Flow\DriverInterface
   - Update `async` that now $onResolve get called with async $callback result or Flow\Exception as first argument
@@ -9,7 +15,7 @@
 - Refactor docs structure
 - Refactor tooling from https://github.com/jolicode/castor
 
-### 1.1.2
+## v1.1.2
 
 - Update to PHP 8.2
 - Upgrade from amphp/amp v2 to amphp/amp v3 that use PHP Fibers
@@ -18,7 +24,7 @@
 - Rename function `corouting` to `async` in Flow\DriverInterface
 - Add function `sleep` in Flow\DriverInterface
 
-### 1.1.1
+## v1.1.1
 
 - Rename entire project from `Railway FBP` to `Flow`
 - Bundle `Flow` to PHP monorepository
@@ -32,55 +38,55 @@
 - Update `Flow\IP` that use readonly object
 - New Flow logo
 
-### 1.1.0
+## v1.1.0
 
 - Release MIT License
 - Update dependencies to PHP 8.1
 
-### 1.0.9
+## v1.0.9
 
 - Add `Flow\Flow\YFlow` that allows introduce recursivity into Flow language approach
 
-### 1.0.8
+## v1.0.8
 
 - Add code of conduct
 
-### 1.0.7
+## v1.0.7
 
 - Define Monads
 
-### 1.0.6
+## v1.0.6
 
 - Add `Flow\TransportFlow`
 - Flow can process multiple jobs in parallel
 
-### 1.0.5
+## v1.0.5
 
 - Add Symfony integration
 - Define monads
 
-### 1.0.4
+## v1.0.4
 
 - Refactor structure
 - Decouple integration
 
-### 1.0.3
+## v1.0.3
 
 - Add `Flow\IpStrategy` add several Ip strategy for data processing
 
-### 1.0.2
+## v1.0.2
 
 - Add `Flow\Driver\DriverInterface`
 - Add `Flow\Driver\AmpDriver`
 - Add `Flow\Driver\ReactDriver`
 - Add `Flow\Driver\SwooleDriver`
 
-### 1.0.1
+## v1.0.1
 
 - Add `Flow\Producer\CollectionConsumer`
 - Add `Flow\Producer\CollectionProducer`
 - Add `Flow\Transport\CollectionTransport`
 
-# 1.0.0
+## v1.0.0
 
 - Initial release

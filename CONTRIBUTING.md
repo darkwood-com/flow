@@ -2,18 +2,18 @@
 
 First of all, **thank you** for contributing, **you are awesome**!
 
-Everybody should be able to help. Here's how you can do it:
+Everybody should be able to help. Here's how you can do it
 
-1. [Fork it](https://github.com/darkwood-fr/flow/fork)
-2. improve it
-3. submit a [pull request](https://help.github.com/articles/creating-a-pull-request)
+- [Fork it](https://github.com/darkwood-fr/flow/fork)
+- Improve it
+- Submit a [pull request](https://help.github.com/articles/creating-a-pull-request)
 
-Here's some tips to make you the best contributor ever:
+Here's some tips to make you the best contributor ever
 
-* [Bug reports](#bug-reports)
-* [Feature requests](#feature-requests)
-* [Creating a pull request](#creating-a-pull-request)
-* [Coding standard](#coding-standard)
+- [Bug reports](#bug-reports)
+- [Feature requests](#feature-requests)
+- [Creating a pull request](#creating-a-pull-request)
+- [Coding standard](#coding-standard)
 
 ## Bug reports
 
