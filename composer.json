@@ -10,27 +10,26 @@
         }
     ],
     "keywords": [
-        "php",
-        "symfony",
-        "async",
         "amphp",
+        "async",
+        "fiber",
+        "monad",
         "reactphp",
         "swoole",
-        "monad"
+        "symfony",
+        "php"
     ],
     "require": {
         "php": "^8.2"
     },
     "require-dev": {
         "amphp/amp": "^3.0",
-        "friendsofphp/php-cs-fixer": "^3.13",
         "openswoole/ide-helper": "^22.0",
-        "phpstan/phpstan": "^1.9",
-        "phpunit/phpunit": "^9.5",
-        "react/async": "4.x-dev",
-        "symfony/doctrine-messenger": "^6.2",
-        "symfony/messenger": "^6.2",
-        "symfony/orm-pack": "^2.3"
+        "phpunit/phpunit": "^10.3",
+        "react/async": "^4.1",
+        "symfony/doctrine-messenger": "^6.3",
+        "symfony/messenger": "^6.3",
+        "symfony/orm-pack": "^2.4"
     },
     "suggest": {
         "amphp/amp": "Provide asynchronous with AMP",
@@ -50,14 +49,18 @@
         }
     },
     "scripts": {
-        "cs-fix": "PHP_CS_FIXER_IGNORE_ENV=true php ./vendor/bin/php-cs-fixer fix",
-        "phpstan": "@php ./vendor/bin/phpstan analyse",
-        "test": "@php ./vendor/bin/phpunit"
+        "dev": "castor flow:tools:dev",
+        "cs-fix": "castor flow:tools:cs-fix",
+        "phpstan": "castor flow:tools:phpstan",
+        "test": "castor flow:tools:test",
+        "docs-serve": "castor flow:tools:docs-serve"
     },
     "scripts-descriptions": {
+        "dev": "Start dev server",
         "cs-fix": "Check and fix coding styles using PHP CS Fixer",
         "phpstan": "Execute PHPStan analysis",
-        "test": "Launch PHPUnit test suite"
+        "test": "Launch PHPUnit test suite",
+        "docs-serve": "Start documentation server locally"
     },
     "minimum-stability": "stable"
 }

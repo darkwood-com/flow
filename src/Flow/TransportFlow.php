@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Flow\Flow;
 
+use Closure;
 use Exception;
 use Flow\Driver\AmpDriver;
 use Flow\DriverInterface;
@@ -31,28 +32,26 @@ class TransportFlow extends FlowDecorator
 
     private DriverInterface $driver;
 
-    /**
-     * @param array<string, mixed> $options valid options are:
-     *                                      - interval (default: 0): tick interval in milliseconds
-     */
     public function __construct(
         private FlowInterface $flow,
         private ReceiverInterface $producer,
         private SenderInterface $consumer,
-        ?DriverInterface $driver = null,
-        array $options = []
+        DriverInterface $driver = null
     ) {
         parent::__construct($flow);
 
         $this->envelopePool = new SplObjectStorage();
         $this->driver = $driver ?? new AmpDriver();
+    }
 
-        $options = array_merge([
-            'interval' => 1,
-        ], $options);
-
-        // producer receive new incoming Ip and initialise their state
-        $this->driver->tick($options['interval'], function () {
+    /**
+     * Producer receive new incoming Ip and initialise their state.
+     *
+     * @return Closure when called, this cleanup pull interval
+     */
+    public function pull(int $interval): Closure
+    {
+        return $this->driver->tick($interval, function () {
             $envelopes = $this->producer->get();
             foreach ($envelopes as $envelope) {
                 $this->emit($envelope);
@@ -67,6 +66,7 @@ class TransportFlow extends FlowDecorator
             $this->envelopeIds[$id] = $envelope;
             $ip = new Ip($envelope->getMessage());
             $this->envelopePool->offsetSet($ip, $envelope);
+
             try {
                 $self = $this;
                 ($this->flow)($ip, static function ($ip) use ($self) {

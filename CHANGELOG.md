@@ -1,17 +1,13 @@
----
-title: "Changelog"
-description: "Changelog."
-lead: "Changelog."
-date: 2020-10-13T15:21:01+02:00
-lastmod: 2020-10-13T15:21:01+02:00
-draft: false
-images: []
-menu:
-  docs:
-    parent: "getting-started"
-weight: 60
-toc: true
----
+### 1.1.3
+
+- Update DX for Flow\DriverInterface
+  - Update `async` that now $onResolve get called with async $callback result or Flow\Exception as first argument
+  - Update `tick` that now return a Closure to cleanup tick interval
+  - Remove `start` and `stop`
+- Add Fiber Driver from https://github.com/jolicode/castor/blob/main/src/functions.php
+- Upgrade to Symfony 6.3 and PHPUnit 10.3
+- Refactor docs structure
+- Refactor tooling from https://github.com/jolicode/castor
 
 ### 1.1.2
 
@@ -87,4 +83,4 @@ toc: true
 
 # 1.0.0
 
-- Initial release : Flow, Supervisor, Client
+- Initial release

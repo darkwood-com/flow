@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use Doctrine\DBAL\DriverManager;
 use Flow\Driver\AmpDriver;
+use Flow\Driver\FiberDriver;
 use Flow\Driver\ReactDriver;
 use Flow\Driver\SwooleDriver;
 use Flow\Examples\Transport\DoctrineIpTransport;
@@ -13,13 +14,17 @@ use Flow\Flow\Flow;
 use Flow\Flow\TransportFlow;
 use Flow\IpStrategy\MaxIpStrategy;
 
-$randomDriver = random_int(1, 3);
+$randomDriver = random_int(1, 4);
 
 if ($randomDriver === 1) {
     printf("Use AmpDriver\n");
 
     $driver = new AmpDriver();
 } elseif ($randomDriver === 2) {
+    printf("Use FiberDriver\n");
+
+    $driver = new FiberDriver();
+} elseif ($randomDriver === 3) {
     printf("Use ReactDriver\n");
 
     $driver = new ReactDriver();
@@ -68,16 +73,16 @@ $errorJob = static function (object $data, Throwable $exception): void {
 
 $flow = (new Flow($addOneJob, $errorJob, new MaxIpStrategy(1), $driver))
     ->fn(new Flow($multbyTwoJob, $errorJob, new MaxIpStrategy(3), $driver))
-    ->fn(new Flow($minusThreeJob, $errorJob, new MaxIpStrategy(2), $driver));
+    ->fn(new Flow($minusThreeJob, $errorJob, new MaxIpStrategy(2), $driver))
+;
 
-$connection = DriverManager::getConnection(['url' => 'mysql://root:root@127.0.0.1:3306/flow?serverVersion=8.0.31']);
+$connection = DriverManager::getConnection(['url' => 'mysql://flow:flow@127.0.0.1:3306/flow?serverVersion=8.1']);
 $transport = new DoctrineIpTransport($connection);
 
-new TransportFlow(
+$transportFlow = new TransportFlow(
     $flow,
     $transport,
     $transport,
     $driver
 );
-
-$driver->start();
+$transportFlow->pull(1);

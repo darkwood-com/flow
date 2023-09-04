@@ -10,10 +10,13 @@ use Flow\DriverInterface;
 use Flow\Flow\Flow;
 use Flow\Ip;
 use Flow\IpStrategyInterface;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
-class FlowTest extends AbstractFlowTest
+class FlowTest extends TestCase
 {
+    use FlowTrait;
+
     /**
      * @dataProvider jobProvider
      *
@@ -26,13 +29,10 @@ class FlowTest extends AbstractFlowTest
             array_map(fn ($job) => new Flow($job, static function () {}, $ipStrategy, $driver), $jobs),
             fn ($flow, $flowIt) => $flow ? $flow->fn($flowIt) : $flowIt
         );
-        ($flow)($ip, function (Ip $ip) use ($driver, $resultNumber) {
-            $driver->stop();
+        ($flow)($ip, function (Ip $ip) use ($resultNumber) {
             self::assertSame(ArrayObject::class, $ip->data::class);
             self::assertSame($resultNumber, $ip->data['number']);
         });
-
-        $driver->start();
     }
 
     /**
@@ -53,36 +53,32 @@ class FlowTest extends AbstractFlowTest
         }];
         $flow = new Flow($jobs, $errorJobs, null, $driver);
 
-        $ips = [];
+        $ips = new ArrayObject();
 
-        $callback = function (Ip $ip) use ($driver, &$ips, $ip1, $ip2) {
-            $ips[] = $ip;
-            if (count($ips) === 2) {
-                $this->assertSame($ip1, $ips[0]);
-                $this->assertSame($ip2, $ips[1]);
+        $callback = function (Ip $ip) use ($ips, $ip1, $ip2) {
+            $ips->append($ip);
+            if ($ips->count() === 2) {
+                $this->assertSame($ip1, $ips->offsetGet(0));
+                $this->assertSame($ip2, $ips->offsetGet(1));
                 self::assertSame(6, $ip1->data['n1']);
                 self::assertSame(16, $ip1->data['n2']);
                 self::assertSame(4, $ip2->data['n1']);
                 self::assertSame(20, $ip2->data['n2']);
-
-                $driver->stop();
             }
         };
 
         ($flow)($ip1, $callback);
         ($flow)($ip2, $callback);
-
-        $driver->start();
     }
 
     /**
      * @return array<array<mixed>>
      */
-    public function jobProvider(): array
+    public static function jobProvider(): array
     {
         $exception = new RuntimeException('job error');
 
-        return $this->matrix(fn (DriverInterface $driver) => [
+        return self::matrix(fn (DriverInterface $driver) => [
             'oneJob' => [[static function (ArrayObject $data) {
                 $data['number'] = 5;
             }], 5],

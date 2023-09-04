@@ -7,7 +7,7 @@ namespace Flow\Test\Driver;
 use Flow\Driver\SwooleDriver;
 use Flow\DriverInterface;
 
-class SwooleDriverTest extends DriverTest
+class SwooleDriverTest extends DriverTestCase
 {
     protected function createDriver(): DriverInterface
     {

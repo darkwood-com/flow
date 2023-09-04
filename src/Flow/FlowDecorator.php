@@ -14,7 +14,7 @@ abstract class FlowDecorator implements FlowInterface
     {
     }
 
-    public function __invoke(Ip $ip, ?Closure $callback = null): void
+    public function __invoke(Ip $ip, Closure $callback = null): void
     {
         ($this->flow)($ip, $callback);
     }

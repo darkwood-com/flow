@@ -1,12 +1,9 @@
-EXEC_PHP        = php -d memory_limit=-1
-COMPOSER        = composer
-
 ##
 ##Dev
-##-------------
+##----------
 
 dev: ## Start dev server
-	docker-compose up -d
+	composer dev
 
 cs-fix: ## Check and fix coding styles using PHP CS Fixer
 	composer cs-fix
@@ -18,7 +15,7 @@ test: ## Launch PHPUnit test suite
 	composer test
 
 docs-serve: ## Start documentation server locally
-	./node_modules/.bin/hugo/hugo server -s docs -D
+	composer docs-serve
 
 # DEFAULT
 .DEFAULT_GOAL := help

@@ -6,22 +6,23 @@ namespace Flow\Test\Flow;
 
 use Closure;
 use Flow\Driver\AmpDriver;
+use Flow\Driver\FiberDriver;
 use Flow\Driver\ReactDriver;
 use Flow\Driver\SwooleDriver;
 use Flow\IpStrategy\LinearIpStrategy;
 use Flow\IpStrategy\MaxIpStrategy;
 use Flow\IpStrategy\StackIpStrategy;
-use PHPUnit\Framework\TestCase;
 
-abstract class AbstractFlowTest extends TestCase
+trait FlowTrait
 {
     /**
      * @return array<array<mixed>>
      */
-    protected function matrix(Closure $datas): array
+    protected static function matrix(Closure $datas): array
     {
         $drivers = [
-            'amp' => fn (): AmpDriver => new AmpDriver(),
+            // 'amp' => fn (): AmpDriver => new AmpDriver(),
+            // 'fiber' => fn (): FiberDriver => new FiberDriver(),
             'react' => fn (): ReactDriver => new ReactDriver(),
             // 'swoole' => fn (): SwooleDriver => new SwooleDriver(),
         ];
@@ -39,7 +40,7 @@ abstract class AbstractFlowTest extends TestCase
             foreach ($strategies as $keyStrategy => $strategyBuilder) {
                 $strategy = $strategyBuilder();
                 foreach ($dataValues as $key => $values) {
-                    $matrixDatas["$keyDriver.$keyStrategy.$key"] = [$driver, $strategy, ...$values];
+                    $matrixDatas["{$keyDriver}.{$keyStrategy}.{$key}"] = [$driver, $strategy, ...$values];
                 }
             }
         }

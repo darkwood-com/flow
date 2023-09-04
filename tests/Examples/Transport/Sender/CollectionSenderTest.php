@@ -17,7 +17,7 @@ class CollectionSenderTest extends TestCase
     {
         $counter = new ArrayObject(['send' => 0]);
         $senders = array_map(function () use ($counter) {
-            $sender = new class($counter) implements SenderInterface {
+            return new class($counter) implements SenderInterface {
                 /**
                  * @param ArrayObject<string, int> $counter
                  */
@@ -32,8 +32,6 @@ class CollectionSenderTest extends TestCase
                     return $envelope;
                 }
             };
-
-            return $sender;
         }, array_fill(0, 10, 0));
         $collectionSender = new CollectionSender($senders);
         $collectionSender->send(new Envelope(new stdClass()));

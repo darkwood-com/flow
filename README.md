@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/darkwood-fr/flow">
-    <img src="docs/images/logo.png" width="auto" height="128px" alt="Flow">
+    <img src="docs/src/images/logo.png" width="auto" height="128px" alt="Flow">
   </a>
 </p>
 
