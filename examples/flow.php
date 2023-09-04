@@ -12,7 +12,7 @@ use Flow\Flow\Flow;
 use Flow\Ip;
 use Flow\IpStrategy\MaxIpStrategy;
 
-$driver = match(random_int(1, 4)) {
+$driver = match (random_int(1, 4)) {
     1 => new AmpDriver(),
     2 => new ReactDriver(),
     3 => new FiberDriver(),
@@ -78,5 +78,5 @@ $ipPool = new SplObjectStorage();
 
 for ($i = 1; $i <= 5; $i++) {
     $ip = new Ip(new ArrayObject(['id' => $i, 'number' => $i]));
-    $flow($ip, fn ($ip) => $ipPool->offsetUnset($ip));
+    $flow($ip, static fn ($ip) => $ipPool->offsetUnset($ip));
 }

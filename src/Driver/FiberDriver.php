@@ -53,11 +53,11 @@ class FiberDriver implements DriverInterface
      */
     public function tick(int $interval, Closure $callback): Closure
     {
-        $closure = fn () => $callback();
+        $closure = static fn () => $callback();
 
         register_tick_function($closure);
 
-        return fn () => unregister_tick_function($closure);
+        return static fn () => unregister_tick_function($closure);
     }
 
     private function loop(): void
@@ -73,7 +73,7 @@ class FiberDriver implements DriverInterface
                 foreach ($this->fibers as $i => $fiber) {
                     $isRunning = $isRunning || !$fiber['fiber']->isTerminated();
 
-                    if (!$fiber['fiber']->isTerminated() && $fiber['fiber']->isSuspended()) {
+                    if (!$fiber['fiber']->isTerminated() and $fiber['fiber']->isSuspended()) {
                         try {
                             $fiber['fiber']->resume();
                         } catch (Throwable $exception) {

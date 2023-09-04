@@ -25,7 +25,7 @@ abstract class DriverTestCase extends TestCase
         $driver->async(static function () {
             return 2;
         }, function (mixed $value) {
-            $this->assertEquals(2, $value);
+            $this->assertSame(2, $value);
         })();
     }
 
@@ -51,7 +51,7 @@ abstract class DriverTestCase extends TestCase
 
     public function testTick(): void
     {
-        $this->assertTrue(true);
+        self::assertTrue(true);
 
         /*$i = 0;
         $driver = $this->createDriver();

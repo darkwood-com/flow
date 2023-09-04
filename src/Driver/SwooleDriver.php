@@ -25,7 +25,7 @@ class SwooleDriver implements DriverInterface
 
     public function async(Closure $callback, Closure $onResolve = null): Closure
     {
-        return function (...$args) use ($callback, $onResolve): void {
+        return static function (...$args) use ($callback, $onResolve): void {
             Coroutine::run(static function () use ($callback, $onResolve, $args) {
                 Coroutine::create(static function (Closure $callback, array $args, Closure $onResolve = null) {
                     try {
@@ -53,7 +53,7 @@ class SwooleDriver implements DriverInterface
     {
         $tickId = Timer::tick($interval, $callback);
 
-        return function () use ($tickId) {
+        return static function () use ($tickId) {
             Timer::clear($tickId); // @phpstan-ignore-line
         };
     }

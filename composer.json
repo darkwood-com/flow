@@ -20,12 +20,11 @@
         "php"
     ],
     "require": {
-        "php": "^8.2"
+        "php": ">=8.2"
     },
     "require-dev": {
         "amphp/amp": "^3.0",
         "openswoole/ide-helper": "^22.0",
-        "phpunit/phpunit": "^10.3",
         "react/async": "^4.1",
         "symfony/doctrine-messenger": "^6.3",
         "symfony/messenger": "^6.3",
@@ -49,18 +48,30 @@
         }
     },
     "scripts": {
-        "dev": "castor flow:tools:dev",
-        "cs-fix": "castor flow:tools:cs-fix",
-        "phpstan": "castor flow:tools:phpstan",
-        "test": "castor flow:tools:test",
-        "docs-serve": "castor flow:tools:docs-serve"
+        "dev": "cd tools && castor flow:tools:dev",
+        "docs-serve": "cd tools && castor flow:tools:docs-serve",
+        "infection": "cd tools && castor flow:tools:infection",
+        "phan": "cd tools && castor flow:tools:phan",
+        "php-cs-fixer": "cd tools && castor flow:tools:php-cs-fixer",
+        "phpcbf": "cd tools && castor flow:tools:phpcbf",
+        "phpcs": "cd tools && castor flow:tools:phpcs",
+        "phpmd": "cd tools && castor flow:tools:phpmd",
+        "phpstan": "cd tools && castor flow:tools:phpstan",
+        "phpunit": "cd tools && castor flow:tools:phpunit",
+        "psalm": "cd tools && castor flow:tools:psalm"
     },
     "scripts-descriptions": {
         "dev": "Start dev server",
-        "cs-fix": "Check and fix coding styles using PHP CS Fixer",
+        "docs-serve": "Start documentation server locally",
+        "infection": "Run Infection",
+        "phan": "Run Phan",
+        "php-cs-fixer": "Check and fix coding styles using PHP CS Fixer",
+        "phpcbf": "Clean code with PHP Code Beautifier and Fixer",
+        "phpcs": "Run PHP Code Sniffer",
+        "phpmd": "Run PHP Mess Detector",
         "phpstan": "Execute PHPStan analysis",
-        "test": "Launch PHPUnit test suite",
-        "docs-serve": "Start documentation server locally"
+        "phpunit": "Launch PHPUnit test suite",
+        "psalm": "Run Psalm"
     },
     "minimum-stability": "stable"
 }

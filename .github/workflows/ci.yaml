@@ -7,7 +7,57 @@ on:
   pull_request:
 
 jobs:
-  cs-fix:
+#  infection:
+#    name: Run Infection
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        php: [ '8.2' ]
+#    steps:
+#      - name: Init repository
+#        uses: actions/checkout@v3
+#
+#      - name: Setup PHP
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: ${{ matrix.php }}
+#          extensions: xsl, openswoole
+#          tools: composer
+#
+#      - name: Install dependencies
+#        run: |
+#          composer install
+#          composer install -d tools/infection
+#
+#      - name: Run Infection
+#        run: (cd tools && infection/vendor/bin/infection --configuration=infection/infection.json)
+
+#  phan:
+#    name: Run Phan
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        php: [ '8.2' ]
+#    steps:
+#      - name: Init repository
+#        uses: actions/checkout@v3
+#
+#      - name: Setup PHP
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: ${{ matrix.php }}
+#          extensions: xsl, openswoole, ast
+#          tools: composer
+#
+#      - name: Install dependencies
+#        run: |
+#          composer install
+#          composer install -d tools/phan
+#
+#      - name: Run Phan
+#        run: (cd tools && phan/vendor/bin/phan --config-file phan/phan.php)
+
+  php-cs-fixer:
     name: Check and fix coding styles using PHP CS Fixer
     runs-on: ubuntu-latest
     strategy:
@@ -26,10 +76,87 @@ jobs:
           coverage: none # disable XDebug for tests
 
       - name: Install dependencies
-        run: composer install -d tools/php-cs-fixer
+        run: |
+          composer install
+          composer install -d tools/php-cs-fixer
 
-      - name: PHP-CS-Fixer
-        run: tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --config .php-cs-fixer.php  --diff --dry-run
+      - name: Check and fix coding styles using PHP CS Fixer
+        run: (cd tools && php-cs-fixer/vendor/bin/php-cs-fixer fix --config php-cs-fixer/.php-cs-fixer.php  --diff --dry-run)
+
+#  phpcbf:
+#    name: Clean code with PHP Code Beautifier and Fixer
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        php: [ '8.2' ]
+#    steps:
+#      - name: Init repository
+#        uses: actions/checkout@v3
+#
+#      - name: Setup PHP
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: ${{ matrix.php }}
+#          extensions: xsl, openswoole, ast
+#          tools: composer
+#
+#      - name: Install dependencies
+#        run: |
+#          composer install
+#          composer install -d tools/phpcbf
+#
+#      - name: Clean code with PHP Code Beautifier and Fixer
+#        run: (cd tools && phpcbf/vendor/bin/phpcbf --standard=phpcbf/phpcs.xml)
+
+#  phpcs:
+#    name: Run PHP Code Sniffer
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        php: [ '8.2' ]
+#    steps:
+#      - name: Init repository
+#        uses: actions/checkout@v3
+#
+#      - name: Setup PHP
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: ${{ matrix.php }}
+#          extensions: xsl, openswoole, ast
+#          tools: composer
+#
+#      - name: Install dependencies
+#        run: |
+#          composer install
+#          composer install -d tools/phpcs
+#
+#      - name: Run PHP Code Sniffer
+#        run: (cd tools && phpcs/vendor/bin/phpcs --standard=phpcs/phpcs.xml)
+
+#  phpmd:
+#    name: Run PHP Mess Detector
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        php: [ '8.2' ]
+#    steps:
+#      - name: Init repository
+#        uses: actions/checkout@v3
+#
+#      - name: Setup PHP
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: ${{ matrix.php }}
+#          extensions: xsl, openswoole
+#          tools: composer
+#
+#      - name: Install dependencies
+#        run: |
+#          composer install
+#          composer install -d tools/phpmd
+#
+#      - name: Run PHP Mess Detector
+#        run: (cd tools && phpmd/vendor/bin/phpmd ../examples/,../src/,../tests/ text phpmd/phpmd.xml)
 
   phpstan:
     name: Execute PHPStan analysis
@@ -51,11 +178,11 @@ jobs:
 
       - name: 'Install dependencies'
         run: |
-          composer install -d tools/phpstan
           composer install
+          composer install -d tools/phpstan
 
-      - name: PHPStan
-        run: tools/phpstan/vendor/bin/phpstan --configuration=phpstan.neon
+      - name: Execute PHPStan analysis
+        run: (cd tools && phpstan/vendor/bin/phpstan --configuration=phpstan/phpstan.neon)
 
   phpunit:
     name: Launch PHPUnit test suite
@@ -76,7 +203,34 @@ jobs:
           coverage: none # disable XDebug for tests
 
       - name: Install dependencies
-        run: composer install
+        run: |
+          composer install
+          composer install -d tools/phpunit
 
-      - name: PHPUnit
-        run: vendor/bin/phpunit
+      - name: Launch PHPUnit test suite
+        run: (cd tools && phpunit/vendor/bin/phpunit --configuration phpunit/phpunit.xml)
+
+#  psalm:
+#    name: Run PHP Mess Detector
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        php: [ '8.2' ]
+#    steps:
+#      - name: Init repository
+#        uses: actions/checkout@v3
+#
+#      - name: Setup PHP
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: ${{ matrix.php }}
+#          extensions: xsl, openswoole
+#          tools: composer
+#
+#      - name: Install dependencies
+#        run: |
+#          composer install
+#          composer install -d tools/psalm
+#
+#      - name: Run PHP Mess Detector
+#        run: (cd tools && psalm/vendor/bin/psalm --no-cache --config psalm/psalm.xml)

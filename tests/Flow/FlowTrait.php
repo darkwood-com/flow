@@ -23,14 +23,14 @@ trait FlowTrait
         $drivers = [
             // 'amp' => fn (): AmpDriver => new AmpDriver(),
             // 'fiber' => fn (): FiberDriver => new FiberDriver(),
-            'react' => fn (): ReactDriver => new ReactDriver(),
+            'react' => static fn (): ReactDriver => new ReactDriver(),
             // 'swoole' => fn (): SwooleDriver => new SwooleDriver(),
         ];
 
         $strategies = [
-            'linear' => fn (): LinearIpStrategy => new LinearIpStrategy(),
-            'max' => fn (): MaxIpStrategy => new MaxIpStrategy(),
-            'stack' => fn (): StackIpStrategy => new StackIpStrategy(),
+            'linear' => static fn (): LinearIpStrategy => new LinearIpStrategy(),
+            'max' => static fn (): MaxIpStrategy => new MaxIpStrategy(),
+            'stack' => static fn (): StackIpStrategy => new StackIpStrategy(),
         ];
 
         $matrixDatas = [];

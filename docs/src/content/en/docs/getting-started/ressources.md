@@ -48,6 +48,10 @@ Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://ww
 - Differences between PHP Fibers RFC in PHP 8.1 vs Swoole Fibers and Coroutines : [https://openswoole.com/article/php-fibers-rfc-vs-swoole-co](https://openswoole.com/article/php-fibers-rfc-vs-swoole-co)
 
 ## Monads and PHP
+Article on Monads : [https://blog.darkwood.fr/article/les-monades-et-leur-utilisation-en-php](https://blog.darkwood.fr/article/les-monades-et-leur-utilisation-en-php)  
+Slides on Monads : [https://speakerdeck.com/matyo91/monads-and-usage-in-php](https://speakerdeck.com/matyo91/monads-and-usage-in-php)  
+Video on Monads : [https://www.youtube.com/watch?v=0M6MhUpra9o](https://www.youtube.com/watch?v=0M6MhUpra9o)
+
 - What is a monad from [Sean Riley](https://twitter.com/seanski44) : [https://www.youtube.com/watch?v=t1e8gqXLbsU](https://www.youtube.com/watch?v=t1e8gqXLbsU)
 - Why monads are useful : [https://jameswestby.net/tech/why-monads-are-useful.html](https://jameswestby.net/tech/why-monads-are-useful.html)
 - Promise is neither a Functor nor an Applicative nor a Monad [https://stackoverflow.com/questions/45712106/why-are-promises-monads](https://stackoverflow.com/questions/45712106/why-are-promises-monads)

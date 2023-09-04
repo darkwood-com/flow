@@ -18,7 +18,7 @@ class EnvelopeTraitTest extends TestCase
     public function testGetIpId(): void
     {
         $ip = Envelope::wrap(new stdClass(), [new TransportMessageIdStamp('envelope_id_test')]);
-        self::assertEquals('envelope_id_test', $this->getEnvelopeId($ip));
+        self::assertSame('envelope_id_test', $this->getEnvelopeId($ip));
     }
 
     public function testGetIpIdWithoutId(): void

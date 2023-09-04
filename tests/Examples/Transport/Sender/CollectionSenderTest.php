@@ -36,6 +36,6 @@ class CollectionSenderTest extends TestCase
         $collectionSender = new CollectionSender($senders);
         $collectionSender->send(new Envelope(new stdClass()));
 
-        self::assertEquals(10, $counter['send']);
+        self::assertSame(10, $counter['send']);
     }
 }

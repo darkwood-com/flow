@@ -19,7 +19,7 @@ class TransportFlowTest extends TestCase
     use FlowTrait;
 
     /**
-     * @dataProvider jobsProvider
+     * @dataProvider provideJobsCases
      *
      * @param array<Closure> $jobs
      */
@@ -51,9 +51,9 @@ class TransportFlowTest extends TestCase
     /**
      * @return array<array<mixed>>
      */
-    public static function jobsProvider(): array
+    public static function provideJobsCases(): iterable
     {
-        return self::matrix(fn (DriverInterface $driver) => [
+        return self::matrix(static fn (DriverInterface $driver) => [
             'oneJob' => [[static function (ArrayObject $data): void {
                 $data['number'] = 1;
             }], 1],

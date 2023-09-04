@@ -34,7 +34,7 @@ class client
     }
 
     /**
-     * @param HandlerDescriptor[][]|callable[][] $handlers
+     * @param callable[][]|HandlerDescriptor[][] $handlers
      */
     public function wait(array $handlers): void
     {
@@ -65,7 +65,7 @@ for ($i = 0; $i < 3; $i++) {
 }
 
 $client->wait([
-    ArrayObject::class => [function (ArrayObject $data) {
+    ArrayObject::class => [static function (ArrayObject $data) {
         if (null === $data['number']) {
             printf("Client %s #%d: error in process\n", $data['client'], $data['id']);
         } else {
