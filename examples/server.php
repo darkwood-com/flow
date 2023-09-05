@@ -14,25 +14,13 @@ use Flow\Flow\Flow;
 use Flow\Flow\TransportFlow;
 use Flow\IpStrategy\MaxIpStrategy;
 
-$randomDriver = random_int(1, 4);
-
-if ($randomDriver === 1) {
-    printf("Use AmpDriver\n");
-
-    $driver = new AmpDriver();
-} elseif ($randomDriver === 2) {
-    printf("Use FiberDriver\n");
-
-    $driver = new FiberDriver();
-} elseif ($randomDriver === 3) {
-    printf("Use ReactDriver\n");
-
-    $driver = new ReactDriver();
-} else {
-    printf("Use SwooleDriver\n");
-
-    $driver = new SwooleDriver();
-}
+$driver = match(random_int(1, 4)) {
+    1 => new AmpDriver(),
+    2 => new ReactDriver(),
+    3 => new FiberDriver(),
+    4 => new SwooleDriver(),
+};
+printf("Use %s\n", $driver::class);
 
 $addOneJob = static function (object $data) use ($driver): void {
     printf("Client %s #%d : Calculating %d + 1\n", $data['client'], $data['id'], $data['number']);

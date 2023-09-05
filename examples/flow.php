@@ -12,25 +12,13 @@ use Flow\Flow\Flow;
 use Flow\Ip;
 use Flow\IpStrategy\MaxIpStrategy;
 
-$randomDriver = random_int(1, 4);
-
-if ($randomDriver === 1) {
-    printf("Use AmpDriver\n");
-
-    $driver = new AmpDriver();
-} elseif ($randomDriver === 2) {
-    printf("Use ReactDriver\n");
-
-    $driver = new ReactDriver();
-} elseif ($randomDriver === 3) {
-    printf("Use FiberDriver\n");
-
-    $driver = new FiberDriver();
-} else {
-    printf("Use SwooleDriver\n");
-
-    $driver = new SwooleDriver();
-}
+$driver = match(random_int(1, 4)) {
+    1 => new AmpDriver(),
+    2 => new ReactDriver(),
+    3 => new FiberDriver(),
+    4 => new SwooleDriver(),
+};
+printf("Use %s\n", $driver::class);
 
 $job1 = static function (object $data) use ($driver): void {
     printf("*. #%d - Job 1 : Calculating %d + %d\n", $data['id'], $data['number'], $data['number']);
@@ -70,20 +58,25 @@ $job2 = static function (object $data) use ($driver): void {
     $data['number'] = $result;
 };
 
-$errorJob = static function (object $data, Throwable $exception): void {
+$errorJob1 = static function (object $data, Throwable $exception): void {
+    printf("*. #%d - Error Job : Exception %s\n", $data['id'], $exception->getMessage());
+
+    $data['number'] = null;
+};
+
+$errorJob2 = static function (object $data, Throwable $exception): void {
     printf(".* #%d - Error Job : Exception %s\n", $data['id'], $exception->getMessage());
 
     $data['number'] = null;
 };
 
-$flow = (new Flow($job1, $errorJob, new MaxIpStrategy(2), $driver))
-    ->fn(new Flow($job2, $errorJob, new MaxIpStrategy(2), $driver))
+$flow = (new Flow($job1, $errorJob1, new MaxIpStrategy(2), $driver))
+    ->fn(new Flow($job2, $errorJob2, new MaxIpStrategy(2), $driver))
 ;
 
 $ipPool = new SplObjectStorage();
 
 for ($i = 1; $i <= 5; $i++) {
     $ip = new Ip(new ArrayObject(['id' => $i, 'number' => $i]));
-    $ipPool->offsetSet($ip, true);
     $flow($ip, fn ($ip) => $ipPool->offsetUnset($ip));
 }
