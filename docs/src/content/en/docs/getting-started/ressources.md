@@ -65,6 +65,10 @@ Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://ww
 - Monad PHP [https://github.com/ircmaxell/monad-php](https://github.com/ircmaxell/monad-php)
 
 ## Y-Combinator and PHP
+Article of Y-Combinator : [https://blog.darkwood.fr/article/y-combinator-en-php](https://blog.darkwood.fr/article/y-combinator-en-php)  
+Slides of Y-Combinator : [https://speakerdeck.com/matyo91/y-combinator-in-php](https://speakerdeck.com/matyo91/y-combinator-in-php)  
+Video of Y-Combinator : [https://www.youtube.com/watch?v=QSS_ZcO8Q1g](https://www.youtube.com/watch?v=QSS_ZcO8Q1g)
+
 - [Lambda Calculus - Wikipedia](http://en.wikipedia.org/wiki/Lambda_calculus)
 - Lambda calculus language explanation : [https://tgdwyer.github.io/lambdacalculus](https://tgdwyer.github.io/lambdacalculus)
 - Combinator : [https://github.com/loophp/combinator](https://github.com/loophp/combinator)
