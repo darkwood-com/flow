@@ -11,13 +11,12 @@ use Revolt\EventLoop;
 use RuntimeException;
 use Throwable;
 
+use function Amp\async;
 use function Amp\delay;
 use function function_exists;
 
 class AmpDriver implements DriverInterface
 {
-    private int $counter = 0;
-
     public function __construct()
     {
         if (!function_exists('Amp\\async')) {
@@ -27,8 +26,8 @@ class AmpDriver implements DriverInterface
 
     public function async(Closure $callback, Closure $onResolve = null): Closure
     {
-        return function (...$args) use ($callback, $onResolve): void {
-            EventLoop::queue(function (Closure $callback, array $args, Closure $onResolve = null) {
+        return static function (...$args) use ($callback, $onResolve): void {
+            async(static function (Closure $callback, array $args, Closure $onResolve = null) {
                 try {
                     $return = $callback(...$args, ...($args = []));
                     if ($onResolve) {
@@ -38,11 +37,8 @@ class AmpDriver implements DriverInterface
                     if ($onResolve) {
                         $onResolve(new Exception($exception->getMessage(), $exception->getCode(), $exception));
                     }
-                } finally {
-                    $this->pop();
                 }
-            }, $callback, $args, $onResolve);
-            $this->push();
+            }, $callback, $args, $onResolve)->await();
         };
     }
 
@@ -54,27 +50,9 @@ class AmpDriver implements DriverInterface
     public function tick(int $interval, Closure $callback): Closure
     {
         $tickId = EventLoop::repeat($interval / 1000, $callback);
-        $this->push();
 
-        return function () use ($tickId) {
+        return static function () use ($tickId) {
             EventLoop::cancel($tickId);
-            $this->pop();
         };
-    }
-
-    private function push(): void
-    {
-        if (/* $this->counter === 0 || */ !EventLoop::getDriver()->isRunning()) {
-            EventLoop::run();
-        }
-        $this->counter++;
-    }
-
-    private function pop(): void
-    {
-        $this->counter--;
-        if ($this->counter === 0) {
-            EventLoop::getDriver()->stop();
-        }
     }
 }

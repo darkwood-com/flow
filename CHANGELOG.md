@@ -2,6 +2,7 @@
 
 ## v1.1.x
 
+- Add Flow\Driver\RevoltDriver
 - Add more quality tools from https://github.com/IngeniozIT/php-skeleton
 
 ## v1.1.3

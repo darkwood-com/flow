@@ -7,16 +7,18 @@ require __DIR__ . '/../vendor/autoload.php';
 use Flow\Driver\AmpDriver;
 use Flow\Driver\FiberDriver;
 use Flow\Driver\ReactDriver;
+use Flow\Driver\RevoltDriver;
 use Flow\Driver\SwooleDriver;
 use Flow\Flow\Flow;
 use Flow\Ip;
 use Flow\IpStrategy\MaxIpStrategy;
 
-$driver = match (random_int(1, 4)) {
+$driver = match (random_int(1, 5)) {
     1 => new AmpDriver(),
     2 => new ReactDriver(),
     3 => new FiberDriver(),
-    4 => new SwooleDriver(),
+    4 => new RevoltDriver(),
+    5 => new SwooleDriver(),
 };
 printf("Use %s\n", $driver::class);
 
