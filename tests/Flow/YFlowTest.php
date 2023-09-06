@@ -17,14 +17,14 @@ class YFlowTest extends TestCase
     use FlowTrait;
 
     /**
-     * @dataProvider jobProvider
+     * @dataProvider provideJobCases
      */
     public function testJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, Closure $job, int $resultNumber): void
     {
         $ip = new Ip(new ArrayObject(['number' => 6]));
         $errorJob = static function () {};
         $yFlow = new YFlow($job, $errorJob, $ipStrategy, $driver);
-        ($yFlow)($ip, function (Ip $ip) use ($resultNumber) {
+        ($yFlow)($ip, static function (Ip $ip) use ($resultNumber) {
             self::assertSame(ArrayObject::class, $ip->data::class);
             self::assertSame($resultNumber, $ip->data['number']);
         });
@@ -33,9 +33,9 @@ class YFlowTest extends TestCase
     /**
      * @return array<array<mixed>>
      */
-    public static function jobProvider(): array
+    public static function provideJobCases(): iterable
     {
-        return self::matrix(fn () => [
+        return self::matrix(static fn () => [
             'job' => [static function (callable $function): Closure {
                 return static function (ArrayObject $data) use ($function) {
                     if ($data['number'] > 1) {

@@ -38,27 +38,27 @@ GitHub.
 Then clone your fork:
 
 ```bash
-$ git clone git@github.com:darkwood-fr/flow.git
-$ git checkout -b bug-or-feature-description
+git clone git@github.com:darkwood-fr/flow.git
+git checkout -b bug-or-feature-description
 ```
 
 And install the dependencies:
 
 ```bash
-$ composer install
+composer install
 ```
 
 Write your code and add tests. Then run the tests:
 
 ```bash
-$ make test
+make test
 ```
 
 Commit your changes and push them to GitHub:
 
 ```bash
-$ git commit -m ":sparkles: Introduce awesome new feature"
-$ git push -u origin bug-or-feature-description
+git commit -m ":sparkles: Introduce awesome new feature"
+git push -u origin bug-or-feature-description
 ```
 
 Then [create a pull request](https://help.github.com/articles/creating-a-pull-request/)
@@ -79,6 +79,6 @@ Please make sure your pull requests adhere to this standard.
 
 To fix, execute this command after [download PHP CS Fixer](https://cs.symfony.com/):
 
-```shell script
-$ make cs-fix
+```bash
+make php-cs-fixer
 ```

@@ -1,11 +1,8 @@
 # Docs
-/docs/node_modules
-/docs/src/public
-/docs/src/resources
+/docs/node_modules/
+/docs/src/public/
+/docs/src/resources/
 
 # PHP
-/.castor.stub.php
-/.php-cs-fixer.cache
-/.phpunit.cache
 /composer.lock
 /vendor/

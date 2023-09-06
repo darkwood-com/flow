@@ -40,8 +40,8 @@ class Flow implements FlowInterface
     private ?FlowInterface $fnFlow = null;
 
     /**
-     * @param Closure|array<Closure> $jobs
-     * @param Closure|array<Closure> $errorJobs
+     * @param array<Closure>|Closure $jobs
+     * @param array<Closure>|Closure $errorJobs
      */
     public function __construct(
         Closure|array $jobs,

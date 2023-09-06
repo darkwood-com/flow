@@ -89,7 +89,7 @@ class CollectionReceiverTest extends TestCase
     /**
      * @return array<array<mixed>>
      */
-    public static function receiverProvider(): array
+    public static function receiverProvider(): iterable
     {
         $expectedReceiversIps = new SplObjectStorage();
         /** @var array<mixed, ReceiverInterface> $expectedAckIpsReceivers */
@@ -170,7 +170,7 @@ class CollectionReceiverTest extends TestCase
      */
     protected function assertArraySimilar(array $expected, array $array): void
     {
-        self::assertEquals([], array_diff_key($array, $expected));
+        self::assertSame([], array_diff_key($array, $expected));
 
         foreach ($expected as $key => $value) {
             if (is_array($value)) {

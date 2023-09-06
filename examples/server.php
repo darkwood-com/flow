@@ -14,7 +14,7 @@ use Flow\Flow\Flow;
 use Flow\Flow\TransportFlow;
 use Flow\IpStrategy\MaxIpStrategy;
 
-$driver = match(random_int(1, 4)) {
+$driver = match (random_int(1, 4)) {
     1 => new AmpDriver(),
     2 => new ReactDriver(),
     3 => new FiberDriver(),

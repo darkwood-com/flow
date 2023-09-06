@@ -2,7 +2,7 @@
 
 ## v1.1.x
 
-
+- Add more quality tools from https://github.com/IngeniozIT/php-skeleton
 
 ## v1.1.3
 
@@ -10,7 +10,7 @@
   - Update `async` that now $onResolve get called with async $callback result or Flow\Exception as first argument
   - Update `tick` that now return a Closure to cleanup tick interval
   - Remove `start` and `stop`
-- Add Fiber Driver from https://github.com/jolicode/castor/blob/main/src/functions.php
+- Add Flow\Driver\FiberDriver from https://github.com/jolicode/castor/blob/main/src/functions.php
 - Upgrade to Symfony 6.3 and PHPUnit 10.3
 - Refactor docs structure
 - Refactor tooling from https://github.com/jolicode/castor
