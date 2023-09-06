@@ -15,6 +15,7 @@ RUN set -eux; \
 		opcache \
 		zip \
         openswoole \
+        pcntl \
     ;
 
 WORKDIR /flow

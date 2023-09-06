@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Flow\Flow;
 
 use Closure;
-use Flow\Driver\ReactDriver;
+use Flow\Driver\FiberDriver;
 use Flow\DriverInterface;
 use Flow\ExceptionInterface;
 use Flow\FlowInterface;
@@ -70,7 +70,7 @@ class Flow implements FlowInterface
         $this->jobs = is_array($jobs) ? $jobs : [$jobs];
         $this->errorJobs = $errorJobs ? (is_array($errorJobs) ? $errorJobs : [$errorJobs]) : [];
         $this->ipStrategy = $ipStrategy ?? new LinearIpStrategy();
-        $this->driver = $driver ?? new ReactDriver();
+        $this->driver = $driver ?? new FiberDriver();
         $this->callbacks = new SplObjectStorage();
     }
 

@@ -9,6 +9,7 @@ use Flow\Driver\AmpDriver;
 use Flow\Driver\FiberDriver;
 use Flow\Driver\ReactDriver;
 use Flow\Driver\RevoltDriver;
+use Flow\Driver\SpatieDriver;
 use Flow\Driver\SwooleDriver;
 use Flow\IpStrategy\LinearIpStrategy;
 use Flow\IpStrategy\MaxIpStrategy;
@@ -26,6 +27,7 @@ trait FlowTrait
             'fiber' => static fn (): FiberDriver => new FiberDriver(),
             'react' => static fn (): ReactDriver => new ReactDriver(),
             'revolt' => static fn (): RevoltDriver => new RevoltDriver(),
+            // 'spatie' => static fn (): SpatieDriver => new SpatieDriver(),
             // 'swoole' => fn (): SwooleDriver => new SwooleDriver(),
         ];
 
