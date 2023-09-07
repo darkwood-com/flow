@@ -9,12 +9,13 @@ namespace Flow\Driver;
 use Closure;
 use Fiber;
 use Flow\DriverInterface;
+use Flow\Event;
+use Flow\Event\AsyncEvent;
 use Flow\Event\PopEvent;
 use Flow\Event\PullEvent;
 use Flow\Event\PushEvent;
 use Flow\Exception\RuntimeException;
 use Flow\Ip;
-use Flow\IpStrategyEvent;
 use Throwable;
 
 use function array_key_exists;
@@ -40,7 +41,7 @@ class FiberDriver implements DriverInterface
 
     public function await(array &$stream): void
     {
-        $async = static function ($ip, $fnFlows, $index, $isTick) {
+        $async = static function ($ip, $fnFlows, $index, $isTick) use (&$fiberDatas) {
             $fiber = new Fiber($fnFlows[$index]['job']);
 
             $exception = null;
@@ -55,7 +56,7 @@ class FiberDriver implements DriverInterface
                 $exception = $fiberException;
             }
 
-            return [
+            $fiberDatas[] = [
                 'index' => $index,
                 'fiber' => $fiber,
                 'exception' => $exception,
@@ -74,21 +75,21 @@ class FiberDriver implements DriverInterface
                 if ($tick % $interval === 0) {
                     $ip = new Ip();
                     $stream['ips']++;
-                    $fiberDatas[] = $async($ip, [['job' => $callback]], 0, true);
+                    $async($ip, [['job' => $callback]], 0, true);
                 }
             }
 
             $nextIp = null;
             do {
                 foreach ($stream['dispatchers'] as $index => $dispatcher) {
-                    $nextIp = $dispatcher->dispatch(new PullEvent(), IpStrategyEvent::PULL)->getIp();
+                    $nextIp = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIp();
                     if ($nextIp !== null) {
-                        $fiberDatas[] = $async($nextIp, $stream['fnFlows'], $index, false);
+                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $nextIp, $stream['fnFlows'], $index, false), Event::ASYNC);
                     }
                 }
             } while ($nextIp !== null);
 
-            foreach ($fiberDatas as $i => $fiberData) {
+            foreach ($fiberDatas as $i => $fiberData) { // @phpstan-ignore-line see https://github.com/phpstan/phpstan/issues/11468
                 if (!$fiberData['fiber']->isTerminated() and $fiberData['fiber']->isSuspended()) {
                     try {
                         $fiberData['fiber']->resume();
@@ -102,15 +103,14 @@ class FiberDriver implements DriverInterface
                         if ($fiberData['isTick'] === false and array_key_exists($fiberData['index'] + 1, $stream['fnFlows'])) {
                             $ip = new Ip($data);
                             $stream['ips']++;
-                            $stream['dispatchers'][$fiberData['index'] + 1]->dispatch(new PushEvent($ip), IpStrategyEvent::PUSH);
-                            $fiberDatas[] = $async($ip, $stream['fnFlows'], $fiberData['index'] + 1, false);
+                            $stream['dispatchers'][$fiberData['index'] + 1]->dispatch(new PushEvent($ip), Event::PUSH);
                         }
                     } elseif (array_key_exists($fiberData['index'], $stream['fnFlows']) and $stream['fnFlows'][$fiberData['index']]['errorJob'] !== null) {
                         $stream['fnFlows'][$fiberData['index']]['errorJob'](
                             new RuntimeException($fiberData['exception']->getMessage(), $fiberData['exception']->getCode(), $fiberData['exception'])
                         );
                     }
-                    $stream['dispatchers'][$fiberData['index']]->dispatch(new PopEvent($fiberData['ip']), IpStrategyEvent::POP);
+                    $stream['dispatchers'][$fiberData['index']]->dispatch(new PopEvent($fiberData['ip']), Event::POP);
                     $stream['ips']--;
                     unset($fiberDatas[$i]);
                 }

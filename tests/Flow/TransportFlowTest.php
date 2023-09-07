@@ -31,7 +31,7 @@ class TransportFlowTest extends TestCase
     public function testJobs(DriverInterface $driver, IpStrategyInterface $ipStrategy, array $jobs, int $resultNumber): void
     {
         $flow = array_reduce(
-            array_map(static fn ($job) => new Flow($job, static function () {}, $ipStrategy, null, $driver), $jobs),
+            array_map(static fn ($job) => new Flow($job, static function () {}, $ipStrategy, null, null, $driver), $jobs),
             static fn ($flow, $flowIt) => $flow ? $flow->fn($flowIt) : $flowIt
         );
         $flow->fn(static function (ArrayObject $data) use ($resultNumber) {

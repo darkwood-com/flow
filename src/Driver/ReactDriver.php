@@ -6,12 +6,13 @@ namespace Flow\Driver;
 
 use Closure;
 use Flow\DriverInterface;
+use Flow\Event;
+use Flow\Event\AsyncEvent;
 use Flow\Event\PopEvent;
 use Flow\Event\PullEvent;
 use Flow\Event\PushEvent;
 use Flow\Exception\RuntimeException;
 use Flow\Ip;
-use Flow\IpStrategyEvent;
 use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
 use RuntimeException as NativeRuntimeException;
@@ -36,7 +37,7 @@ class ReactDriver implements DriverInterface
 
     public function __construct(?LoopInterface $eventLoop = null)
     {
-        if (!function_exists('React\\Async\\async')) {
+        if (!function_exists('React\Async\async')) {
             throw new NativeRuntimeException('ReactPHP is not loaded. Suggest install it with composer require react/event-loop');
         }
 
@@ -58,36 +59,36 @@ class ReactDriver implements DriverInterface
 
     public function await(array &$stream): void
     {
-        $async = function ($ip, $fnFlows, $index) {
+        $async = function ($ip, $fnFlows, $index, $then) {
             $async = $this->async($fnFlows[$index]['job']);
 
             if ($ip->data === null) {
-                return $async();
+                $promise = $async();
+            } else {
+                $promise = $async($ip->data);
             }
 
-            return $async($ip->data);
+            $promise->then($then);
         };
 
         $loop = function () use (&$loop, &$stream, $async) {
             $nextIp = null;
             do {
                 foreach ($stream['dispatchers'] as $index => $dispatcher) {
-                    $nextIp = $dispatcher->dispatch(new PullEvent(), IpStrategyEvent::PULL)->getIp();
+                    $nextIp = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIp();
                     if ($nextIp !== null) {
-                        $async($nextIp, $stream['fnFlows'], $index)
-                            ->then(static function ($data) use (&$stream, $index, $nextIp) {
-                                if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
-                                    $stream['fnFlows'][$index]['errorJob']($data);
-                                } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
-                                    $ip = new Ip($data);
-                                    $stream['ips']++;
-                                    $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), IpStrategyEvent::PUSH);
-                                }
+                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $nextIp, $stream['fnFlows'], $index, static function ($data) use (&$stream, $index, $nextIp) {
+                            if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
+                                $stream['fnFlows'][$index]['errorJob']($data);
+                            } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
+                                $ip = new Ip($data);
+                                $stream['ips']++;
+                                $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), Event::PUSH);
+                            }
 
-                                $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), IpStrategyEvent::POP);
-                                $stream['ips']--;
-                            })
-                        ;
+                            $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
+                            $stream['ips']--;
+                        }), Event::ASYNC);
                     }
                 }
             } while ($nextIp !== null);
