@@ -44,8 +44,6 @@ A working script is available in the bundled `examples` directory
 - Start Server : `php examples/server.php`  
   Start Client(s) : `php examples/client.php`
 
-Messaging part require to install [Docker](https://www.docker.com) and execute `docker-compose up -d`
-
 ## Documentation
 
 [https://darkwood-fr.github.io/flow](https://darkwood-fr.github.io/flow)
