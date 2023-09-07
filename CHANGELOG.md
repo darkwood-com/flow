@@ -4,6 +4,7 @@
 
 - Add Flow\Driver\RevoltDriver
 - Add more quality tools from https://github.com/IngeniozIT/php-skeleton
+- Add gRPC from https://twitter.com/dunglas/status/1679203347490914305
 
 ## v1.1.3
 
