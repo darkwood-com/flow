@@ -4,6 +4,9 @@
 
 - Add Flow\Driver\RevoltDriver
 - Add more quality tools from https://github.com/IngeniozIT/php-skeleton
+- Add Supply Chain from
+  - https://naderman.de/slippy/slides/2023-05-23-IPC-Get-a-grip-on-your-projects-supply-chain.pdf
+	- https://speakerdeck.com/dunglas/mitigate-attacks-on-your-php-supply-chain
 
 ## v1.1.3
 
