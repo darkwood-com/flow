@@ -4,6 +4,7 @@
 
 - Add Flow\Driver\RevoltDriver
 - Add more quality tools from https://github.com/IngeniozIT/php-skeleton
+- Add Webhooks from https://speakerdeck.com/fabpot/symfonycon-2022-keynote-webhooks
 
 ## v1.1.3
 

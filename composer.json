@@ -29,6 +29,7 @@
         "symfony/doctrine-messenger": "^6.3",
         "symfony/messenger": "^6.3",
         "symfony/orm-pack": "^2.4",
+        "symfony/webhook": "^6.3",
         "revolt/event-loop": "^1.0"
     },
     "suggest": {
