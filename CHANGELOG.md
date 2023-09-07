@@ -2,7 +2,12 @@
 
 ## v1.1.x
 
-
+- Add Flow\FlowInterface::do notation from https://github.com/fp4php/functional
+- Update Flow\FlowInterface::fn to accept as first argument
+    - Closure : it's the job itself
+    - array : constructor arguments for Flow instanciation
+    - array (view as shape) : configuration for Flow instanciation
+    - FlowInterface : the FlowInterface instance itself
 
 ## v1.1.4
 

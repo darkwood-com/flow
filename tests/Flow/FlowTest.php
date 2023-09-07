@@ -88,6 +88,31 @@ class FlowTest extends TestCase
     }
 
     /**
+     * @dataProvider provideDoCases
+     *
+     * @param DriverInterface<T1,T2>  $driver
+     * @param IpStrategyInterface<T1> $ipStrategy
+     * @param array<mixed>            $config
+     */
+    public function testDo(DriverInterface $driver, IpStrategyInterface $ipStrategy, callable $callable, ?array $config, int $resultNumber): void
+    {
+        $ip = new Ip(new ArrayObject(['number' => 0]));
+        $flow = Flow::do($callable, [
+            ...['driver' => $driver, 'ipStrategy' => $ipStrategy],
+            ...($config ?? []),
+        ]);
+
+        ($flow)($ip, static function (Ip $ip) use ($driver, $resultNumber) {
+            $driver->stop();
+
+            self::assertSame(ArrayObject::class, $ip->data::class);
+            self::assertSame($resultNumber, $ip->data['number']);
+        });
+
+        $driver->start();
+    }
+
+    /**
      * @return array<array<mixed>>
      */
     public static function jobProvider(): iterable
@@ -112,6 +137,23 @@ class FlowTest extends TestCase
             'exceptionJob' => [[static function () use ($exception) {
                 throw $exception;
             }], 0],
+        ]);
+    }
+
+    /**
+     * @return array<array<mixed>>
+     */
+    public static function provideDoCases(): iterable
+    {
+        return self::matrix(static fn (DriverInterface $driver) => [
+            'simpleGenerator' => [static function () {
+                yield static function (ArrayObject $data) {
+                    $data['number'] = 5;
+                };
+                yield static function (ArrayObject $data) {
+                    $data['number'] = 10;
+                };
+            }, null, 10],
         ]);
     }
 }
