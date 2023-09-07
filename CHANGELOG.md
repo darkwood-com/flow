@@ -2,6 +2,7 @@
 
 ## v1.1.x
 
+- Add generic templating
 - Add Flow\Driver\RevoltDriver
 - Add more quality tools from https://github.com/IngeniozIT/php-skeleton
 

@@ -14,6 +14,10 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 
+/**
+ * @template T1
+ * @template T2
+ */
 class TransportFlowTest extends TestCase
 {
     use FlowTrait;
@@ -21,7 +25,9 @@ class TransportFlowTest extends TestCase
     /**
      * @dataProvider provideJobsCases
      *
-     * @param array<Closure> $jobs
+     * @param DriverInterface<T1,T2>  $driver
+     * @param IpStrategyInterface<T1> $ipStrategy
+     * @param array<Closure>          $jobs
      */
     public function testJobs(DriverInterface $driver, IpStrategyInterface $ipStrategy, array $jobs, int $resultNumber): void
     {

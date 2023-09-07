@@ -9,6 +9,8 @@ use Flow\Driver\FiberDriver;
 use Flow\Driver\ReactDriver;
 use Flow\Driver\RevoltDriver;
 use Flow\Driver\SwooleDriver;
+use Flow\Examples\Data;
+use Flow\ExceptionInterface;
 use Flow\Flow\Flow;
 use Flow\Ip;
 use Flow\IpStrategy\MaxIpStrategy;
@@ -22,13 +24,13 @@ $driver = match (random_int(1, 5)) {
 };
 printf("Use %s\n", $driver::class);
 
-$job1 = static function (object $data) use ($driver): void {
-    printf("*. #%d - Job 1 : Calculating %d + %d\n", $data['id'], $data['number'], $data['number']);
+$job1 = static function (Data $data) use ($driver): void {
+    printf("*. #%d - Job 1 : Calculating %d + %d\n", $data->id, $data->number, $data->number);
 
     // simulating calculating some "light" operation from 0.1 to 1 seconds
     $delay = random_int(1, 10) / 10;
     $driver->delay($delay);
-    $result = $data['number'];
+    $result = $data->number;
     $result += $result;
 
     // simulating 1 chance on 5 to produce an exception from the "light" operation
@@ -36,18 +38,18 @@ $job1 = static function (object $data) use ($driver): void {
         throw new Error('Failure when processing "Job1"');
     }
 
-    printf("*. #%d - Job 1 : Result for %d + %d = %d and took %.01f seconds\n", $data['id'], $data['number'], $data['number'], $result, $delay);
+    printf("*. #%d - Job 1 : Result for %d + %d = %d and took %.01f seconds\n", $data->id, $data->number, $data->number, $result, $delay);
 
-    $data['number'] = $result;
+    $data->number = $result;
 };
 
-$job2 = static function (object $data) use ($driver): void {
-    printf(".* #%d - Job 2 : Calculating %d * %d\n", $data['id'], $data['number'], $data['number']);
+$job2 = static function (Data $data) use ($driver): void {
+    printf(".* #%d - Job 2 : Calculating %d * %d\n", $data->id, $data->number, $data->number);
 
     // simulating calculating some "heavy" operation from from 1 to 3 seconds
     $delay = random_int(1, 3);
     $driver->delay($delay);
-    $result = $data['number'];
+    $result = $data->number;
     $result *= $result;
 
     // simulating 1 chance on 5 to produce an exception from the "heavy" operation
@@ -55,21 +57,27 @@ $job2 = static function (object $data) use ($driver): void {
         throw new Error('Failure when processing "Job2"');
     }
 
-    printf(".* #%d - Job 2 : Result for %d * %d = %d and took %.01f seconds\n", $data['id'], $data['number'], $data['number'], $result, $delay);
+    printf(".* #%d - Job 2 : Result for %d * %d = %d and took %.01f seconds\n", $data->id, $data->number, $data->number, $result, $delay);
 
-    $data['number'] = $result;
+    $data->number = $result;
 };
 
-$errorJob1 = static function (object $data, Throwable $exception): void {
-    printf("*. #%d - Error Job : Exception %s\n", $data['id'], $exception->getMessage());
+/**
+ * @param Ip<Data> $ip
+ */
+$errorJob1 = static function (Ip $ip, ExceptionInterface $exception): void {
+    printf("*. #%d - Error Job : Exception %s\n", $ip->data->id, $exception->getMessage());
 
-    $data['number'] = null;
+    $ip->data->number = null;
 };
 
-$errorJob2 = static function (object $data, Throwable $exception): void {
-    printf(".* #%d - Error Job : Exception %s\n", $data['id'], $exception->getMessage());
+/**
+ * @param Ip<Data> $ip
+ */
+$errorJob2 = static function (Ip $ip, ExceptionInterface $exception): void {
+    printf(".* #%d - Error Job : Exception %s\n", $ip->data->id, $exception->getMessage());
 
-    $data['number'] = null;
+    $ip->data->number = null;
 };
 
 $flow = (new Flow($job1, $errorJob1, new MaxIpStrategy(2), $driver))
@@ -79,6 +87,6 @@ $flow = (new Flow($job1, $errorJob1, new MaxIpStrategy(2), $driver))
 $ipPool = new SplObjectStorage();
 
 for ($i = 1; $i <= 5; $i++) {
-    $ip = new Ip(new ArrayObject(['id' => $i, 'number' => $i]));
+    $ip = new Ip(new Data($i, $i));
     $flow($ip, static fn ($ip) => $ipPool->offsetUnset($ip));
 }

@@ -14,6 +14,12 @@ use Throwable;
 
 use function extension_loaded;
 
+/**
+ * @template TArgs
+ * @template TReturn
+ *
+ * @implements DriverInterface<TArgs,TReturn>
+ */
 class SwooleDriver implements DriverInterface
 {
     public function __construct()

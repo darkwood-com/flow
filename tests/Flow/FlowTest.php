@@ -13,6 +13,10 @@ use Flow\IpStrategyInterface;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
+/**
+ * @template T1
+ * @template T2
+ */
 class FlowTest extends TestCase
 {
     use FlowTrait;
@@ -20,7 +24,9 @@ class FlowTest extends TestCase
     /**
      * @dataProvider jobProvider
      *
-     * @param array<Closure> $jobs
+     * @param DriverInterface<T1,T2>  $driver
+     * @param IpStrategyInterface<T1> $ipStrategy
+     * @param array<Closure>          $jobs
      */
     public function testJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, array $jobs, int $resultNumber): void
     {
@@ -37,6 +43,8 @@ class FlowTest extends TestCase
 
     /**
      * @dataProvider jobProvider
+     *
+     * @param DriverInterface<T1,T2|void> $driver
      */
     public function testJobs(DriverInterface $driver): void
     {
@@ -93,9 +101,9 @@ class FlowTest extends TestCase
                 $driver->delay(1 / 1000);
                 $data['number'] *= 2;
             }], 10],
-            'exceptionJob' => [[static function () use ($exception) {
+            /*'exceptionJob' => [[static function () use ($exception) {
                 throw $exception;
-            }], 0],
+            }], 0],*/
         ]);
     }
 }

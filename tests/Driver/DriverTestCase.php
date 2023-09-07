@@ -8,6 +8,10 @@ use Exception;
 use Flow\DriverInterface;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @template T1
+ * @template T2
+ */
 abstract class DriverTestCase extends TestCase
 {
     public function testAsync(): void
@@ -65,5 +69,8 @@ abstract class DriverTestCase extends TestCase
         })();*/
     }
 
+    /**
+     * @return DriverInterface<T1,T2>
+     */
     abstract protected function createDriver(): DriverInterface;
 }

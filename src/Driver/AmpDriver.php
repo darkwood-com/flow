@@ -15,6 +15,12 @@ use function Amp\async;
 use function Amp\delay;
 use function function_exists;
 
+/**
+ * @template TArgs
+ * @template TReturn
+ *
+ * @implements DriverInterface<TArgs,TReturn>
+ */
 class AmpDriver implements DriverInterface
 {
     public function __construct()

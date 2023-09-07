@@ -16,6 +16,12 @@ use function function_exists;
 use function React\Async\async;
 use function React\Async\delay;
 
+/**
+ * @template TArgs
+ * @template TReturn
+ *
+ * @implements DriverInterface<TArgs,TReturn>
+ */
 class ReactDriver implements DriverInterface
 {
     private LoopInterface $eventLoop;

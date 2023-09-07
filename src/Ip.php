@@ -4,9 +4,15 @@ declare(strict_types=1);
 
 namespace Flow;
 
+/**
+ * @template-covariant T
+ */
 final readonly class Ip
 {
-    public function __construct(public ?object $data = null)
+    /**
+     * @param T $data
+     */
+    public function __construct(public mixed $data = null)
     {
     }
 }

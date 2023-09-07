@@ -12,6 +12,12 @@ use Flow\DriverInterface;
 use Flow\Exception\RuntimeException;
 use Throwable;
 
+/**
+ * @template TArgs
+ * @template TReturn
+ *
+ * @implements DriverInterface<TArgs,TReturn>
+ */
 class FiberDriver implements DriverInterface
 {
     /**
