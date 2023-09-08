@@ -8,6 +8,8 @@
     - array : constructor arguments for Flow instanciation
     - array (view as shape) : configuration for Flow instanciation
     - FlowInterface : the FlowInterface instance itself
+    - array : map of all possible above choices
+- Add event system for processing IpStrategy
 
 ## v1.1.4
 
