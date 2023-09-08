@@ -6,10 +6,10 @@ namespace Flow\Driver;
 
 use Closure;
 use Flow\DriverInterface;
-use Flow\Exception;
+use Flow\Exception\RuntimeException;
 use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
-use RuntimeException;
+use RuntimeException as NativeRuntimeException;
 use Throwable;
 
 use function function_exists;
@@ -25,7 +25,7 @@ class ReactDriver implements DriverInterface
     public function __construct(LoopInterface $eventLoop = null)
     {
         if (!function_exists('React\\Async\\async')) {
-            throw new RuntimeException('ReactPHP is not loaded. Suggest install it with composer require react/event-loop');
+            throw new NativeRuntimeException('ReactPHP is not loaded. Suggest install it with composer require react/event-loop');
         }
 
         $this->eventLoop = $eventLoop ?? Loop::get();
@@ -42,7 +42,7 @@ class ReactDriver implements DriverInterface
                     }
                 } catch (Throwable $exception) {
                     if ($onResolve) {
-                        $onResolve(new Exception($exception->getMessage(), $exception->getCode(), $exception));
+                        $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
                     }
                 } finally {
                     $this->pop();

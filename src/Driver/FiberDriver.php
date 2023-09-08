@@ -9,7 +9,7 @@ namespace Flow\Driver;
 use Closure;
 use Fiber;
 use Flow\DriverInterface;
-use Flow\Exception;
+use Flow\Exception\RuntimeException;
 use Throwable;
 
 class FiberDriver implements DriverInterface
@@ -84,7 +84,7 @@ class FiberDriver implements DriverInterface
                             if ($fiber['exception'] === null) {
                                 $fiber['onResolve']($fiber['fiber']->getReturn());
                             } else {
-                                $fiber['onResolve'](new Exception($fiber['exception']->getMessage(), $fiber['exception']->getCode(), $fiber['exception']));
+                                $fiber['onResolve'](new RuntimeException($fiber['exception']->getMessage(), $fiber['exception']->getCode(), $fiber['exception']));
                             }
                         }
                         unset($this->fibers[$i]);

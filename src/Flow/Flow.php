@@ -7,7 +7,7 @@ namespace Flow\Flow;
 use Closure;
 use Flow\Driver\ReactDriver;
 use Flow\DriverInterface;
-use Flow\Exception;
+use Flow\Exception\RuntimeException;
 use Flow\FlowInterface;
 use Flow\Ip;
 use Flow\IpStrategy\LinearIpStrategy;
@@ -88,12 +88,12 @@ class Flow implements FlowInterface
         foreach ($this->jobs as $i => $job) {
             $this->driver->async($job, function (mixed $value) use ($ip, &$count, $i, $callback) {
                 $count--;
-                if ($count === 0 || $value instanceof Exception) {
+                if ($count === 0 || $value instanceof RuntimeException) {
                     $count = 0;
                     $this->ipStrategy->done($ip);
                     $this->nextIpJob();
 
-                    if ($value instanceof Exception) {
+                    if ($value instanceof RuntimeException) {
                         if (isset($this->errorJobs[$i])) {
                             $this->errorJobs[$i]($ip->data, $value->getPrevious());
                         } else {

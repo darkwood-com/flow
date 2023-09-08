@@ -6,10 +6,10 @@ namespace Flow\Driver;
 
 use Closure;
 use Flow\DriverInterface;
-use Flow\Exception;
+use Flow\Exception\RuntimeException;
 use Revolt\EventLoop;
 use Revolt\EventLoop\Driver;
-use RuntimeException;
+use RuntimeException as NativeRuntimeException;
 use Throwable;
 
 class RevoltDriver implements DriverInterface
@@ -19,7 +19,7 @@ class RevoltDriver implements DriverInterface
     public function __construct(Driver $driver = null)
     {
         if (!class_exists('Revolt\\EventLoop')) {
-            throw new RuntimeException('Revolt is not loaded. Suggest install it with composer require revolt/event-loop');
+            throw new NativeRuntimeException('Revolt is not loaded. Suggest install it with composer require revolt/event-loop');
         }
 
         if ($driver !== null) {
@@ -38,7 +38,7 @@ class RevoltDriver implements DriverInterface
                     }
                 } catch (Throwable $exception) {
                     if ($onResolve) {
-                        $onResolve(new Exception($exception->getMessage(), $exception->getCode(), $exception));
+                        $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
                     }
                 } finally {
                     $this->pop();

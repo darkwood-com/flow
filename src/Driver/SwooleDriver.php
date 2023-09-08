@@ -6,10 +6,10 @@ namespace Flow\Driver;
 
 use Closure;
 use Flow\DriverInterface;
-use Flow\Exception;
+use Flow\Exception\RuntimeException;
 use OpenSwoole\Coroutine;
 use OpenSwoole\Timer;
-use RuntimeException;
+use RuntimeException as NativeRuntimeException;
 use Throwable;
 
 use function extension_loaded;
@@ -19,7 +19,7 @@ class SwooleDriver implements DriverInterface
     public function __construct()
     {
         if (!extension_loaded('openswoole')) {
-            throw new RuntimeException('Swoole extension is not loaded. Suggest install it with pecl install openswoole');
+            throw new NativeRuntimeException('Swoole extension is not loaded. Suggest install it with pecl install openswoole');
         }
     }
 
@@ -35,7 +35,7 @@ class SwooleDriver implements DriverInterface
                         }
                     } catch (Throwable $exception) {
                         if ($onResolve) {
-                            $onResolve(new Exception($exception->getMessage(), $exception->getCode(), $exception));
+                            $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
                         }
                     }
                 }, $callback, $args, $onResolve);

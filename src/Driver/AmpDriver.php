@@ -6,9 +6,9 @@ namespace Flow\Driver;
 
 use Closure;
 use Flow\DriverInterface;
-use Flow\Exception;
+use Flow\Exception\RuntimeException;
 use Revolt\EventLoop;
-use RuntimeException;
+use RuntimeException as NativeRuntimeException;
 use Throwable;
 
 use function Amp\async;
@@ -20,7 +20,7 @@ class AmpDriver implements DriverInterface
     public function __construct()
     {
         if (!function_exists('Amp\\async')) {
-            throw new RuntimeException('Amp is not loaded. Suggest install it with composer require amphp/amp');
+            throw new NativeRuntimeException('Amp is not loaded. Suggest install it with composer require amphp/amp');
         }
     }
 
@@ -35,7 +35,7 @@ class AmpDriver implements DriverInterface
                     }
                 } catch (Throwable $exception) {
                     if ($onResolve) {
-                        $onResolve(new Exception($exception->getMessage(), $exception->getCode(), $exception));
+                        $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
                     }
                 }
             }, $callback, $args, $onResolve)->await();
