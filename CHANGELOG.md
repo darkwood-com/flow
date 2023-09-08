@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.1.6
+
+- Add event system for processing IpStrategy
+
 ## v1.1.5
 
 - Add Flow\FlowInterface::do notation from https://github.com/fp4php/functional
@@ -8,6 +12,7 @@
     - array : constructor arguments for Flow instanciation
     - array (view as shape) : configuration for Flow instanciation
     - FlowInterface : the FlowInterface instance itself
+    - array : map of all possible above choices
 - Update to Symfony 7.0
 
 ## v1.1.4
