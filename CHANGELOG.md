@@ -2,6 +2,11 @@
 
 ## v1.1.x
 
+- Add generic errors from
+  - https://gpb.moe/doc/slides/Gestion_Erreur_Toutes_Ses_Couleurs_FR.pdf
+  - https://slides.com/kpn13/les-generiques-en-php
+  - @isaacs/catcher https://x.com/izs/status/1719121317650460836?s=46&t=abFP3FPiDqehJPygWZmpWw
+  - @isaacs/catcher https://github.com/isaacs/catcher
 - Add generic templating
 - Add Flow\Driver\RevoltDriver
 - Add more quality tools from https://github.com/IngeniozIT/php-skeleton
