@@ -12,6 +12,12 @@ use Revolt\EventLoop\Driver;
 use RuntimeException as NativeRuntimeException;
 use Throwable;
 
+/**
+ * @template TArgs
+ * @template TReturn
+ *
+ * @implements DriverInterface<TArgs,TReturn>
+ */
 class RevoltDriver implements DriverInterface
 {
     private int $counter = 0;

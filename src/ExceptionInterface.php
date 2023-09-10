@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Flow\Exception;
+namespace Flow;
 
 use Throwable;
 

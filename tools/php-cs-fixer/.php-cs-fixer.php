@@ -33,7 +33,7 @@ return (new PhpCsFixer\Config())
             'import_functions' => true,
             'import_classes' => true,
         ],
-        'logical_operators' => false, // https://cs.symfony.com/doc/rules/operator/logical_operators.html we keep or and by design
+        'logical_operators' => false, // https://cs.symfony.com/doc/rules/operator/logical_operators.html prefer use 'or' and 'and' operators by design
         'yoda_style' => false, // https://cs.symfony.com/doc/rules/control_structure/yoda_style.html
         'increment_style' => ['style' => 'post'],
     ])
