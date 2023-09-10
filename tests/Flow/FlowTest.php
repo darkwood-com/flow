@@ -35,10 +35,14 @@ class FlowTest extends TestCase
             array_map(static fn ($job) => new Flow($job, static function () {}, $ipStrategy, $driver), $jobs),
             static fn ($flow, $flowIt) => $flow ? $flow->fn($flowIt) : $flowIt
         );
-        ($flow)($ip, static function (Ip $ip) use ($resultNumber) {
+        ($flow)($ip, static function (Ip $ip) use ($driver, $resultNumber) {
+            $driver->stop();
+
             self::assertSame(ArrayObject::class, $ip->data::class);
             self::assertSame($resultNumber, $ip->data['number']);
         });
+
+        $driver->start();
     }
 
     /**
@@ -63,9 +67,11 @@ class FlowTest extends TestCase
 
         $ips = new ArrayObject();
 
-        $callback = function (Ip $ip) use ($ips, $ip1, $ip2) {
+        $callback = function (Ip $ip) use ($driver, $ips, $ip1, $ip2) {
             $ips->append($ip);
             if ($ips->count() === 2) {
+                $driver->stop();
+
                 $this->assertSame($ip1, $ips->offsetGet(0));
                 $this->assertSame($ip2, $ips->offsetGet(1));
                 self::assertSame(6, $ip1->data['n1']);
@@ -77,6 +83,8 @@ class FlowTest extends TestCase
 
         ($flow)($ip1, $callback);
         ($flow)($ip2, $callback);
+
+        $driver->start();
     }
 
     /**
@@ -101,9 +109,9 @@ class FlowTest extends TestCase
                 $driver->delay(1 / 1000);
                 $data['number'] *= 2;
             }], 10],
-            /*'exceptionJob' => [[static function () use ($exception) {
+            'exceptionJob' => [[static function () use ($exception) {
                 throw $exception;
-            }], 0],*/
+            }], 0],
         ]);
     }
 }

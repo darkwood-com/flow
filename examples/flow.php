@@ -17,8 +17,8 @@ use Flow\IpStrategy\MaxIpStrategy;
 
 $driver = match (random_int(1, 5)) {
     1 => new AmpDriver(),
-    2 => new ReactDriver(),
-    3 => new FiberDriver(),
+    2 => new FiberDriver(),
+    3 => new ReactDriver(),
     4 => new RevoltDriver(),
     5 => new SwooleDriver(),
 };
@@ -28,7 +28,7 @@ $job1 = static function (Data $data) use ($driver): void {
     printf("*. #%d - Job 1 : Calculating %d + %d\n", $data->id, $data->number, $data->number);
 
     // simulating calculating some "light" operation from 0.1 to 1 seconds
-    $delay = random_int(1, 10) / 10;
+    $delay = random_int(1, 3);
     $driver->delay($delay);
     $result = $data->number;
     $result += $result;
@@ -88,5 +88,13 @@ $ipPool = new SplObjectStorage();
 
 for ($i = 1; $i <= 5; $i++) {
     $ip = new Ip(new Data($i, $i));
+    $ipPool->offsetSet($ip, true);
     $flow($ip, static fn ($ip) => $ipPool->offsetUnset($ip));
 }
+
+$driver->tick(1, static function () use ($driver, $ipPool) {
+    if ($ipPool->count() === 0) {
+        $driver->stop();
+    }
+});
+$driver->start();

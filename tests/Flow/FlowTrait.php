@@ -22,10 +22,10 @@ trait FlowTrait
     protected static function matrix(Closure $datas): array
     {
         $drivers = [
-            // 'amp' => fn (): AmpDriver => new AmpDriver(),
-            // 'fiber' => fn (): FiberDriver => new FiberDriver(),
+            'amp' => static fn (): AmpDriver => new AmpDriver(),
+            'fiber' => static fn (): FiberDriver => new FiberDriver(),
             'react' => static fn (): ReactDriver => new ReactDriver(),
-            // 'revolt' => static fn (): RevoltDriver => new RevoltDriver(),
+            'revolt' => static fn (): RevoltDriver => new RevoltDriver(),
             // 'swoole' => fn (): SwooleDriver => new SwooleDriver(),
         ];
 

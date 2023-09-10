@@ -22,6 +22,11 @@ use function extension_loaded;
  */
 class SwooleDriver implements DriverInterface
 {
+    /**
+     * @var array<int, callable(): void>
+     */
+    private array $ticksIds = [];
+
     public function __construct()
     {
         if (!extension_loaded('openswoole')) {
@@ -59,8 +64,20 @@ class SwooleDriver implements DriverInterface
     {
         $tickId = Timer::tick($interval, $callback);
 
-        return static function () use ($tickId) {
+        return function () use ($tickId) {
+            unset($this->ticksIds[$tickId]);
             Timer::clear($tickId); // @phpstan-ignore-line
         };
+    }
+
+    public function start(): void
+    {
+    }
+
+    public function stop(): void
+    {
+        foreach ($this->ticksIds as $cancel) {
+            $cancel();
+        }
     }
 }

@@ -26,7 +26,10 @@ class ReactDriver implements DriverInterface
 {
     private LoopInterface $eventLoop;
 
-    private int $counter = 0;
+    /**
+     * @var array<string>
+     */
+    private array $ticksIds = [];
 
     public function __construct(LoopInterface $eventLoop = null)
     {
@@ -39,8 +42,8 @@ class ReactDriver implements DriverInterface
 
     public function async(Closure $callback, Closure $onResolve = null): Closure
     {
-        return function (...$args) use ($callback, $onResolve): void {
-            async(function () use ($callback, $onResolve, $args) {
+        return static function (...$args) use ($callback, $onResolve): void {
+            async(static function () use ($callback, $onResolve, $args) {
                 try {
                     $return = $callback(...$args, ...($args = []));
                     if ($onResolve) {
@@ -50,11 +53,8 @@ class ReactDriver implements DriverInterface
                     if ($onResolve) {
                         $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
                     }
-                } finally {
-                    $this->pop();
                 }
             })();
-            $this->push();
         };
     }
 
@@ -65,28 +65,27 @@ class ReactDriver implements DriverInterface
 
     public function tick(int $interval, Closure $callback): Closure
     {
-        $tickId = $this->eventLoop->addPeriodicTimer($interval, $callback);
-        $this->push();
+        $tickId = uniqid('flow_react_tick_id');
 
-        return function () use ($tickId) {
-            $this->eventLoop->cancelTimer($tickId);
-            $this->pop();
+        $timer = $this->eventLoop->addPeriodicTimer($interval, $callback);
+
+        return function () use ($tickId, $timer) {
+            unset($this->ticksIds[$tickId]);
+            $this->eventLoop->cancelTimer($timer);
         };
     }
 
-    private function push(): void
+    public function start(): void
     {
-        if ($this->counter === 0) {
-            $this->eventLoop->run();
-        }
-        $this->counter++;
+        $this->eventLoop->run();
     }
 
-    private function pop(): void
+    public function stop(): void
     {
-        $this->counter--;
-        if ($this->counter === 0) {
-            $this->eventLoop->stop();
+        foreach ($this->ticksIds as $cancel) {
+            $cancel();
         }
+
+        $this->eventLoop->stop();
     }
 }

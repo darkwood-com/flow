@@ -42,16 +42,20 @@ class TransportFlowTest extends TestCase
 
         new TransportFlow($flow, $transport1, $transport2, $driver);
 
-        $driver->tick(1, static function () use ($transport2, $resultNumber) {
+        $driver->tick(1, static function () use ($driver, $transport2, $resultNumber) {
             $ips = $transport2->get();
             foreach ($ips as $ip) {
                 $data = $ip->getMessage();
                 self::assertEquals($resultNumber, $data['number']);
             }
+
+            $driver->stop();
         });
 
         $envelope = new Envelope(new ArrayObject(['number' => 0]));
-        $transport1->send($envelope);*/
+        $transport1->send($envelope);
+
+        $driver->start();*/
     }
 
     /**

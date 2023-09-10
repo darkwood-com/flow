@@ -6,7 +6,6 @@ namespace Flow\Test\Driver;
 
 use Flow\Driver\AmpDriver;
 use Flow\DriverInterface;
-use Revolt\EventLoop;
 
 /**
  * @template T1
@@ -16,16 +15,6 @@ use Revolt\EventLoop;
  */
 class AmpDriverTest extends DriverTestCase
 {
-    protected function setUp(): void
-    {
-        EventLoop::getDriver()->run();
-    }
-
-    protected function tearDown(): void
-    {
-        EventLoop::getDriver()->stop();
-    }
-
     /**
      * @return DriverInterface<T1,T2>
      */

@@ -11,7 +11,6 @@
 - Update DX for Flow\DriverInterface
   - Update `async` that now $onResolve get called with async $callback result or Flow\Exception as first argument
   - Update `tick` that now return a Closure to cleanup tick interval
-  - Remove `start` and `stop`
 - Add Flow\Driver\FiberDriver from https://github.com/jolicode/castor/blob/main/src/functions.php
 - Upgrade to Symfony 6.3 and PHPUnit 10.3
 - Refactor docs structure

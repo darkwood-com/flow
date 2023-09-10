@@ -18,9 +18,11 @@ abstract class DriverTestCase extends TestCase
     {
         $driver = $this->createDriver();
         $driver->async(static function () {
-        }, function (mixed $value) {
+        }, function (mixed $value) use ($driver) {
+            $driver->stop();
             $this->assertNull($value);
         })();
+        $driver->start();
     }
 
     public function testAsyncReturn(): void
@@ -28,9 +30,11 @@ abstract class DriverTestCase extends TestCase
         $driver = $this->createDriver();
         $driver->async(static function () {
             return 2;
-        }, function (mixed $value) {
+        }, function (mixed $value) use ($driver) {
+            $driver->stop();
             $this->assertSame(2, $value);
         })();
+        $driver->start();
     }
 
     public function testAsyncError(): void
@@ -38,9 +42,11 @@ abstract class DriverTestCase extends TestCase
         $driver = $this->createDriver();
         $driver->async(static function () {
             throw new Exception();
-        }, function (mixed $value) {
+        }, function (mixed $value) use ($driver) {
+            $driver->stop();
             $this->assertInstanceOf(Exception::class, $value);
         })();
+        $driver->start();
     }
 
     public function testDelay(): void
@@ -48,9 +54,11 @@ abstract class DriverTestCase extends TestCase
         $driver = $this->createDriver();
         $driver->async(static function () use ($driver) {
             $driver->delay(1 / 1000);
-        }, function (mixed $value) {
+        }, function (mixed $value) use ($driver) {
+            $driver->stop();
             $this->assertNull($value);
         })();
+        $driver->start();
     }
 
     public function testTick(): void
@@ -64,9 +72,12 @@ abstract class DriverTestCase extends TestCase
         });
         $driver->async(function () use ($driver, &$i) {
             $driver->delay(3 / 1000);
+            $driver->stop();
 
             $this->assertGreaterThan(3, $i);
-        })();*/
+        })();
+
+        $driver->start();*/
     }
 
     /**

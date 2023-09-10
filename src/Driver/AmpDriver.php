@@ -23,6 +23,11 @@ use function function_exists;
  */
 class AmpDriver implements DriverInterface
 {
+    /**
+     * @var array<string>
+     */
+    private array $ticksIds = [];
+
     public function __construct()
     {
         if (!function_exists('Amp\\async')) {
@@ -44,7 +49,7 @@ class AmpDriver implements DriverInterface
                         $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
                     }
                 }
-            }, $callback, $args, $onResolve)->await();
+            }, $callback, $args, $onResolve);
         };
     }
 
@@ -57,8 +62,29 @@ class AmpDriver implements DriverInterface
     {
         $tickId = EventLoop::repeat($interval / 1000, $callback);
 
-        return static function () use ($tickId) {
+        $cancel = function () use ($tickId) {
+            unset($this->ticksIds[$tickId]);
             EventLoop::cancel($tickId);
         };
+
+        $this->ticksIds[$tickId] = $cancel;
+
+        return $cancel;
+    }
+
+    public function start(): void
+    {
+        if (!EventLoop::getDriver()->isRunning()) {
+            EventLoop::run();
+        }
+    }
+
+    public function stop(): void
+    {
+        foreach ($this->ticksIds as $cancel) {
+            $cancel();
+        }
+
+        EventLoop::getDriver()->stop();
     }
 }

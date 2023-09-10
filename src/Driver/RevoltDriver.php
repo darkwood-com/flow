@@ -20,7 +20,10 @@ use Throwable;
  */
 class RevoltDriver implements DriverInterface
 {
-    private int $counter = 0;
+    /**
+     * @var array<string>
+     */
+    private array $ticksIds = [];
 
     public function __construct(Driver $driver = null)
     {
@@ -35,8 +38,8 @@ class RevoltDriver implements DriverInterface
 
     public function async(Closure $callback, Closure $onResolve = null): Closure
     {
-        return function (...$args) use ($callback, $onResolve): void {
-            EventLoop::queue(function (Closure $callback, array $args, Closure $onResolve = null) {
+        return static function (...$args) use ($callback, $onResolve): void {
+            EventLoop::queue(static function (Closure $callback, array $args, Closure $onResolve = null) {
                 try {
                     $return = $callback(...$args, ...($args = []));
                     if ($onResolve) {
@@ -46,11 +49,8 @@ class RevoltDriver implements DriverInterface
                     if ($onResolve) {
                         $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
                     }
-                } finally {
-                    $this->pop();
                 }
             }, $callback, $args, $onResolve);
-            $this->push();
         };
     }
 
@@ -69,27 +69,26 @@ class RevoltDriver implements DriverInterface
     public function tick(int $interval, Closure $callback): Closure
     {
         $tickId = EventLoop::repeat($interval / 1000, $callback);
-        $this->push();
 
-        return function () use ($tickId) {
+        $cancel = function () use ($tickId) {
+            unset($this->ticksIds[$tickId]);
             EventLoop::cancel($tickId);
-            $this->pop();
         };
+
+        $this->ticksIds[$tickId] = $cancel;
+
+        return $cancel;
     }
 
-    private function push(): void
+    public function start(): void
     {
-        if (/* $this->counter === 0 || */ !EventLoop::getDriver()->isRunning()) {
+        if (!EventLoop::getDriver()->isRunning()) {
             EventLoop::run();
         }
-        $this->counter++;
     }
 
-    private function pop(): void
+    public function stop(): void
     {
-        $this->counter--;
-        if ($this->counter === 0) {
-            EventLoop::getDriver()->stop();
-        }
+        EventLoop::getDriver()->stop();
     }
 }

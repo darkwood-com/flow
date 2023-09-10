@@ -28,4 +28,8 @@ interface DriverInterface
      * @return Closure(): void when called, this cleanup tick interval
      */
     public function tick(int $interval, Closure $callback): Closure;
+
+    public function start(): void;
+
+    public function stop(): void;
 }

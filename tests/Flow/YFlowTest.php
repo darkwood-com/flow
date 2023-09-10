@@ -31,10 +31,14 @@ class YFlowTest extends TestCase
         $ip = new Ip(new ArrayObject(['number' => 6]));
         $errorJob = static function () {};
         $yFlow = new YFlow($job, $errorJob, $ipStrategy, $driver);
-        ($yFlow)($ip, static function (Ip $ip) use ($resultNumber) {
+        ($yFlow)($ip, static function (Ip $ip) use ($driver, $resultNumber) {
+            $driver->stop();
+
             self::assertSame(ArrayObject::class, $ip->data::class);
             self::assertSame($resultNumber, $ip->data['number']);
         });
+
+        $driver->start();
     }
 
     /**

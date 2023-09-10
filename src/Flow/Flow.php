@@ -122,8 +122,6 @@ class Flow implements FlowInterface
                         } else {
                             throw $value;
                         }
-
-                        return;
                     }
 
                     if ($this->fnFlow) {

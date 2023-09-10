@@ -17,8 +17,8 @@ use Flow\IpStrategy\MaxIpStrategy;
 
 $driver = match (random_int(1, 5)) {
     1 => new AmpDriver(),
-    2 => new ReactDriver(),
-    3 => new FiberDriver(),
+    2 => new FiberDriver(),
+    3 => new ReactDriver(),
     4 => new RevoltDriver(),
     5 => new SwooleDriver(),
 };
