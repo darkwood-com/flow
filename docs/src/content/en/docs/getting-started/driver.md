@@ -52,6 +52,26 @@ composer require react/async
 
 More documentation can be found [https://reactphp.org](https://reactphp.org)
 
+## Revolt Driver
+
+To use Revolt Driver, you have to require the library with composer
+
+```bash
+composer require revolt/event-loop
+```
+
+More documentation can be found [https://revolt.run](https://revolt.run)
+
+## Spatie Driver
+
+To use Spatie Driver, you have to require the library with composer
+
+```bash
+composer require spatie/async
+```
+
+More documentation can be found [https://github.com/spatie/async](https://github.com/spatie/async)
+
 ## Swoole Driver
 
 To use Swoole Driver, you have to add the extension with your current running PHP

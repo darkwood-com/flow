@@ -9,18 +9,21 @@ use Flow\Driver\AmpDriver;
 use Flow\Driver\FiberDriver;
 use Flow\Driver\ReactDriver;
 use Flow\Driver\RevoltDriver;
+use Flow\Driver\SpatieDriver;
 use Flow\Driver\SwooleDriver;
 use Flow\Examples\Transport\DoctrineIpTransport;
 use Flow\Flow\Flow;
 use Flow\Flow\TransportFlow;
+use Flow\Ip;
 use Flow\IpStrategy\MaxIpStrategy;
 
-$driver = match (random_int(1, 5)) {
+$driver = match (random_int(1, 6)) {
     1 => new AmpDriver(),
     2 => new FiberDriver(),
     3 => new ReactDriver(),
     4 => new RevoltDriver(),
-    5 => new SwooleDriver(),
+    5 => new SpatieDriver(),
+    6 => new SwooleDriver(),
 };
 printf("Use %s\n", $driver::class);
 
@@ -55,10 +58,13 @@ $minusThreeJob = static function (object $data): void {
     $data['number'] -= 3;
 };
 
-$errorJob = static function (object $data, Throwable $exception): void {
-    printf("Client %s #%d : Exception %s\n", $data['client'], $data['id'], $exception->getMessage());
+/**
+ * @param Ip<ArrayObject> $ip
+ */
+$errorJob = static function (Ip $ip, Throwable $exception): void {
+    printf("Client %s #%d : Exception %s\n", $ip->data['client'], $ip->data['id'], $exception->getMessage());
 
-    $data['number'] = null;
+    $ip->data->offsetSet('number', null);
 };
 
 $flow = (new Flow($addOneJob, $errorJob, new MaxIpStrategy(1), $driver))

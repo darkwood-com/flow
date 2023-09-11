@@ -69,10 +69,14 @@ class ReactDriver implements DriverInterface
 
         $timer = $this->eventLoop->addPeriodicTimer($interval, $callback);
 
-        return function () use ($tickId, $timer) {
+        $cancel = function () use ($tickId, $timer) {
             unset($this->ticksIds[$tickId]);
             $this->eventLoop->cancelTimer($timer);
         };
+
+        $this->ticksIds[$tickId] = $cancel;
+
+        return $cancel;
     }
 
     public function start(): void

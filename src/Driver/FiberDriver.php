@@ -73,6 +73,8 @@ class FiberDriver implements DriverInterface
             unregister_tick_function($closure);
         };
 
+        $this->ticksIds[$tickId] = $cancel;
+
         return $cancel;
     }
 

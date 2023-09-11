@@ -15,6 +15,7 @@
         "fiber",
         "monad",
         "reactphp",
+        "spatie",
         "swoole",
         "symfony",
         "php"
@@ -29,14 +30,16 @@
         "symfony/doctrine-messenger": "^6.3",
         "symfony/messenger": "^6.3",
         "symfony/orm-pack": "^2.4",
-        "revolt/event-loop": "^1.0"
+        "revolt/event-loop": "^1.0",
+        "spatie/async": "^1.6"
     },
     "suggest": {
         "amphp/amp": "Provide asynchronous with AMP",
         "ext-openswoole": "Provide asynchronous with OpenSwoole",
         "react/async": "Provide asynchronous with ReactPHP",
-        "symfony/messenger": "Provide symfony messenger support",
-        "revolt/event-loop": "Provide asynchronous with Revolt"
+        "symfony/messenger": "Provide Symfony Messenger support",
+        "revolt/event-loop": "Provide asynchronous with Revolt",
+        "spatie/async": "Provide asynchronous with Spatie"
     },
     "autoload": {
         "psr-4": {
