@@ -11,11 +11,13 @@ RUN curl "https://github.com/jolicode/castor/releases/latest/download/castor.lin
 RUN set -eux; \
     install-php-extensions \
 		apcu \
+        ast \
 		intl \
 		opcache \
-		zip \
         openswoole \
         pcntl \
+        pcov \
+		zip \
     ;
 
 WORKDIR /flow
