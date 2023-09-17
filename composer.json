@@ -14,11 +14,12 @@
         "async",
         "fiber",
         "monad",
+        "php",
         "reactphp",
         "spatie",
         "swoole",
         "symfony",
-        "php"
+        "symplely"
     ],
     "require": {
         "php": ">=8.2"
@@ -31,7 +32,9 @@
         "symfony/messenger": "^6.3",
         "symfony/orm-pack": "^2.4",
         "revolt/event-loop": "^1.0",
-        "spatie/async": "^1.6"
+        "spatie/async": "^1.6",
+        "symplely/coroutine": "^1.9",
+        "mcaskill/composer-exclude-files": "^3.0"
     },
     "suggest": {
         "amphp/amp": "Provide asynchronous with AMP",
@@ -39,7 +42,8 @@
         "react/async": "Provide asynchronous with ReactPHP",
         "symfony/messenger": "Provide Symfony Messenger support",
         "revolt/event-loop": "Provide asynchronous with Revolt",
-        "spatie/async": "Provide asynchronous with Spatie"
+        "spatie/async": "Provide asynchronous with Spatie",
+        "symplely/coroutine": "Provide asynchronous with Symplely"
     },
     "autoload": {
         "psr-4": {
@@ -78,5 +82,16 @@
         "phpunit": "Launch PHPUnit test suite",
         "psalm": "Run Psalm"
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "extra": {
+        "exclude-from-files": [
+            "spatie/async/src/helpers.php",
+            "symplely/coroutine/Coroutine/Core.php"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "mcaskill/composer-exclude-files": true
+        }
+    }
 }

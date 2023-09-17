@@ -10,19 +10,21 @@ use Flow\Driver\ReactDriver;
 use Flow\Driver\RevoltDriver;
 use Flow\Driver\SpatieDriver;
 use Flow\Driver\SwooleDriver;
+use Flow\Driver\SymplelyDriver;
 use Flow\Examples\Data;
 use Flow\ExceptionInterface;
 use Flow\Flow\Flow;
 use Flow\Ip;
 use Flow\IpStrategy\MaxIpStrategy;
 
-$driver = match (random_int(1, 6)) {
+$driver = match (random_int(6, 6)) {
     1 => new AmpDriver(),
     2 => new FiberDriver(),
     3 => new ReactDriver(),
     4 => new RevoltDriver(),
     5 => new SpatieDriver(),
-    6 => new SwooleDriver(),
+    6 => new SymplelyDriver(),
+    7 => new SwooleDriver(),
 };
 printf("Use %s\n", $driver::class);
 
