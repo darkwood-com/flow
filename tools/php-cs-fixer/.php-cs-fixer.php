@@ -5,7 +5,7 @@ declare(strict_types=1);
 $finder = PhpCsFixer\Finder::create()
     ->ignoreVCSIgnored(true)
     ->ignoreDotFiles(false)
-    ->in(__DIR__)
+    ->in(dirname(__DIR__, 2))
     ->append([
         __FILE__,
     ])
@@ -15,10 +15,11 @@ $finder = PhpCsFixer\Finder::create()
 return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setRules([
+        '@PSR12' => true,
         '@PHP82Migration' => true,
-        '@PhpCsFixer' => true,
-        '@Symfony' => true, // https://cs.symfony.com/doc/ruleSets/Symfony.html
-        '@Symfony:risky' => true,
+        '@PhpCsFixer' => true, // https://cs.symfony.com/doc/ruleSets/PhpCsFixer.html
+        '@PhpCsFixer:risky' => true, // https://cs.symfony.com/doc/ruleSets/PhpCsFixerRisky.html
+        '@PHPUnit100Migration:risky' => true, // https://cs.symfony.com/doc/ruleSets/PHPUnit100MigrationRisky.html
         'heredoc_indentation' => false,
         'php_unit_internal_class' => false, // From @PhpCsFixer but we don't want it
         'php_unit_test_class_requires_covers' => false, // From @PhpCsFixer but we don't want it
@@ -32,8 +33,10 @@ return (new PhpCsFixer\Config())
             'import_functions' => true,
             'import_classes' => true,
         ],
+        'logical_operators' => false, // https://cs.symfony.com/doc/rules/operator/logical_operators.html prefer use 'or' and 'and' operators by design
         'yoda_style' => false, // https://cs.symfony.com/doc/rules/control_structure/yoda_style.html
         'increment_style' => ['style' => 'post'],
     ])
     ->setFinder($finder)
+    ->setCacheFile(__DIR__ . '/.php-cs-fixer.cache')
 ;

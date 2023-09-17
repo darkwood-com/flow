@@ -8,6 +8,8 @@ use Closure;
 use Flow\Driver\AmpDriver;
 use Flow\Driver\FiberDriver;
 use Flow\Driver\ReactDriver;
+use Flow\Driver\RevoltDriver;
+use Flow\Driver\SpatieDriver;
 use Flow\Driver\SwooleDriver;
 use Flow\IpStrategy\LinearIpStrategy;
 use Flow\IpStrategy\MaxIpStrategy;
@@ -21,16 +23,18 @@ trait FlowTrait
     protected static function matrix(Closure $datas): array
     {
         $drivers = [
-            // 'amp' => fn (): AmpDriver => new AmpDriver(),
-            // 'fiber' => fn (): FiberDriver => new FiberDriver(),
-            'react' => fn (): ReactDriver => new ReactDriver(),
+            'amp' => static fn (): AmpDriver => new AmpDriver(),
+            'fiber' => static fn (): FiberDriver => new FiberDriver(),
+            'react' => static fn (): ReactDriver => new ReactDriver(),
+            'revolt' => static fn (): RevoltDriver => new RevoltDriver(),
+            // 'spatie' => static fn (): SpatieDriver => new SpatieDriver(),
             // 'swoole' => fn (): SwooleDriver => new SwooleDriver(),
         ];
 
         $strategies = [
-            'linear' => fn (): LinearIpStrategy => new LinearIpStrategy(),
-            'max' => fn (): MaxIpStrategy => new MaxIpStrategy(),
-            'stack' => fn (): StackIpStrategy => new StackIpStrategy(),
+            'linear' => static fn (): LinearIpStrategy => new LinearIpStrategy(),
+            'max' => static fn (): MaxIpStrategy => new MaxIpStrategy(),
+            'stack' => static fn (): StackIpStrategy => new StackIpStrategy(),
         ];
 
         $matrixDatas = [];

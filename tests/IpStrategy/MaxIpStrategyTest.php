@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 class MaxIpStrategyTest extends TestCase
 {
     /**
-     * @dataProvider strategyProvider
+     * @dataProvider provideStrategyCases
      */
     public function testStrategy(int $doneIndex): void
     {
@@ -38,7 +38,7 @@ class MaxIpStrategyTest extends TestCase
     /**
      * @return array<array<mixed>>
      */
-    public static function strategyProvider(): array
+    public static function provideStrategyCases(): iterable
     {
         return [
             [0],

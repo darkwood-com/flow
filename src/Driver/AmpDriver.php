@@ -6,29 +6,39 @@ namespace Flow\Driver;
 
 use Closure;
 use Flow\DriverInterface;
-use Flow\Exception;
+use Flow\Exception\RuntimeException;
 use Revolt\EventLoop;
-use RuntimeException;
+use RuntimeException as NativeRuntimeException;
 use Throwable;
 
+use function Amp\async;
 use function Amp\delay;
 use function function_exists;
 
+/**
+ * @template TArgs
+ * @template TReturn
+ *
+ * @implements DriverInterface<TArgs,TReturn>
+ */
 class AmpDriver implements DriverInterface
 {
-    private int $counter = 0;
+    /**
+     * @var array<string>
+     */
+    private array $ticksIds = [];
 
     public function __construct()
     {
         if (!function_exists('Amp\\async')) {
-            throw new RuntimeException('Amp is not loaded. Suggest install it with composer require amphp/amp');
+            throw new NativeRuntimeException('Amp is not loaded. Suggest install it with composer require amphp/amp');
         }
     }
 
     public function async(Closure $callback, Closure $onResolve = null): Closure
     {
-        return function (...$args) use ($callback, $onResolve): void {
-            EventLoop::queue(function (Closure $callback, array $args, Closure $onResolve = null) {
+        return static function (...$args) use ($callback, $onResolve): void {
+            async(static function (Closure $callback, array $args, Closure $onResolve = null) {
                 try {
                     $return = $callback(...$args, ...($args = []));
                     if ($onResolve) {
@@ -36,13 +46,10 @@ class AmpDriver implements DriverInterface
                     }
                 } catch (Throwable $exception) {
                     if ($onResolve) {
-                        $onResolve(new Exception($exception->getMessage(), $exception->getCode(), $exception));
+                        $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
                     }
-                } finally {
-                    $this->pop();
                 }
             }, $callback, $args, $onResolve);
-            $this->push();
         };
     }
 
@@ -54,27 +61,30 @@ class AmpDriver implements DriverInterface
     public function tick(int $interval, Closure $callback): Closure
     {
         $tickId = EventLoop::repeat($interval / 1000, $callback);
-        $this->push();
 
-        return function () use ($tickId) {
+        $cancel = function () use ($tickId) {
+            unset($this->ticksIds[$tickId]);
             EventLoop::cancel($tickId);
-            $this->pop();
         };
+
+        $this->ticksIds[$tickId] = $cancel;
+
+        return $cancel;
     }
 
-    private function push(): void
+    public function start(): void
     {
-        if (/* $this->counter === 0 || */ !EventLoop::getDriver()->isRunning()) {
+        if (!EventLoop::getDriver()->isRunning()) {
             EventLoop::run();
         }
-        $this->counter++;
     }
 
-    private function pop(): void
+    public function stop(): void
     {
-        $this->counter--;
-        if ($this->counter === 0) {
-            EventLoop::getDriver()->stop();
+        foreach ($this->ticksIds as $cancel) {
+            $cancel();
         }
+
+        EventLoop::getDriver()->stop();
     }
 }

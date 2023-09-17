@@ -6,26 +6,37 @@ namespace Flow\Driver;
 
 use Closure;
 use Flow\DriverInterface;
-use Flow\Exception;
+use Flow\Exception\RuntimeException;
 use OpenSwoole\Coroutine;
 use OpenSwoole\Timer;
-use RuntimeException;
+use RuntimeException as NativeRuntimeException;
 use Throwable;
 
 use function extension_loaded;
 
+/**
+ * @template TArgs
+ * @template TReturn
+ *
+ * @implements DriverInterface<TArgs,TReturn>
+ */
 class SwooleDriver implements DriverInterface
 {
+    /**
+     * @var array<int, callable(): void>
+     */
+    private array $ticksIds = [];
+
     public function __construct()
     {
         if (!extension_loaded('openswoole')) {
-            throw new RuntimeException('Swoole extension is not loaded. Suggest install it with pecl install openswoole');
+            throw new NativeRuntimeException('Swoole extension is not loaded. Suggest install it with pecl install openswoole');
         }
     }
 
     public function async(Closure $callback, Closure $onResolve = null): Closure
     {
-        return function (...$args) use ($callback, $onResolve): void {
+        return static function (...$args) use ($callback, $onResolve): void {
             Coroutine::run(static function () use ($callback, $onResolve, $args) {
                 Coroutine::create(static function (Closure $callback, array $args, Closure $onResolve = null) {
                     try {
@@ -35,7 +46,7 @@ class SwooleDriver implements DriverInterface
                         }
                     } catch (Throwable $exception) {
                         if ($onResolve) {
-                            $onResolve(new Exception($exception->getMessage(), $exception->getCode(), $exception));
+                            $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
                         }
                     }
                 }, $callback, $args, $onResolve);
@@ -53,8 +64,24 @@ class SwooleDriver implements DriverInterface
     {
         $tickId = Timer::tick($interval, $callback);
 
-        return function () use ($tickId) {
+        $cancel = function () use ($tickId) {
+            unset($this->ticksIds[$tickId]);
             Timer::clear($tickId); // @phpstan-ignore-line
         };
+
+        $this->ticksIds[$tickId] = $cancel;
+
+        return $cancel;
+    }
+
+    public function start(): void
+    {
+    }
+
+    public function stop(): void
+    {
+        foreach ($this->ticksIds as $cancel) {
+            $cancel();
+        }
     }
 }

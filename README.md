@@ -15,7 +15,7 @@ Flow concept aims to solve
 ## Installation
 
 PHP 8.2 is the minimal version to use Flow  
-The recommended way to install it through [Composer](http://getcomposer.org/) and execute
+The recommended way to install it through [Composer](http://getcomposer.org) and execute
 
 ```bash
 composer require darkwood/flow
@@ -43,8 +43,6 @@ A working script is available in the bundled `examples` directory
 - Run Flow : `php examples/flow.php`
 - Start Server : `php examples/server.php`  
   Start Client(s) : `php examples/client.php`
-
-Messaging part require to install [Docker](https://www.docker.com) and execute `docker-compose up -d`
 
 ## Documentation
 

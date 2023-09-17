@@ -13,6 +13,10 @@ use Flow\IpStrategyInterface;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
+/**
+ * @template T1
+ * @template T2
+ */
 class FlowTest extends TestCase
 {
     use FlowTrait;
@@ -20,44 +24,54 @@ class FlowTest extends TestCase
     /**
      * @dataProvider jobProvider
      *
-     * @param array<Closure> $jobs
+     * @param DriverInterface<T1,T2>  $driver
+     * @param IpStrategyInterface<T1> $ipStrategy
+     * @param array<Closure>          $jobs
      */
     public function testJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, array $jobs, int $resultNumber): void
     {
         $ip = new Ip(new ArrayObject(['number' => 0]));
         $flow = array_reduce(
-            array_map(fn ($job) => new Flow($job, static function () {}, $ipStrategy, $driver), $jobs),
-            fn ($flow, $flowIt) => $flow ? $flow->fn($flowIt) : $flowIt
+            array_map(static fn ($job) => new Flow($job, static function () {}, $ipStrategy, $driver), $jobs),
+            static fn ($flow, $flowIt) => $flow ? $flow->fn($flowIt) : $flowIt
         );
-        ($flow)($ip, function (Ip $ip) use ($resultNumber) {
+        ($flow)($ip, static function (Ip $ip) use ($driver, $resultNumber) {
+            $driver->stop();
+
             self::assertSame(ArrayObject::class, $ip->data::class);
             self::assertSame($resultNumber, $ip->data['number']);
         });
+
+        $driver->start();
     }
 
     /**
      * @dataProvider jobProvider
+     *
+     * @param DriverInterface<T1,T2|void> $driver
      */
     public function testJobs(DriverInterface $driver): void
     {
         $ip1 = new Ip(new ArrayObject(['n1' => 3, 'n2' => 4]));
         $ip2 = new Ip(new ArrayObject(['n1' => 2, 'n2' => 5]));
 
-        $jobs = [function (object $data): void {
+        $jobs = [static function (object $data): void {
             $data['n1'] *= 2;
-        }, function (object $data): void {
+        }, static function (object $data): void {
             $data['n2'] *= 4;
         }];
-        $errorJobs = [function () {
-        }, function () {
+        $errorJobs = [static function () {
+        }, static function () {
         }];
         $flow = new Flow($jobs, $errorJobs, null, $driver);
 
         $ips = new ArrayObject();
 
-        $callback = function (Ip $ip) use ($ips, $ip1, $ip2) {
+        $callback = function (Ip $ip) use ($driver, $ips, $ip1, $ip2) {
             $ips->append($ip);
             if ($ips->count() === 2) {
+                $driver->stop();
+
                 $this->assertSame($ip1, $ips->offsetGet(0));
                 $this->assertSame($ip2, $ips->offsetGet(1));
                 self::assertSame(6, $ip1->data['n1']);
@@ -69,16 +83,18 @@ class FlowTest extends TestCase
 
         ($flow)($ip1, $callback);
         ($flow)($ip2, $callback);
+
+        $driver->start();
     }
 
     /**
      * @return array<array<mixed>>
      */
-    public static function jobProvider(): array
+    public static function jobProvider(): iterable
     {
         $exception = new RuntimeException('job error');
 
-        return self::matrix(fn (DriverInterface $driver) => [
+        return self::matrix(static fn (DriverInterface $driver) => [
             'oneJob' => [[static function (ArrayObject $data) {
                 $data['number'] = 5;
             }], 5],

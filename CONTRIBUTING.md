@@ -2,18 +2,18 @@
 
 First of all, **thank you** for contributing, **you are awesome**!
 
-Everybody should be able to help. Here's how you can do it:
+Everybody should be able to help. Here's how you can do it
 
-1. [Fork it](https://github.com/darkwood-fr/flow/fork)
-2. improve it
-3. submit a [pull request](https://help.github.com/articles/creating-a-pull-request)
+- [Fork it](https://github.com/darkwood-fr/flow/fork)
+- Improve it
+- Submit a [pull request](https://help.github.com/articles/creating-a-pull-request)
 
-Here's some tips to make you the best contributor ever:
+Here's some tips to make you the best contributor ever
 
-* [Bug reports](#bug-reports)
-* [Feature requests](#feature-requests)
-* [Creating a pull request](#creating-a-pull-request)
-* [Coding standard](#coding-standard)
+- [Bug reports](#bug-reports)
+- [Feature requests](#feature-requests)
+- [Creating a pull request](#creating-a-pull-request)
+- [Coding standard](#coding-standard)
 
 ## Bug reports
 
@@ -38,27 +38,27 @@ GitHub.
 Then clone your fork:
 
 ```bash
-$ git clone git@github.com:darkwood-fr/flow.git
-$ git checkout -b bug-or-feature-description
+git clone git@github.com:darkwood-fr/flow.git
+git checkout -b bug-or-feature-description
 ```
 
 And install the dependencies:
 
 ```bash
-$ composer install
+composer install
 ```
 
 Write your code and add tests. Then run the tests:
 
 ```bash
-$ make test
+make test
 ```
 
 Commit your changes and push them to GitHub:
 
 ```bash
-$ git commit -m ":sparkles: Introduce awesome new feature"
-$ git push -u origin bug-or-feature-description
+git commit -m ":sparkles: Introduce awesome new feature"
+git push -u origin bug-or-feature-description
 ```
 
 Then [create a pull request](https://help.github.com/articles/creating-a-pull-request/)
@@ -79,6 +79,6 @@ Please make sure your pull requests adhere to this standard.
 
 To fix, execute this command after [download PHP CS Fixer](https://cs.symfony.com/):
 
-```shell script
-$ make cs-fix
+```bash
+make php-cs-fixer
 ```

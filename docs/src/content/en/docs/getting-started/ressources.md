@@ -15,11 +15,12 @@ toc: true
 
 # More information about the code
 
-Article of this project : [https://blog.darkwood.fr/article/php-railway-flow-based-programming](https://blog.darkwood.fr/article/php-railway-flow-based-programming)  
-Slides of this project : [https://speakerdeck.com/matyo91/php-railway-flow-based-programming](https://speakerdeck.com/matyo91/php-railway-flow-based-programming)  
+Article of this project : [https://blog.darkwood.fr/article/php-railway-flow-based-programming](https://blog.darkwood.fr/article/php-railway-flow-based-programming)
+Slides of this project : [https://speakerdeck.com/matyo91/php-railway-flow-based-programming](https://speakerdeck.com/matyo91/php-railway-flow-based-programming)
 Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://www.youtube.com/watch?v=mxxdhGsaIjY)
 
 ## Railway Flow Based Programming with Elixir from [Anton Mishchuk](https://twitter.com/anton_mishchuk)
+
 - Presentation in an article : [https://anton-mishchuk.medium.com/railway-flow-based-programming-with-flowex-ef04fd338e41](https://anton-mishchuk.medium.com/railway-flow-based-programming-with-flowex-ef04fd338e41)
 - Presentation with video : [https://www.youtube.com/watch?v=TLvbP8bt2HA](https://www.youtube.com/watch?v=TLvbP8bt2HA)
 - Advanced implementation with multiple programming languages : [https://medium.com/@anton.mishchuk/multi-language-flowex-components-fdda11d34744](https://medium.com/@anton.mishchuk/multi-language-flowex-components-fdda11d34744)
@@ -33,6 +34,7 @@ Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://ww
 - Implementation in PHP from [Henri Bergius](https://github.com/bergie) : [https://github.com/phpflo/phpflo](https://github.com/phpflo/phpflo)
 
 ## Railway Oriented Programming
+
 - Presentation from [Sarmiento Calle](https://twitter.com/rrramiro) : [https://www.youtube.com/watch?v=RNTo7Y2wMyI](https://www.youtube.com/watch?v=RNTo7Y2wMyI)
 - Presentation from [Scott Wlaschin](https://fr.slideshare.net/scottwlaschin) : [https://fr.slideshare.net/ScottWlaschin/railway-oriented-programming](https://fr.slideshare.net/ScottWlaschin/railway-oriented-programming)
 - Railway Oriented Programming: C# Edition - Tama Waddell : [https://www.youtube.com/watch?v=45yk2nuRjj8](https://www.youtube.com/watch?v=45yk2nuRjj8)
@@ -40,14 +42,30 @@ Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://ww
 - Implementation in PHP from [Monsieur Luge](https://github.com/monsieurluge) : [https://github.com/monsieurluge/result](https://github.com/monsieurluge/result)
 
 ## Coroutines in PHP
+
 - [Nikita Popov](https://github.com/nikic) talk about Coroutines in PHP : [https://nikic.github.io/2012/12/22/Cooperative-multitasking-using-coroutines-in-PHP.html](https://nikic.github.io/2012/12/22/Cooperative-multitasking-using-coroutines-in-PHP.html)
 - 100% Asynchrone - 0% Callback en PHP - [Joel Wurtz](https://jolicode.com/equipe/joel-wurtz) - PHP Tour Montpellier 2018 : [https://www.youtube.com/watch?v=g1UgU5KMyMA](https://www.youtube.com/watch?v=g1UgU5KMyMA)
 - Générateurs et Programmation Asynchrone: Mode d’emploi - [Benoit Viguier](https://twitter.com/b_viguier) - Forum PHP 2018 : [https://www.youtube.com/watch?v=7TvIIt4c8uY](https://www.youtube.com/watch?v=7TvIIt4c8uY)
 - En route vers le multi-tâche ! - Julien Bianchi - PHP Tour 2016 [https://www.youtube.com/watch?v=FOeGfSbKkuY](https://www.youtube.com/watch?v=FOeGfSbKkuY)
 - Differences between Multiprocessing, Multithreading and Coroutines execution in PHP : [https://divinglaravel.com/asynchronous-php](https://divinglaravel.com/asynchronous-php)
 - Differences between PHP Fibers RFC in PHP 8.1 vs Swoole Fibers and Coroutines : [https://openswoole.com/article/php-fibers-rfc-vs-swoole-co](https://openswoole.com/article/php-fibers-rfc-vs-swoole-co)
+- Wikipedia Coroutine : [https://en.wikipedia.org/wiki/Coroutine#PHP](https://en.wikipedia.org/wiki/Coroutine#PHP)
+- Coroutines in C : [https://www.chiark.greenend.org.uk/~sgtatham/coroutines.html](https://www.chiark.greenend.org.uk/~sgtatham/coroutines.html)
+
+## Fibers in PHP
+
+- PHP Fibers, l’asynchrone au bout de la trompe : [https://blog.ineat-group.com/2023/01/php-fibers-lasynchrone-au-bout-de-la-trompe](https://blog.ineat-group.com/2023/01/php-fibers-lasynchrone-au-bout-de-la-trompe)
+- PHP RFC on Fibers : [https://wiki.php.net/rfc/fibers](https://wiki.php.net/rfc/fibers)
+- What Color is Your Function? Understand related issues with asynchronous code execution [https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function](https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function)
+- Wikipedia on Gree Threads [https://en.wikipedia.org/wiki/Green_thread](https://en.wikipedia.org/wiki/Green_thread)
+- PHP Fibers - Milko Kosturkov - PHP UK 2022 : [https://www.youtube.com/watch?v=jx0c_3J1BV4](https://www.youtube.com/watch?v=jx0c_3J1BV4) and Fibers vs Generators vs Threads.
 
 ## Monads and PHP
+
+Article on Monads : [https://blog.darkwood.fr/article/les-monades-et-leur-utilisation-en-php](https://blog.darkwood.fr/article/les-monades-et-leur-utilisation-en-php)
+Slides on Monads : [https://speakerdeck.com/matyo91/monads-and-usage-in-php](https://speakerdeck.com/matyo91/monads-and-usage-in-php)
+Video on Monads : [https://www.youtube.com/watch?v=0M6MhUpra9o](https://www.youtube.com/watch?v=0M6MhUpra9o)
+
 - What is a monad from [Sean Riley](https://twitter.com/seanski44) : [https://www.youtube.com/watch?v=t1e8gqXLbsU](https://www.youtube.com/watch?v=t1e8gqXLbsU)
 - Why monads are useful : [https://jameswestby.net/tech/why-monads-are-useful.html](https://jameswestby.net/tech/why-monads-are-useful.html)
 - Promise is neither a Functor nor an Applicative nor a Monad [https://stackoverflow.com/questions/45712106/why-are-promises-monads](https://stackoverflow.com/questions/45712106/why-are-promises-monads)
@@ -65,11 +83,17 @@ Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://ww
 - Monad PHP [https://github.com/ircmaxell/monad-php](https://github.com/ircmaxell/monad-php)
 
 ## Y-Combinator and PHP
+
+Article of Y-Combinator : [https://blog.darkwood.fr/article/y-combinator-en-php](https://blog.darkwood.fr/article/y-combinator-en-php)
+Slides of Y-Combinator : [https://speakerdeck.com/matyo91/y-combinator-in-php](https://speakerdeck.com/matyo91/y-combinator-in-php)
+Video of Y-Combinator : [https://www.youtube.com/watch?v=QSS_ZcO8Q1g](https://www.youtube.com/watch?v=QSS_ZcO8Q1g)
+
 - [Lambda Calculus - Wikipedia](http://en.wikipedia.org/wiki/Lambda_calculus)
 - Lambda calculus language explanation : [https://tgdwyer.github.io/lambdacalculus](https://tgdwyer.github.io/lambdacalculus)
 - Combinator : [https://github.com/loophp/combinator](https://github.com/loophp/combinator)
 - Lambda-php : [https://github.com/igorw/lambda-php](https://github.com/igorw/lambda-php)
 
 ## Messaging approach with East oriented code from [Frédéric Hardy](https://twitter.com/mageekguy)
+
 - Article : [http://blog.est.voyage/phpTour2015](http://blog.est.voyage/phpTour2015)
 - Source code : [https://github.com/estvoyage/phpTour2015](https://github.com/estvoyage/phpTour2015)

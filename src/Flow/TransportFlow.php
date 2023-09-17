@@ -16,12 +16,18 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
 
+/**
+ * @template T1
+ * @template T2
+ *
+ * @extends FlowDecorator<T1,T2>
+ */
 class TransportFlow extends FlowDecorator
 {
     use EnvelopeTrait;
 
     /**
-     * @var SplObjectStorage<Ip, Envelope>
+     * @var SplObjectStorage<Ip<T1>, Envelope>
      */
     private SplObjectStorage $envelopePool;
 
@@ -30,8 +36,14 @@ class TransportFlow extends FlowDecorator
      */
     private array $envelopeIds;
 
+    /**
+     * @var DriverInterface<T1,T2>
+     */
     private DriverInterface $driver;
 
+    /**
+     * @param null|DriverInterface<T1,T2> $driver
+     */
     public function __construct(
         private FlowInterface $flow,
         private ReceiverInterface $producer,

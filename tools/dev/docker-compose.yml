@@ -1,0 +1,16 @@
+version: '3'
+services:
+    php:
+        image: flow-php
+        build:
+            context: .
+            target: php
+        volumes:
+            - ../..:/flow
+    mysql:
+        image: mysql:8.1
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=flow
+            - MYSQL_USER=flow
+            - MYSQL_PASSWORD=flow

@@ -1,5 +1,23 @@
 {
-    "require": {
+    "require-dev": {
+        "amphp/amp": "^3.0",
+        "openswoole/ide-helper": "^22.0",
+        "react/async": "^4.1",
+        "symfony/doctrine-messenger": "^6.3",
+        "symfony/messenger": "^6.3",
+        "symfony/orm-pack": "^2.4",
+        "phpunit/phpunit": "^10.3",
         "phpstan/phpstan": "^1.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "Flow\\": "../../src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Flow\\Examples\\": "../../examples",
+            "Flow\\Test\\": "../../tests"
+        }
     }
 }

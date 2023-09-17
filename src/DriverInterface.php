@@ -6,19 +6,30 @@ namespace Flow;
 
 use Closure;
 
+/**
+ * @template TArgs TArgs is supposed to be list of generic templating arguments https://github.com/phpstan/phpstan/issues/6873
+ * @template TReturn
+ */
 interface DriverInterface
 {
     /**
-     * @param Closure $onResolve called on resolved and first argument is $callback return or Flow\Exception on Exception
+     * #return Closure(TArgs): void when called this start async $callback.
      *
-     * @return Closure when called, this start async $callback
+     * @param Closure(TArgs): TReturn                        $callback
+     * @param null|Closure(ExceptionInterface|TReturn): void $onResolve
      */
     public function async(Closure $callback, Closure $onResolve = null): Closure;
 
     public function delay(float $seconds): void;
 
     /**
-     * @return Closure when called, this cleanup tick interval
+     * @param Closure(): void $callback
+     *
+     * @return Closure(): void when called, this cleanup tick interval
      */
     public function tick(int $interval, Closure $callback): Closure;
+
+    public function start(): void;
+
+    public function stop(): void;
 }

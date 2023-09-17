@@ -6,26 +6,35 @@ namespace Flow\Driver;
 
 use Closure;
 use Flow\DriverInterface;
-use Flow\Exception;
+use Flow\Exception\RuntimeException;
 use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
-use RuntimeException;
+use RuntimeException as NativeRuntimeException;
 use Throwable;
 
 use function function_exists;
 use function React\Async\async;
 use function React\Async\delay;
 
+/**
+ * @template TArgs
+ * @template TReturn
+ *
+ * @implements DriverInterface<TArgs,TReturn>
+ */
 class ReactDriver implements DriverInterface
 {
     private LoopInterface $eventLoop;
 
-    private int $counter = 0;
+    /**
+     * @var array<string>
+     */
+    private array $ticksIds = [];
 
     public function __construct(LoopInterface $eventLoop = null)
     {
         if (!function_exists('React\\Async\\async')) {
-            throw new RuntimeException('ReactPHP is not loaded. Suggest install it with composer require react/event-loop');
+            throw new NativeRuntimeException('ReactPHP is not loaded. Suggest install it with composer require react/event-loop');
         }
 
         $this->eventLoop = $eventLoop ?? Loop::get();
@@ -33,8 +42,8 @@ class ReactDriver implements DriverInterface
 
     public function async(Closure $callback, Closure $onResolve = null): Closure
     {
-        return function (...$args) use ($callback, $onResolve): void {
-            async(function () use ($callback, $onResolve, $args) {
+        return static function (...$args) use ($callback, $onResolve): void {
+            async(static function () use ($callback, $onResolve, $args) {
                 try {
                     $return = $callback(...$args, ...($args = []));
                     if ($onResolve) {
@@ -42,13 +51,10 @@ class ReactDriver implements DriverInterface
                     }
                 } catch (Throwable $exception) {
                     if ($onResolve) {
-                        $onResolve(new Exception($exception->getMessage(), $exception->getCode(), $exception));
+                        $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
                     }
-                } finally {
-                    $this->pop();
                 }
             })();
-            $this->push();
         };
     }
 
@@ -59,28 +65,31 @@ class ReactDriver implements DriverInterface
 
     public function tick(int $interval, Closure $callback): Closure
     {
-        $tickId = $this->eventLoop->addPeriodicTimer($interval, $callback);
-        $this->push();
+        $tickId = uniqid('flow_react_tick_id');
 
-        return function () use ($tickId) {
-            $this->eventLoop->cancelTimer($tickId);
-            $this->pop();
+        $timer = $this->eventLoop->addPeriodicTimer($interval, $callback);
+
+        $cancel = function () use ($tickId, $timer) {
+            unset($this->ticksIds[$tickId]);
+            $this->eventLoop->cancelTimer($timer);
         };
+
+        $this->ticksIds[$tickId] = $cancel;
+
+        return $cancel;
     }
 
-    private function push(): void
+    public function start(): void
     {
-        if ($this->counter === 0) {
-            $this->eventLoop->run();
-        }
-        $this->counter++;
+        $this->eventLoop->run();
     }
 
-    private function pop(): void
+    public function stop(): void
     {
-        $this->counter--;
-        if ($this->counter === 0) {
-            $this->eventLoop->stop();
+        foreach ($this->ticksIds as $cancel) {
+            $cancel();
         }
+
+        $this->eventLoop->stop();
     }
 }

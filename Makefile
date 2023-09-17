@@ -1,21 +1,39 @@
 ##
 ##Dev
-##----------
+##------------
 
 dev: ## Start dev server
 	composer dev
 
-cs-fix: ## Check and fix coding styles using PHP CS Fixer
-	composer cs-fix
+docs-serve: ## Start documentation server locally
+	composer docs-serve
+
+infection: ## Run Infection
+	composer infection
+
+php-cs-fixer: ## Check and fix coding styles using PHP CS Fixer
+	composer php-cs-fixer
+
+phan: ## Run Phan
+	composer phan
+
+phpcbf: ## Clean code with PHP Code Beautifier and Fixer
+	composer phpcbf
+
+phpcs: ## Run PHP Code Sniffer
+	composer phpcs
+
+phpmd: ## Run PHP Mess Detector
+	composer phpmd
 
 phpstan: ## Execute PHPStan analysis
 	composer phpstan
 
-test: ## Launch PHPUnit test suite
-	composer test
+phpunit: ## Launch PHPUnit test suite
+	composer phpunit
 
-docs-serve: ## Start documentation server locally
-	composer docs-serve
+psalm: ## Run Psalm
+	composer psalm
 
 # DEFAULT
 .DEFAULT_GOAL := help
