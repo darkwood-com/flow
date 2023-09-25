@@ -13,7 +13,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 final class PopEvent extends Event
 {
     /**
-     * @param Ip<T> $ip
+     * @var Ip<T>
      */
     private Ip $ip;
 

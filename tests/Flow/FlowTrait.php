@@ -8,7 +8,6 @@ use Closure;
 use Flow\Driver\AmpDriver;
 use Flow\Driver\FiberDriver;
 use Flow\Driver\ReactDriver;
-use Flow\Driver\RevoltDriver;
 use Flow\Driver\SpatieDriver;
 use Flow\Driver\SwooleDriver;
 use Flow\IpStrategy\LinearIpStrategy;
@@ -26,9 +25,8 @@ trait FlowTrait
             'amp' => static fn (): AmpDriver => new AmpDriver(),
             'fiber' => static fn (): FiberDriver => new FiberDriver(),
             'react' => static fn (): ReactDriver => new ReactDriver(),
-            'revolt' => static fn (): RevoltDriver => new RevoltDriver(),
             // 'spatie' => static fn (): SpatieDriver => new SpatieDriver(),
-            // 'swoole' => fn (): SwooleDriver => new SwooleDriver(),
+            // 'swoole' => static fn (): SwooleDriver => new SwooleDriver(),
         ];
 
         $strategies = [

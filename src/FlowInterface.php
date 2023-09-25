@@ -13,23 +13,22 @@ use Generator;
 interface FlowInterface
 {
     /**
-     * @param Ip<T1>                     $ip
-     * @param null|Closure(Ip<T1>): void $callback
+     * @param Ip<T1> $ip
      */
-    public function __invoke(Ip $ip, Closure $callback = null): void;
+    public function __invoke(Ip $ip): void;
 
     /**
      * @template T2
      *
      * @param array<mixed>|Closure|FlowInterface<T2> $flow can be Closure as Job, array constructor arguments for Flow instanciation, array configuration for Flow instanciation or FlowInterface instance
      *                                                     #param ?array{
-     *                                                     0: Closure|array,
-     *                                                     1?: Closure|array,
+     *                                                     0: Closure,
+     *                                                     1?: Closure,
      *                                                     2?: IpStrategyInterface,
      *                                                     3?: DriverInterface
      *                                                     }|array{
-     *                                                     "jobs"?: Closure|array,
-     *                                                     "errorJobs"?: Closure|array,
+     *                                                     "job"?: Closure,
+     *                                                     "errorJob"?: Closure,
      *                                                     "ipStrategy"?: IpStrategyInterface,
      *                                                     "driver"?: DriverInterface
      *                                                     }|Closure|FlowInterface<T2> $config
@@ -76,4 +75,10 @@ interface FlowInterface
      * @return FlowInterface<mixed>
      */
     public static function do(callable $callable, ?array $config = null): self;
+
+    /**
+     * Await asynchonous call for current IPs.
+     * After await, all IPs have been proceed, it continues synchronously.
+     */
+    public function await(): void;
 }

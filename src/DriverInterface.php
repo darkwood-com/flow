@@ -15,21 +15,22 @@ interface DriverInterface
     /**
      * #return Closure(TArgs): void when called this start async $callback.
      *
-     * @param Closure(TArgs): TReturn                        $callback
-     * @param null|Closure(ExceptionInterface|TReturn): void $onResolve
+     * @param Closure(TArgs): TReturn $callback
      */
-    public function async(Closure $callback, Closure $onResolve = null): Closure;
+    public function async(Closure $callback): Closure;
+
+    /**
+     * @param array{'ips': int, 'fnFlows': array<mixed>, 'dispatchers': array<mixed>} $stream
+     */
+    public function await(array &$stream): void;
 
     public function delay(float $seconds): void;
 
     /**
+     * @param float           $interval in seconds
      * @param Closure(): void $callback
      *
      * @return Closure(): void when called, this cleanup tick interval
      */
-    public function tick(int $interval, Closure $callback): Closure;
-
-    public function start(): void;
-
-    public function stop(): void;
+    public function tick(float $interval, Closure $callback): Closure;
 }

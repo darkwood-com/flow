@@ -21,13 +21,12 @@ class client
     public function __construct(
         private SenderInterface $sender,
         private ReceiverInterface $receiver
-    ) {
-    }
+    ) {}
 
     /**
      * @param ?int $delay The delay in milliseconds
      */
-    public function call(object $data, int $delay = null): void
+    public function call(object $data, ?int $delay = null): void
     {
         $ip = Envelope::wrap($data, $delay ? [new DelayStamp($delay)] : []);
         $this->sender->send($ip);

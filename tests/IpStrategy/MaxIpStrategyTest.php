@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Flow\Test\IpStrategy;
 
+use Flow\Event\PopEvent;
+use Flow\Event\PullEvent;
+use Flow\Event\PushEvent;
 use Flow\Ip;
 use Flow\IpStrategy\MaxIpStrategy;
 use PHPUnit\Framework\TestCase;
@@ -16,22 +19,32 @@ class MaxIpStrategyTest extends TestCase
     public function testStrategy(int $doneIndex): void
     {
         $strategy = new MaxIpStrategy(2);
-        $strategy->push(new Ip());
-        $strategy->push(new Ip());
-        $strategy->push(new Ip());
+        $strategy->push(new PushEvent(new Ip()));
+        $strategy->push(new PushEvent(new Ip()));
+        $strategy->push(new PushEvent(new Ip()));
 
         $ips = [];
-        $ips[] = $strategy->pop();
+
+        $pullEvent = new PullEvent();
+        $strategy->pull($pullEvent);
+        $ips[] = $pullEvent->getIp();
         self::assertNotNull($ips[0]);
-        $ips[] = $strategy->pop();
+
+        $pullEvent = new PullEvent();
+        $strategy->pull($pullEvent);
+        $ips[] = $pullEvent->getIp();
         self::assertNotNull($ips[1]);
 
-        $ips[] = $strategy->pop();
+        $pullEvent = new PullEvent();
+        $strategy->pull($pullEvent);
+        $ips[] = $pullEvent->getIp();
         self::assertNull($ips[2]);
 
-        $strategy->done($ips[$doneIndex]);
+        $strategy->pop(new PopEvent($ips[$doneIndex]));
 
-        $ips[] = $strategy->pop();
+        $pullEvent = new PullEvent();
+        $strategy->pull($pullEvent);
+        $ips[] = $pullEvent->getIp();
         self::assertNotNull($ips[3]);
     }
 

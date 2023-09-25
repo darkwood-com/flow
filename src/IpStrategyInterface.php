@@ -6,6 +6,7 @@ namespace Flow;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-interface IpStrategyInterface extends EventSubscriberInterface
-{
-}
+/**
+ * @template T
+ */
+interface IpStrategyInterface extends EventSubscriberInterface {}

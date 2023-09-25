@@ -6,7 +6,7 @@ namespace Flow\Flow;
 
 use Closure;
 use Exception;
-use Flow\Driver\AmpDriver;
+use Flow\Driver\FiberDriver;
 use Flow\DriverInterface;
 use Flow\EnvelopeTrait;
 use Flow\FlowInterface;
@@ -48,12 +48,12 @@ class TransportFlow extends FlowDecorator
         private FlowInterface $flow,
         private ReceiverInterface $producer,
         private SenderInterface $consumer,
-        DriverInterface $driver = null
+        ?DriverInterface $driver = null
     ) {
         parent::__construct($flow);
 
         $this->envelopePool = new SplObjectStorage();
-        $this->driver = $driver ?? new AmpDriver();
+        $this->driver = $driver ?? new FiberDriver();
     }
 
     /**
@@ -80,22 +80,22 @@ class TransportFlow extends FlowDecorator
             $this->envelopePool->offsetSet($ip, $envelope);
 
             try {
-                $self = $this;
-                ($this->flow)($ip, static function ($ip) use ($self) {
-                    $envelope = $self->envelopePool->offsetGet($ip);
-                    $self->consumer->send(Envelope::wrap($ip->data, array_reduce($envelope->all(), static function (array $all, array $stamps) {
+                $this->flow->fn(function ($ip) {
+                    $envelope = $this->envelopePool->offsetGet($ip);
+                    $this->consumer->send(Envelope::wrap($ip->data, array_reduce($envelope->all(), static function (array $all, array $stamps) {
                         foreach ($stamps as $stamp) {
                             $all[] = $stamp;
                         }
 
                         return $all;
                     }, [])));
-                    $self->producer->ack($envelope);
+                    $this->producer->ack($envelope);
 
-                    $self->envelopePool->offsetUnset($ip);
-                    $id = $self->getEnvelopeId($envelope);
-                    unset($self->envelopeIds[$id]);
+                    $this->envelopePool->offsetUnset($ip);
+                    $id = $this->getEnvelopeId($envelope);
+                    unset($this->envelopeIds[$id]);
                 });
+                ($this->flow)($ip);
             } catch (Exception $e) {
                 $envelope = $this->envelopePool->offsetGet($ip);
                 $this->producer->reject($envelope);

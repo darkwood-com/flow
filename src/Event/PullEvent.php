@@ -13,7 +13,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 final class PullEvent extends Event
 {
     /**
-     * @param null|Ip<T> $ip
+     * @var null|Ip<T>
      */
     private ?Ip $ip = null;
 
@@ -26,9 +26,9 @@ final class PullEvent extends Event
     }
 
     /**
-     * @return null|Ip<T>
+     * @param null|Ip<T> $ip
      */
-    public function setIp(?Ip $ip)
+    public function setIp(?Ip $ip): void
     {
         $this->ip = $ip;
     }

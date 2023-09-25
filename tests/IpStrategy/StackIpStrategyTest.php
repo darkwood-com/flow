@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Flow\Test\IpStrategy;
 
+use Flow\Event\PullEvent;
+use Flow\Event\PushEvent;
 use Flow\Ip;
 use Flow\IpStrategy\StackIpStrategy;
 use PHPUnit\Framework\TestCase;
@@ -16,18 +18,21 @@ class StackIpStrategyTest extends TestCase
         $ip2 = new Ip();
 
         $strategy = new StackIpStrategy();
-        $strategy->push($ip1);
-        $strategy->push($ip2);
+        $strategy->push(new PushEvent($ip1));
+        $strategy->push(new PushEvent($ip2));
 
-        $ip = $strategy->pop();
-        self::assertNotNull($ip);
-        self::assertSame($ip2, $ip);
+        $pullEvent = new PullEvent();
+        $strategy->pull($pullEvent);
+        self::assertNotNull($pullEvent->getIp());
+        self::assertSame($ip2, $pullEvent->getIp());
 
-        $ip = $strategy->pop();
-        self::assertNotNull($ip);
-        self::assertSame($ip1, $ip);
+        $pullEvent = new PullEvent();
+        $strategy->pull($pullEvent);
+        self::assertNotNull($pullEvent->getIp());
+        self::assertSame($ip1, $pullEvent->getIp());
 
-        $ip = $strategy->pop();
-        self::assertNull($ip);
+        $pullEvent = new PullEvent();
+        $strategy->pull($pullEvent);
+        self::assertNull($pullEvent->getIp());
     }
 }

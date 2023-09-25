@@ -7,8 +7,6 @@ namespace Flow\Flow;
 use Closure;
 use Flow\Driver\FiberDriver;
 use Flow\DriverInterface;
-use Flow\Event\PopEvent;
-use Flow\Event\PullEvent;
 use Flow\Event\PushEvent;
 use Flow\Exception\LogicException;
 use Flow\ExceptionInterface;
@@ -18,12 +16,10 @@ use Flow\IpStrategy\LinearIpStrategy;
 use Flow\IpStrategyEvent;
 use Flow\IpStrategyInterface;
 use Generator;
-use SplObjectStorage;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 use function array_key_exists;
-use function count;
 use function is_array;
 
 /**
@@ -35,64 +31,60 @@ use function is_array;
 class Flow implements FlowInterface
 {
     /**
-     * @var array<Closure(T1): T2>
+     * @var array<mixed>
      */
-    private array $jobs;
+    private array $stream = [
+        'ips' => 0,
+        'fnFlows' => [],
+        'dispatchers' => [],
+    ];
 
     /**
-     * @var array<Closure(Ip<T1>, ExceptionInterface): void>
+     * @var Closure(T1): T2
      */
-    private array $errorJobs;
+    private $job;
 
     /**
-     * @var IpStrategyInterface<T1>
+     * @var null|Closure(ExceptionInterface): void
      */
-    private IpStrategyInterface $ipStrategy;
+    private $errorJob;
+
+    private EventDispatcherInterface $dispatcher;
 
     /**
      * @var DriverInterface<T1,T2>
      */
     private DriverInterface $driver;
 
-    private EventDispatcherInterface $dispatcher;
-
     /**
-     * @var SplObjectStorage<Ip<T1>, null|Closure(Ip<T1>): void>
-     */
-    private SplObjectStorage $callbacks;
-
-    /**
-     * @var null|FlowInterface<T2>
-     */
-    private ?FlowInterface $fnFlow = null;
-
-    /**
-     * @param array<Closure(T1): T2>|Closure(T1): T2                                                     $jobs
-     * @param array<Closure(Ip<T1>, ExceptionInterface): void>|Closure(Ip<T1>, ExceptionInterface): void $errorJobs
-     * @param null|IpStrategyInterface<T1>                                                               $ipStrategy
-     * @param null|DriverInterface<T1,T2>                                                                $driver
+     * @param Closure(T1): T2                   $job
+     * @param Closure(ExceptionInterface): void $errorJob
+     * @param null|IpStrategyInterface<T1>      $ipStrategy
+     * @param null|DriverInterface<T1,T2>       $driver
      */
     public function __construct(
-        Closure|array $jobs,
-        Closure|array $errorJobs = null,
-        IpStrategyInterface $ipStrategy = null,
-        DriverInterface $driver = null,
-        EventDispatcherInterface $dispatcher = null,
+        Closure $job,
+        ?Closure $errorJob = null,
+        ?IpStrategyInterface $ipStrategy = null,
+        ?EventDispatcherInterface $dispatcher = null,
+        ?DriverInterface $driver = null,
     ) {
-        $this->jobs = is_array($jobs) ? $jobs : [$jobs];
-        $this->errorJobs = $errorJobs ? (is_array($errorJobs) ? $errorJobs : [$errorJobs]) : [];
-        $this->ipStrategy = $ipStrategy ?? new LinearIpStrategy();
-        $this->driver = $driver ?? new FiberDriver();
+        $this->job = $job;
+        $this->errorJob = $errorJob;
+        $this->stream['fnFlows'][] = [
+            'job' => $this->job,
+            'errorJob' => $this->errorJob,
+        ];
         $this->dispatcher = $dispatcher ?? new EventDispatcher();
-        $this->dispatcher->addSubscriber($this->ipStrategy);
-        $this->callbacks = new SplObjectStorage();
+        $this->dispatcher->addSubscriber($ipStrategy ?? new LinearIpStrategy());
+        $this->stream['dispatchers'][] = $this->dispatcher;
+        $this->driver = $driver ?? new FiberDriver();
     }
 
-    public function __invoke(Ip $ip, Closure $callback = null): void
+    public function __invoke(Ip $ip): void
     {
-        $this->callbacks->offsetSet($ip, $callback);
-        $this->dispatcher->dispatch(new PushEvent($ip), IpStrategyEvent::PUSH);
-        $this->nextIpJob();
+        $this->stream['ips']++;
+        $this->stream['dispatchers'][0]->dispatch(new PushEvent($ip), IpStrategyEvent::PUSH);
     }
 
     public static function do(callable $callable, ?array $config = null): FlowInterface
@@ -126,81 +118,47 @@ class Flow implements FlowInterface
 
     public function fn(array|Closure|FlowInterface $flow): FlowInterface
     {
-        $flow = self::flowUnwrap($flow);
+        $flow = self::flowUnwrap($flow, ['driver' => $this->driver]);
 
-        if ($this->fnFlow) {
-            $this->fnFlow->fn($flow);
-        } else {
-            $this->fnFlow = $flow;
-        }
+        $this->stream['fnFlows'][] = [
+            'job' => $flow->job,
+            'errorJob' => $flow->errorJob,
+        ];
+        $this->stream['dispatchers'][] = $flow->dispatcher;
 
         return $this;
     }
 
-    private function nextIpJob(): void
+    public function await(): void
     {
-        $ip = $this->dispatcher->dispatch(new PullEvent(), IpStrategyEvent::PULL)->getIp();
-        if (!$ip) {
-            return;
-        }
-
-        $callback = $this->callbacks->offsetGet($ip);
-        $this->callbacks->offsetUnset($ip);
-
-        $count = count($this->jobs);
-        foreach ($this->jobs as $i => $job) {
-            $this->driver->async($job, function ($value) use ($ip, &$count, $i, $callback) {
-                $count--;
-                if ($count === 0 || $value instanceof ExceptionInterface) {
-                    $count = 0;
-                    $this->dispatcher->dispatch(new PopEvent($ip), IpStrategyEvent::POP);
-                    $this->nextIpJob();
-
-                    if ($value instanceof ExceptionInterface) {
-                        if (isset($this->errorJobs[$i])) {
-                            $this->errorJobs[$i]($ip, $value);
-                        } else {
-                            throw $value;
-                        }
-                    }
-
-                    if ($this->fnFlow) {
-                        ($this->fnFlow)($ip, $callback);
-                    } else {
-                        ($callback)($ip);
-                    }
-                }
-            })($ip->data);
-        }
+        $this->driver->await($this->stream);
     }
 
     /**
-     * @template TI
+     * @param array<mixed>|Closure|FlowInterface<mixed> $flow
+     * @param ?array<mixed>                             $config
      *
-     * @param array<mixed>|Closure|FlowInterface<TI> $flow
-     * @param ?array<mixed>                          $config
-     *
-     * @return FlowInterface<mixed>
+     * @return Flow<mixed, mixed>
      *
      * #param ?array{
-     *  0: Closure|array,
-     *  1?: Closure|array,
-     *  2?: IpStrategyInterface
-     *  3?: DriverInterface
+     *  0: Closure,
+     *  1?: Closure,
+     *  2?: IpStrategyInterface,
+     *  3?: EventDispatcherInterface,
+     *  4?: DriverInterface
      * }|array{
-     *  "jobs"?: Closure|array,
-     *  "errorJobs"?: Closure|array,
-     *  "ipStrategy"?: IpStrategyInterface
+     *  "ipStrategy"?: IpStrategyInterface,
+     *  "dispatcher"?: EventDispatcherInterface,
      *  "driver"?: DriverInterface
      * } $config
      */
-    private static function flowUnwrap($flow, ?array $config = null): FlowInterface
+    private static function flowUnwrap($flow, ?array $config = null): self
     {
         if ($flow instanceof Closure) {
-            return new self(...[...['jobs' => $flow], ...($config ?? [])]);
+            return new self(...[...['job' => $flow], ...($config ?? [])]);
         }
         if (is_array($flow)) {
-            if (array_key_exists(0, $flow) || array_key_exists('jobs', $flow)) {
+            if (array_key_exists(0, $flow) || array_key_exists('job', $flow)) {
                 return new self(...[...$flow, ...($config ?? [])]);
             }
 

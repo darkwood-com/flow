@@ -14,19 +14,27 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @template T
+ *
+ * @implements IpStrategyInterface<T>
  */
 class MaxIpStrategy implements IpStrategyInterface
 {
+    /**
+     * @var IpStrategyInterface<T>
+     */
     private IpStrategyInterface $ipStrategy;
 
     private EventDispatcherInterface $dispatcher;
 
     private int $processing = 0;
 
+    /**
+     * @param null|IpStrategyInterface<T> $ipStrategy
+     */
     public function __construct(
         private int $max = 1,
         ?IpStrategyInterface $ipStrategy = null,
-        EventDispatcherInterface $dispatcher = null,
+        ?EventDispatcherInterface $dispatcher = null,
     ) {
         $this->ipStrategy = $ipStrategy ?? new LinearIpStrategy();
         $this->dispatcher = $dispatcher ?? new EventDispatcher();
@@ -42,13 +50,16 @@ class MaxIpStrategy implements IpStrategyInterface
         ];
     }
 
+    /**
+     * @param PushEvent<T> $event
+     */
     public function push(PushEvent $event): void
     {
         $this->dispatcher->dispatch($event, IpStrategyEvent::PUSH);
     }
 
     /**
-     * @return PullEvent<T>
+     * @param PullEvent<T> $event
      */
     public function pull(PullEvent $event): void
     {

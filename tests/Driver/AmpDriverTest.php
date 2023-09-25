@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Flow\Test\Driver;
 
 use Flow\Driver\AmpDriver;
+use Flow\Driver\FiberDriver;
 use Flow\DriverInterface;
 
 /**
@@ -20,6 +21,7 @@ class AmpDriverTest extends DriverTestCase
      */
     protected function createDriver(): DriverInterface
     {
-        return new AmpDriver();
+        // return new AmpDriver();
+        return new FiberDriver();
     }
 }

@@ -2,12 +2,13 @@
     "require-dev": {
         "amphp/amp": "^3.0",
         "openswoole/ide-helper": "^22.0",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^10.3",
         "react/async": "^4.1",
+        "spatie/async": "^1.6",
         "symfony/doctrine-messenger": "^6.3",
         "symfony/messenger": "^6.3",
-        "symfony/orm-pack": "^2.4",
-        "phpunit/phpunit": "^10.3",
-        "phpstan/phpstan": "^1.10"
+        "symfony/orm-pack": "^2.4"
     },
     "autoload": {
         "psr-4": {

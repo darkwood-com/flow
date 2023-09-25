@@ -6,13 +6,20 @@ namespace Flow\Driver;
 
 use Closure;
 use Flow\DriverInterface;
+use Flow\Event\PopEvent;
+use Flow\Event\PullEvent;
+use Flow\Event\PushEvent;
 use Flow\Exception\RuntimeException;
+use Flow\Ip;
+use Flow\IpStrategyEvent;
 use Revolt\EventLoop;
+use Revolt\EventLoop\Driver;
 use RuntimeException as NativeRuntimeException;
 use Throwable;
 
 use function Amp\async;
 use function Amp\delay;
+use function array_key_exists;
 use function function_exists;
 
 /**
@@ -23,34 +30,77 @@ use function function_exists;
  */
 class AmpDriver implements DriverInterface
 {
-    /**
-     * @var array<string>
-     */
-    private array $ticksIds = [];
+    private int $ticks = 0;
 
-    public function __construct()
+    public function __construct(?Driver $driver = null)
     {
         if (!function_exists('Amp\\async')) {
             throw new NativeRuntimeException('Amp is not loaded. Suggest install it with composer require amphp/amp');
         }
+
+        if ($driver !== null) {
+            EventLoop::setDriver($driver);
+        }
     }
 
-    public function async(Closure $callback, Closure $onResolve = null): Closure
+    public function async(Closure $callback): Closure
     {
-        return static function (...$args) use ($callback, $onResolve): void {
-            async(static function (Closure $callback, array $args, Closure $onResolve = null) {
+        return static function (...$args) use ($callback) {
+            return async(static function (Closure $callback, array $args) {
                 try {
-                    $return = $callback(...$args, ...($args = []));
-                    if ($onResolve) {
-                        $onResolve($return);
-                    }
+                    return $callback(...$args, ...($args = []));
                 } catch (Throwable $exception) {
-                    if ($onResolve) {
-                        $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
+                    return new RuntimeException($exception->getMessage(), $exception->getCode(), $exception);
+                }
+            }, $callback, $args);
+        };
+    }
+
+    public function await(array &$stream): void
+    {
+        $async = function ($ip, $fnFlows, $index) {
+            $async = $this->async($fnFlows[$index]['job']);
+
+            if ($ip->data === null) {
+                return $async();
+            }
+
+            return $async($ip->data);
+        };
+
+        $loop = function () use (&$loop, &$stream, $async) {
+            $nextIp = null;
+            do {
+                foreach ($stream['dispatchers'] as $index => $dispatcher) {
+                    $nextIp = $dispatcher->dispatch(new PullEvent(), IpStrategyEvent::PULL)->getIp();
+                    if ($nextIp !== null) {
+                        $async($nextIp, $stream['fnFlows'], $index)
+                            ->map(static function ($data) use (&$stream, $index, $nextIp) {
+                                if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
+                                    $stream['fnFlows'][$index]['errorJob']($data);
+                                } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
+                                    $ip = new Ip($data);
+                                    $stream['ips']++;
+                                    $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), IpStrategyEvent::PUSH);
+                                }
+
+                                $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), IpStrategyEvent::POP);
+                                $stream['ips']--;
+                            })
+                        ;
                     }
                 }
-            }, $callback, $args, $onResolve);
+            } while ($nextIp !== null);
+
+            if ($stream['ips'] > 0 or $this->ticks > 0) {
+                EventLoop::defer($loop);
+            } else {
+                EventLoop::getDriver()->stop();
+            }
         };
+        EventLoop::defer($loop);
+
+        EventLoop::run();
     }
 
     public function delay(float $seconds): void
@@ -58,33 +108,14 @@ class AmpDriver implements DriverInterface
         delay($seconds);
     }
 
-    public function tick(int $interval, Closure $callback): Closure
+    public function tick($interval, Closure $callback): Closure
     {
-        $tickId = EventLoop::repeat($interval / 1000, $callback);
+        $this->ticks++;
+        $tickId = EventLoop::repeat($interval, $callback);
 
-        $cancel = function () use ($tickId) {
-            unset($this->ticksIds[$tickId]);
+        return function () use ($tickId) {
             EventLoop::cancel($tickId);
+            $this->ticks--;
         };
-
-        $this->ticksIds[$tickId] = $cancel;
-
-        return $cancel;
-    }
-
-    public function start(): void
-    {
-        if (!EventLoop::getDriver()->isRunning()) {
-            EventLoop::run();
-        }
-    }
-
-    public function stop(): void
-    {
-        foreach ($this->ticksIds as $cancel) {
-            $cancel();
-        }
-
-        EventLoop::getDriver()->stop();
     }
 }

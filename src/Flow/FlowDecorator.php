@@ -19,13 +19,11 @@ abstract class FlowDecorator implements FlowInterface
     /**
      * @param FlowInterface<T1> $flow
      */
-    public function __construct(private FlowInterface $flow)
-    {
-    }
+    public function __construct(private FlowInterface $flow) {}
 
-    public function __invoke(Ip $ip, Closure $callback = null): void
+    public function __invoke(Ip $ip): void
     {
-        ($this->flow)($ip, $callback);
+        ($this->flow)($ip);
     }
 
     public function fn(array|Closure|FlowInterface $flow): FlowInterface
@@ -36,5 +34,10 @@ abstract class FlowDecorator implements FlowInterface
     public static function do(callable $callable, ?array $config = null): FlowInterface
     {
         return Flow::do($callable, $config);
+    }
+
+    public function await(): void
+    {
+        $this->flow->await();
     }
 }

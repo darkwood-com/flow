@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Flow\Test\Flow;
 
 use ArrayObject;
-use Closure;
 use Flow\DriverInterface;
 use Flow\Flow\Flow;
 use Flow\Flow\TransportFlow;
@@ -27,35 +26,36 @@ class TransportFlowTest extends TestCase
      *
      * @param DriverInterface<T1,T2>  $driver
      * @param IpStrategyInterface<T1> $ipStrategy
-     * @param array<Closure>          $jobs
+     * @param array<mixed>            $jobs
      */
     public function testJobs(DriverInterface $driver, IpStrategyInterface $ipStrategy, array $jobs, int $resultNumber): void
     {
-        self::assertTrue(true);
-
-        /*$transport1 = new InMemoryTransport();
-        $transport2 = new InMemoryTransport();
         $flow = array_reduce(
-            array_map(fn ($job) => new Flow($job, static function () {}, $ipStrategy, $driver), $jobs),
-            fn ($flow, $flowIt) => $flow ? $flow->fn($flowIt) : $flowIt
+            array_map(static fn ($job) => new Flow($job, static function () {}, $ipStrategy, null, $driver), $jobs),
+            static fn ($flow, $flowIt) => $flow ? $flow->fn($flowIt) : $flowIt
         );
+        $flow->fn(static function (ArrayObject $data) use ($resultNumber) {
+            self::assertSame(ArrayObject::class, $data::class);
+            self::assertSame($resultNumber, $data['number']);
 
-        new TransportFlow($flow, $transport1, $transport2, $driver);
-
-        $driver->tick(1, static function () use ($driver, $transport2, $resultNumber) {
-            $ips = $transport2->get();
-            foreach ($ips as $ip) {
-                $data = $ip->getMessage();
-                self::assertEquals($resultNumber, $data['number']);
-            }
-
-            $driver->stop();
+            return $data;
         });
 
-        $envelope = new Envelope(new ArrayObject(['number' => 0]));
-        $transport1->send($envelope);
+        $producerTransport = new InMemoryTransport();
+        $consumerTransport = new InMemoryTransport();
+        $transportFlow = new TransportFlow($flow, $producerTransport, $consumerTransport, $driver);
+        $cancel = $transportFlow->pull(1);
 
-        $driver->start();*/
+        $envelope = new Envelope(new ArrayObject(['number' => 0]));
+        $producerTransport->send($envelope);
+
+        $flow->fn(static function (ArrayObject $data) use ($cancel) {
+            $cancel();
+
+            return $data;
+        });
+
+        $flow->await();
     }
 
     /**
@@ -64,25 +64,17 @@ class TransportFlowTest extends TestCase
     public static function provideJobsCases(): iterable
     {
         return self::matrix(static fn (DriverInterface $driver) => [
-            'oneJob' => [[static function (ArrayObject $data): void {
+            'job' => [[static function (ArrayObject $data) {
                 $data['number'] = 1;
+
+                return $data;
             }], 1],
-            'oneAsyncJob' => [[static function (ArrayObject $data) use ($driver): void {
+            'asyncJob' => [[static function (ArrayObject $data) use ($driver) {
                 $driver->delay(1 / 1000);
                 $data['number'] = 5;
+
+                return $data;
             }], 5],
-            'twoJob' => [[static function (ArrayObject $data): void {
-                $data['number'] += 2;
-            }, static function (ArrayObject $data) {
-                $data['number'] *= 3;
-            }], 6],
-            'twoAsyncJob' => [[static function (ArrayObject $data) use ($driver): void {
-                $driver->delay(1 / 1000);
-                $data['number'] += 5;
-            }, static function (ArrayObject $data) use ($driver): void {
-                $driver->delay(1 / 1000);
-                $data['number'] *= 2;
-            }], 10],
         ]);
     }
 }

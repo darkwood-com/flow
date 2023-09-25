@@ -12,6 +12,8 @@ use Flow\IpStrategyInterface;
 
 /**
  * @template T
+ *
+ * @implements IpStrategyInterface<T>
  */
 class LinearIpStrategy implements IpStrategyInterface
 {

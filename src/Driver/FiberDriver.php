@@ -9,8 +9,16 @@ namespace Flow\Driver;
 use Closure;
 use Fiber;
 use Flow\DriverInterface;
+use Flow\Event\PopEvent;
+use Flow\Event\PullEvent;
+use Flow\Event\PushEvent;
 use Flow\Exception\RuntimeException;
+use Flow\Ip;
+use Flow\IpStrategyEvent;
 use Throwable;
+
+use function array_key_exists;
+use function count;
 
 /**
  * @template TArgs
@@ -23,104 +31,113 @@ class FiberDriver implements DriverInterface
     /**
      * @var array<mixed>
      */
-    private array $fibers = [];
+    private array $ticks = [];
 
-    /**
-     * @var array<string>
-     */
-    private array $ticksIds = [];
-
-    private bool $isLooping = false;
-
-    public function async(Closure $callback, Closure $onResolve = null): Closure
+    public function async(Closure $callback): Closure
     {
-        return function (...$args) use ($callback, $onResolve): void {
-            $fiber = new Fiber($callback);
+        return static function () {};
+    }
 
-            $fiberData = [
-                'fiber' => $fiber,
-                'onResolve' => $onResolve,
-                'exception' => null,
-            ];
+    public function await(array &$stream): void
+    {
+        $async = static function ($ip, $fnFlows, $index, $isTick) {
+            $fiber = new Fiber($fnFlows[$index]['job']);
+
+            $exception = null;
 
             try {
-                $fiber->start(...$args);
-            } catch (Throwable $exception) {
-                $fiberData['exception'] = $exception;
+                if ($ip->data === null) {
+                    $fiber->start();
+                } else {
+                    $fiber->start($ip->data);
+                }
+            } catch (Throwable $fiberException) {
+                $exception = $fiberException;
             }
 
-            $this->fibers[] = $fiberData;
+            return [
+                'index' => $index,
+                'fiber' => $fiber,
+                'exception' => $exception,
+                'ip' => $ip,
+                'isTick' => $isTick,
+            ];
         };
+
+        $tick = 0;
+        $fiberDatas = [];
+        while ($stream['ips'] > 0 or count($this->ticks) > 0) {
+            foreach ($this->ticks as [
+                'interval' => $interval,
+                'callback' => $callback,
+            ]) {
+                if ($tick % $interval === 0) {
+                    $ip = new Ip();
+                    $stream['ips']++;
+                    $fiberDatas[] = $async($ip, [['job' => $callback]], 0, true);
+                }
+            }
+
+            $nextIp = null;
+            do {
+                foreach ($stream['dispatchers'] as $index => $dispatcher) {
+                    $nextIp = $dispatcher->dispatch(new PullEvent(), IpStrategyEvent::PULL)->getIp();
+                    if ($nextIp !== null) {
+                        $fiberDatas[] = $async($nextIp, $stream['fnFlows'], $index, false);
+                    }
+                }
+            } while ($nextIp !== null);
+
+            foreach ($fiberDatas as $i => $fiberData) {
+                if (!$fiberData['fiber']->isTerminated() and $fiberData['fiber']->isSuspended()) {
+                    try {
+                        $fiberData['fiber']->resume();
+                    } catch (Throwable $exception) {
+                        $fiberDatas[$i]['exception'] = $exception;
+                    }
+                } else {
+                    if ($fiberData['exception'] === null) {
+                        $data = $fiberData['fiber']->getReturn();
+
+                        if ($fiberData['isTick'] === false and array_key_exists($fiberData['index'] + 1, $stream['fnFlows'])) {
+                            $ip = new Ip($data);
+                            $stream['ips']++;
+                            $stream['dispatchers'][$fiberData['index'] + 1]->dispatch(new PushEvent($ip), IpStrategyEvent::PUSH);
+                            $fiberDatas[] = $async($ip, $stream['fnFlows'], $fiberData['index'] + 1, false);
+                        }
+                    } elseif (array_key_exists($fiberData['index'], $stream['fnFlows']) and $stream['fnFlows'][$fiberData['index']]['errorJob'] !== null) {
+                        $stream['fnFlows'][$fiberData['index']]['errorJob'](
+                            new RuntimeException($fiberData['exception']->getMessage(), $fiberData['exception']->getCode(), $fiberData['exception'])
+                        );
+                    }
+                    $stream['dispatchers'][$fiberData['index']]->dispatch(new PopEvent($fiberData['ip']), IpStrategyEvent::POP);
+                    $stream['ips']--;
+                    unset($fiberDatas[$i]);
+                }
+            }
+
+            $tick++;
+        }
     }
 
     public function delay(float $seconds): void
     {
-        sleep((int) $seconds);
+        $date = time();
+        do {
+            Fiber::suspend();
+        } while (time() - $date < $seconds);
     }
 
-    /**
-     * @param int $interval is hardcoded for now from declare(ticks=1000)
-     */
-    public function tick(int $interval, Closure $callback): Closure
+    public function tick($interval, Closure $callback): Closure
     {
-        $tickId = uniqid('flow_fiber_tick_id');
+        $i = count($this->ticks) - 1;
+        $this->ticks[$i] = [
+            'interval' => $interval,
+            'callback' => $callback,
+        ];
 
-        $closure = static fn () => $callback();
-        register_tick_function($closure);
-
-        $cancel = function () use ($tickId, $closure) {
-            unset($this->ticksIds[$tickId]);
-            unregister_tick_function($closure);
+        return function () use ($i) {
+            unset($this->ticks[$i]);
         };
-
-        $this->ticksIds[$tickId] = $cancel;
-
-        return $cancel;
-    }
-
-    public function start(): void
-    {
-        $this->isLooping = true;
-
-        $isRunning = true;
-
-        while ($this->isLooping || $isRunning) { /** @phpstan-ignore-line */
-            $isRunning = false;
-
-            foreach ($this->fibers as $i => $fiber) {
-                $isRunning = $isRunning || !$fiber['fiber']->isTerminated();
-
-                if (!$fiber['fiber']->isTerminated() and $fiber['fiber']->isSuspended()) {
-                    try {
-                        $fiber['fiber']->resume();
-                    } catch (Throwable $exception) {
-                        $this->fibers[$i]['exception'] = $exception;
-                    }
-                } else {
-                    if ($fiber['onResolve']) {
-                        if ($fiber['exception'] === null) {
-                            $fiber['onResolve']($fiber['fiber']->getReturn());
-                        } else {
-                            $fiber['onResolve'](new RuntimeException($fiber['exception']->getMessage(), $fiber['exception']->getCode(), $fiber['exception']));
-                        }
-                    }
-                    unset($this->fibers[$i]);
-                }
-            }
-
-            if (Fiber::getCurrent()) {
-                Fiber::suspend();
-                usleep(1_000);
-            }
-        }
-    }
-
-    public function stop(): void
-    {
-        foreach ($this->ticksIds as $cancel) {
-            $cancel();
-        }
-
-        $this->isLooping = false;
     }
 }
