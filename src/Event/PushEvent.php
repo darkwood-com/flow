@@ -13,7 +13,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 final class PushEvent extends Event
 {
     /**
-     * @param Ip<T> $ip
+     * @var Ip<T>
      */
     private Ip $ip;
 

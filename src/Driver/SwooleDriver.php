@@ -6,8 +6,12 @@ namespace Flow\Driver;
 
 use Closure;
 use Flow\DriverInterface;
+use Flow\Event\PopEvent;
+use Flow\Event\PullEvent;
+use Flow\Event\PushEvent;
 use Flow\Exception\RuntimeException;
-use OpenSwoole\Coroutine;
+use Flow\Ip;
+use Flow\IpStrategyEvent;
 use OpenSwoole\Timer;
 use RuntimeException as NativeRuntimeException;
 use Throwable;
@@ -22,10 +26,7 @@ use function extension_loaded;
  */
 class SwooleDriver implements DriverInterface
 {
-    /**
-     * @var array<int, callable(): void>
-     */
-    private array $ticksIds = [];
+    private int $ticks = 0;
 
     public function __construct()
     {
@@ -34,54 +35,74 @@ class SwooleDriver implements DriverInterface
         }
     }
 
-    public function async(Closure $callback, Closure $onResolve = null): Closure
+    public function async(Closure $callback): Closure
     {
-        return static function (...$args) use ($callback, $onResolve): void {
-            Coroutine::run(static function () use ($callback, $onResolve, $args) {
-                Coroutine::create(static function (Closure $callback, array $args, Closure $onResolve = null) {
-                    try {
-                        $return = $callback(...$args, ...($args = []));
-                        if ($onResolve) {
-                            $onResolve($return);
-                        }
-                    } catch (Throwable $exception) {
-                        if ($onResolve) {
-                            $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
-                        }
-                    }
-                }, $callback, $args, $onResolve);
-            });
+        return static function ($onResolve) use ($callback) {
+			return function(...$args) use ($onResolve, $callback) {
+				\go(static function () use ($args, $callback, $onResolve) {
+					try {
+						$return = $callback(...$args, ...($args = []));
+						$onResolve($return);
+					} catch (Throwable $exception) {
+						$onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
+					}
+				});
+			};
         };
     }
 
-    public function delay(float $seconds): void
+    public function await(array &$stream): void
     {
-        Coroutine::sleep((int) $seconds);
-        // Coroutine::usleep((int) $seconds * 1000);
-    }
+		$async = function ($ip, $fnFlows, $index, $onResolve) {
+            $async = $this->async($fnFlows[$index]['job']);
 
-    public function tick(int $interval, Closure $callback): Closure
-    {
-        $tickId = Timer::tick($interval, $callback);
+            if ($ip->data === null) {
+                return $async($onResolve)();
+            }
 
-        $cancel = function () use ($tickId) {
-            unset($this->ticksIds[$tickId]);
-            Timer::clear($tickId); // @phpstan-ignore-line
+            return $async($onResolve)($ip->data);
         };
 
-        $this->ticksIds[$tickId] = $cancel;
+		\co::run(function() use (&$stream, $async)
+		{
+			while ($stream['ips'] > 0 or $this->ticks > 0) {
+				do {
+					foreach ($stream['dispatchers'] as $index => $dispatcher) {
+						$nextIp = $dispatcher->dispatch(new PullEvent(), IpStrategyEvent::PULL)->getIp();
+						if ($nextIp !== null) {
+							$async($nextIp, $stream['fnFlows'], $index, static function ($data) use (&$stream, $index, $nextIp) {
+								if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
+									$stream['fnFlows'][$index]['errorJob']($data);
+								} elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
+									$ip = new Ip($data);
+									$stream['ips']++;
+									$stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), IpStrategyEvent::PUSH);
+								}
 
-        return $cancel;
+								$stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), IpStrategyEvent::POP);
+								$stream['ips']--;
+							});
+						}
+					}
+					\Co::sleep(1);
+				} while ($nextIp !== null);
+			}
+		});
     }
 
-    public function start(): void
+	public function delay(float $seconds): void
     {
+        \Co::sleep((int) $seconds);
     }
 
-    public function stop(): void
+    public function tick($interval, Closure $callback): Closure
     {
-        foreach ($this->ticksIds as $cancel) {
-            $cancel();
-        }
+        $this->ticks++;
+        $tickId = Timer::tick((int) $interval, $callback);
+
+        return function () use ($tickId) {
+            Timer::clear($tickId);
+            $this->ticks--;
+        };
     }
 }

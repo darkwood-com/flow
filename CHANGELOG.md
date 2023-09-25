@@ -1,8 +1,9 @@
 # Changelog
 
-## v1.1.6
+## v1.2.0
 
 - Add event system for processing IpStrategy
+- Remove `start` and `stop` in favor of `await` for Flow\DriverInterface
 
 ## v1.1.5
 
@@ -18,7 +19,6 @@
 ## v1.1.4
 
 - Add generic templating
-- Add Flow\Driver\RevoltDriver
 - Add Flow\Driver\SpatieDriver
 - Add more quality tools from https://github.com/IngeniozIT/php-skeleton
 

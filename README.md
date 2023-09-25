@@ -14,7 +14,7 @@ Flow concept aims to solve
 
 ## Installation
 
-PHP 8.2 is the minimal version to use Flow  
+PHP 8.2 is the minimal version to use Flow
 The recommended way to install it through [Composer](http://getcomposer.org) and execute
 
 ```bash
@@ -37,13 +37,17 @@ class D2 {
     public function __construct(public int $n2) {}
 }
 
+class D3 {
+    public function __construct(public int $n3) {}
+}
+
 $flow = Flow::do(static function() {
     yield fn (D1 $data1) => new D2($data1->n1 += 1);
-    yield fn (D2 $data2) => $data2->n2 * 2;
+    yield fn (D2 $data2) => new D3($data2->n2 * 2);
 });
 
 $ip = new Ip(new D1(4));
-$flow($ip, fn ($ip) => printf("my number %d\n", $ip->data->n2)); // display 'my number 10'
+$flow($ip, fn ($ip) => printf("my number %d\n", $ip->data->n3)); // display 'my number 10'
 ```
 
 ## Examples
@@ -51,7 +55,7 @@ $flow($ip, fn ($ip) => printf("my number %d\n", $ip->data->n2)); // display 'my 
 A working script is available in the bundled `examples` directory
 
 - Run Flow : `php examples/flow.php`
-- Start Server : `php examples/server.php`  
+- Start Server : `php examples/server.php`
   Start Client(s) : `php examples/client.php`
 
 ## Documentation

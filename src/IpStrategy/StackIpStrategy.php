@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Flow\IpStrategy;
 
 use Flow\Event\PullEvent;
+use Flow\Event\PushEvent;
 use Flow\Ip;
 use Flow\IpStrategyEvent;
 use Flow\IpStrategyInterface;
@@ -27,9 +28,9 @@ class StackIpStrategy implements IpStrategyInterface
         ];
     }
 
-    public function push(Ip $ip): void
+    public function push(PushEvent $event): void
     {
-        $this->ips[] = $ip;
+        $this->ips[] = $event->getIp();
     }
 
     /**
