@@ -23,21 +23,18 @@ abstract class FlowDecorator implements FlowInterface
     {
     }
 
-    /**
-     * @param Ip<T1> $ip
-     */
     public function __invoke(Ip $ip, Closure $callback = null): void
     {
         ($this->flow)($ip, $callback);
     }
 
-    /**
-     * @param FlowInterface<T2> $flow
-     *
-     * @return FlowInterface<T1>
-     */
-    public function fn(FlowInterface $flow): FlowInterface
+    public function fn(array|Closure|FlowInterface $flow): FlowInterface
     {
         return $this->flow->fn($flow);
+    }
+
+    public static function do(callable $callable, ?array $config = null): FlowInterface
+    {
+        return Flow::do($callable, $config);
     }
 }

@@ -7,13 +7,16 @@ namespace Flow\Flow;
 use Closure;
 use Flow\Driver\FiberDriver;
 use Flow\DriverInterface;
+use Flow\Exception\LogicException;
 use Flow\ExceptionInterface;
 use Flow\FlowInterface;
 use Flow\Ip;
 use Flow\IpStrategy\LinearIpStrategy;
 use Flow\IpStrategyInterface;
+use Generator;
 use SplObjectStorage;
 
+use function array_key_exists;
 use function count;
 use function is_array;
 
@@ -81,13 +84,39 @@ class Flow implements FlowInterface
         $this->nextIpJob();
     }
 
-    /**
-     * @param FlowInterface<T2> $flow
-     *
-     * @return FlowInterface<T1>
-     */
-    public function fn(FlowInterface $flow): FlowInterface
+    public static function do(callable $callable, ?array $config = null): FlowInterface
     {
+        /**
+         * @var Closure|Generator $generator
+         */
+        $generator = $callable();
+
+        if ($generator instanceof Generator) {
+            $flows = [];
+
+            while ($generator->valid()) {
+                $flow = self::flowUnwrap($generator->current(), $config);
+
+                $generator->send($flow);
+
+                $flows[] = $flow;
+            }
+
+            $return = $generator->getReturn();
+            if (!empty($return)) {
+                $flows[] = self::flowUnwrap($return, $config);
+            }
+
+            return self::flowMap($flows);
+        }
+
+        return self::flowUnwrap($generator, $config);
+    }
+
+    public function fn(array|Closure|FlowInterface $flow): FlowInterface
+    {
+        $flow = self::flowUnwrap($flow);
+
         if ($this->fnFlow) {
             $this->fnFlow->fn($flow);
         } else {
@@ -132,5 +161,60 @@ class Flow implements FlowInterface
                 }
             })($ip->data);
         }
+    }
+
+    /**
+     * @template TI
+     *
+     * @param array<mixed>|Closure|FlowInterface<TI> $flow
+     * @param ?array<mixed>                          $config
+     *
+     * @return FlowInterface<mixed>
+     *
+     * #param ?array{
+     *  0: Closure|array,
+     *  1?: Closure|array,
+     *  2?: IpStrategyInterface
+     *  3?: DriverInterface
+     * }|array{
+     *  "jobs"?: Closure|array,
+     *  "errorJobs"?: Closure|array,
+     *  "ipStrategy"?: IpStrategyInterface
+     *  "driver"?: DriverInterface
+     * } $config
+     */
+    private static function flowUnwrap($flow, ?array $config = null): FlowInterface
+    {
+        if ($flow instanceof Closure) {
+            return new self(...[...['jobs' => $flow], ...($config ?? [])]);
+        }
+        if (is_array($flow)) {
+            if (array_key_exists(0, $flow) || array_key_exists('jobs', $flow)) {
+                return new self(...[...$flow, ...($config ?? [])]);
+            }
+
+            return self::flowMap($flow);
+        }
+
+        return $flow;
+    }
+
+    /**
+     * @param array<FlowInterface<mixed>> $flows
+     *
+     * @return FlowInterface<mixed>
+     */
+    private static function flowMap(array $flows)
+    {
+        $flow = array_shift($flows);
+        if (null === $flow) {
+            throw new LogicException('Flow is empty');
+        }
+
+        foreach ($flows as $flowIt) {
+            $flow = $flow->fn($flowIt);
+        }
+
+        return $flow;
     }
 }
