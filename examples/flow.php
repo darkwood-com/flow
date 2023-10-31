@@ -29,7 +29,7 @@ printf("Use %s\n", $driver::class);
 $job1 = static function (Data $data) use ($driver): void {
     printf("*. #%d - Job 1 : Calculating %d + %d\n", $data->id, $data->number, $data->number);
 
-    // simulating calculating some "light" operation from 0.1 to 1 seconds
+    // simulating calculating some "light" operation from 1 to 3 seconds
     $delay = random_int(1, 3);
     $driver->delay($delay);
     $result = $data->number;
@@ -48,8 +48,8 @@ $job1 = static function (Data $data) use ($driver): void {
 $job2 = static function (Data $data) use ($driver): void {
     printf(".* #%d - Job 2 : Calculating %d * %d\n", $data->id, $data->number, $data->number);
 
-    // simulating calculating some "heavy" operation from from 1 to 3 seconds
-    $delay = random_int(1, 3);
+    // simulating calculating some "heavy" operation from from 1 to 5 seconds
+    $delay = random_int(1, 5);
     $driver->delay($delay);
     $result = $data->number;
     $result *= $result;
