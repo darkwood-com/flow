@@ -158,7 +158,7 @@ class Flow implements FlowInterface
      *  "driver"?: DriverInterface
      * } $config
      */
-    private static function flowUnwrap($flow, ?array $config = null): self
+    private static function flowUnwrap($flow, ?array $config = null): FlowInterface
     {
         if ($flow instanceof Closure) {
             return new self(...[...['job' => $flow], ...($config ?? [])]);

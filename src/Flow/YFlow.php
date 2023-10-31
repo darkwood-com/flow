@@ -15,20 +15,26 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @template T1
  * @template T2
  *
- * @extends FlowDecorator<T1,T2>
+ * @extends Flow<T1,T2>
  */
-class YFlow extends FlowDecorator
+class YFlow extends Flow
 {
     /**
      * @param null|Closure(ExceptionInterface): void $errorJob
      * @param null|IpStrategyInterface<T1>           $ipStrategy
      * @param null|DriverInterface<T1,T2>            $driver
      */
-    public function __construct(Closure $job, ?Closure $errorJob = null, ?IpStrategyInterface $ipStrategy = null, ?EventDispatcherInterface $dispatcher = null, ?AsyncHandlerInterface $asyncHandler = null, ?DriverInterface $driver = null)
-    {
+    public function __construct(
+        Closure $job,
+        ?Closure $errorJob = null,
+        ?IpStrategyInterface $ipStrategy = null,
+        ?EventDispatcherInterface $dispatcher = null,
+        ?AsyncHandlerInterface $asyncHandler = null,
+        ?DriverInterface $driver = null
+    ) {
         $U = static fn (Closure $f) => $f($f);
         $Y = static fn (Closure $f) => $U(static fn (Closure $x) => $f(static fn ($y) => $U($x)($y)));
 
-        parent::__construct(new Flow($Y($job), $errorJob, $ipStrategy, $dispatcher, $asyncHandler, $driver));
+        parent::__construct($Y($job), $errorJob, $ipStrategy, $dispatcher, $asyncHandler, $driver);
     }
 }

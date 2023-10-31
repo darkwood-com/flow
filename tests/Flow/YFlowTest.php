@@ -28,19 +28,16 @@ class YFlowTest extends TestCase
      */
     public function testJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, Closure $job, int $resultNumber): void
     {
-        self::assertTrue(true);
-
-        /*$ip = new Ip(new ArrayObject(['number' => 6]));
+        $ip = new Ip(new ArrayObject(['number' => 6]));
         $errorJob = static function () {};
-        $yFlow = new YFlow($job, $errorJob, $ipStrategy, $driver);
-        ($yFlow)($ip, static function (Ip $ip) use ($driver, $resultNumber) {
-            $driver->stop();
+        $yFlow = (new YFlow($job, $errorJob, $ipStrategy, null, null, $driver))
+            ->fn(static function (ArrayObject $data) use ($resultNumber) {
+                self::assertSame($resultNumber, $data['number']);
+            })
+        ;
+        $yFlow($ip);
 
-            self::assertSame(ArrayObject::class, $ip->data::class);
-            self::assertSame($resultNumber, $ip->data['number']);
-        });
-
-        $driver->start();*/
+        $yFlow->await();
     }
 
     /**
@@ -49,15 +46,11 @@ class YFlowTest extends TestCase
     public static function provideJobCases(): iterable
     {
         return self::matrix(static fn () => [
-            'job' => [static function (callable $function): Closure {
-                return static function (ArrayObject $data) use ($function) {
-                    if ($data['number'] > 1) {
-                        $calcData = new ArrayObject(['number' => $data['number'] - 1]);
-                        $function($calcData);
-                        $data['number'] *= $calcData['number'];
-                    } else {
-                        $data['number'] = 1;
-                    }
+            'job' => [static function (callable $factorial): Closure {
+                return static function (ArrayObject $data) use ($factorial) {
+                    return new ArrayObject([
+                        'number' => ($data['number'] <= 1) ? 1 : $data['number'] * $factorial(new ArrayObject(['number' => $data['number'] - 1]))['number'],
+                    ]);
                 };
             }, 720],
         ]);
