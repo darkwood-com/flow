@@ -21,7 +21,8 @@
         "php"
     ],
     "require": {
-        "php": ">=8.2"
+        "php": ">=8.2",
+        "symfony/event-dispatcher": "^6.3"
     },
     "require-dev": {
         "amphp/amp": "^3.0",

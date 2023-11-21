@@ -4,62 +4,70 @@ declare(strict_types=1);
 
 namespace Flow\IpStrategy;
 
-use Flow\Ip;
+use Flow\Event\PopEvent;
+use Flow\Event\PullEvent;
+use Flow\Event\PushEvent;
+use Flow\IpStrategyEvent;
 use Flow\IpStrategyInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @template T
- *
- * @implements IpStrategyInterface<T>
  */
 class MaxIpStrategy implements IpStrategyInterface
 {
-    /**
-     * @var IpStrategyInterface<T>
-     */
     private IpStrategyInterface $ipStrategy;
+
+    private EventDispatcherInterface $dispatcher;
 
     private int $processing = 0;
 
-    /**
-     * @param null|IpStrategyInterface<T> $ipStrategy
-     */
-    public function __construct(private int $max = 1, IpStrategyInterface $ipStrategy = null)
-    {
+    public function __construct(
+        private int $max = 1,
+        ?IpStrategyInterface $ipStrategy = null,
+        EventDispatcherInterface $dispatcher = null,
+    ) {
         $this->ipStrategy = $ipStrategy ?? new LinearIpStrategy();
+        $this->dispatcher = $dispatcher ?? new EventDispatcher();
+        $this->dispatcher->addSubscriber($this->ipStrategy);
     }
 
-    /**
-     * @param Ip<T> $ip
-     */
-    public function push(Ip $ip): void
+    public static function getSubscribedEvents()
     {
-        $this->ipStrategy->push($ip);
+        return [
+            IpStrategyEvent::PUSH => 'push',
+            IpStrategyEvent::PULL => 'pull',
+            IpStrategyEvent::POP => 'pop',
+        ];
+    }
+
+    public function push(PushEvent $event): void
+    {
+        $this->dispatcher->dispatch($event, IpStrategyEvent::PUSH);
     }
 
     /**
-     * @return null|Ip<T>
+     * @return PullEvent<T>
      */
-    public function pop(): ?Ip
+    public function pull(PullEvent $event): void
     {
         if ($this->processing < $this->max) {
-            $ip = $this->ipStrategy->pop();
+            $ip = $this->dispatcher->dispatch($event, IpStrategyEvent::PULL)->getIp();
             if ($ip) {
                 $this->processing++;
             }
 
-            return $ip;
+            $event->setIp($ip);
         }
-
-        return null;
     }
 
     /**
-     * @param Ip<T> $ip
+     * @param PopEvent<T> $event
      */
-    public function done(Ip $ip): void
+    public function pop(PopEvent $event): void
     {
-        $this->ipStrategy->done($ip);
+        $this->dispatcher->dispatch($event, IpStrategyEvent::POP);
         $this->processing--;
     }
 }

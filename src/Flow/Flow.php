@@ -7,14 +7,20 @@ namespace Flow\Flow;
 use Closure;
 use Flow\Driver\FiberDriver;
 use Flow\DriverInterface;
+use Flow\Event\PopEvent;
+use Flow\Event\PullEvent;
+use Flow\Event\PushEvent;
 use Flow\Exception\LogicException;
 use Flow\ExceptionInterface;
 use Flow\FlowInterface;
 use Flow\Ip;
 use Flow\IpStrategy\LinearIpStrategy;
+use Flow\IpStrategyEvent;
 use Flow\IpStrategyInterface;
 use Generator;
 use SplObjectStorage;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 use function array_key_exists;
 use function count;
@@ -48,6 +54,8 @@ class Flow implements FlowInterface
      */
     private DriverInterface $driver;
 
+    private EventDispatcherInterface $dispatcher;
+
     /**
      * @var SplObjectStorage<Ip<T1>, null|Closure(Ip<T1>): void>
      */
@@ -68,19 +76,22 @@ class Flow implements FlowInterface
         Closure|array $jobs,
         Closure|array $errorJobs = null,
         IpStrategyInterface $ipStrategy = null,
-        DriverInterface $driver = null
+        DriverInterface $driver = null,
+        EventDispatcherInterface $dispatcher = null,
     ) {
         $this->jobs = is_array($jobs) ? $jobs : [$jobs];
         $this->errorJobs = $errorJobs ? (is_array($errorJobs) ? $errorJobs : [$errorJobs]) : [];
         $this->ipStrategy = $ipStrategy ?? new LinearIpStrategy();
         $this->driver = $driver ?? new FiberDriver();
+        $this->dispatcher = $dispatcher ?? new EventDispatcher();
+        $this->dispatcher->addSubscriber($this->ipStrategy);
         $this->callbacks = new SplObjectStorage();
     }
 
     public function __invoke(Ip $ip, Closure $callback = null): void
     {
         $this->callbacks->offsetSet($ip, $callback);
-        $this->ipStrategy->push($ip);
+        $this->dispatcher->dispatch(new PushEvent($ip), IpStrategyEvent::PUSH);
         $this->nextIpJob();
     }
 
@@ -128,7 +139,7 @@ class Flow implements FlowInterface
 
     private function nextIpJob(): void
     {
-        $ip = $this->ipStrategy->pop();
+        $ip = $this->dispatcher->dispatch(new PullEvent(), IpStrategyEvent::PULL)->getIp();
         if (!$ip) {
             return;
         }
@@ -142,7 +153,7 @@ class Flow implements FlowInterface
                 $count--;
                 if ($count === 0 || $value instanceof ExceptionInterface) {
                     $count = 0;
-                    $this->ipStrategy->done($ip);
+                    $this->dispatcher->dispatch(new PopEvent($ip), IpStrategyEvent::POP);
                     $this->nextIpJob();
 
                     if ($value instanceof ExceptionInterface) {
