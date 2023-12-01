@@ -8,6 +8,7 @@
     - array : constructor arguments for Flow instanciation
     - array (view as shape) : configuration for Flow instanciation
     - FlowInterface : the FlowInterface instance itself
+- Update to Symfony 7.0
 
 ## v1.1.4
 

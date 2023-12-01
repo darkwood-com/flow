@@ -25,12 +25,12 @@
     },
     "require-dev": {
         "amphp/amp": "^3.0",
-        "openswoole/ide-helper": "^22.0",
-        "react/async": "^4.1",
-        "symfony/doctrine-messenger": "^6.3",
-        "symfony/messenger": "^6.3",
+        "openswoole/ide-helper": "^22.0.1",
+        "react/async": "^4.2",
+        "symfony/doctrine-messenger": "^7.0",
+        "symfony/messenger": "^7.0",
         "symfony/orm-pack": "^2.4",
-        "revolt/event-loop": "^1.0",
+        "revolt/event-loop": "^1.0.6",
         "spatie/async": "^1.6"
     },
     "suggest": {
