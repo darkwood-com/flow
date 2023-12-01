@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.1.x
+## v1.1.5
 
 - Add Flow\FlowInterface::do notation from https://github.com/fp4php/functional
 - Update Flow\FlowInterface::fn to accept as first argument
