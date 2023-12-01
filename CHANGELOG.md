@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.1.5
+
+- Add Flow\FlowInterface::do notation from https://github.com/fp4php/functional
+- Update Flow\FlowInterface::fn to accept as first argument
+    - Closure : it's the job itself
+    - array : constructor arguments for Flow instanciation
+    - array (view as shape) : configuration for Flow instanciation
+    - FlowInterface : the FlowInterface instance itself
+- Update to Symfony 7.0
+
 ## v1.1.4
 
 - Add generic templating

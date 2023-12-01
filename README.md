@@ -29,11 +29,21 @@ composer require darkwood/flow
 use Flow\Flow\Flow;
 use Flow\Ip;
 
-$flow = (new Flow(fn (object $data) => $data['number'] += 1))
-    ->fn(new Flow(fn (object $data) => $data['number'] *= 2));
+class D1 {
+    public function __construct(public int $n1) {}
+}
 
-$ip = new Ip(new ArrayObject(['number' => 4]));
-$flow($ip, fn ($ip) => printf("my number %d\n", $ip->data['number'])); // display 'my number 10'
+class D2 {
+    public function __construct(public int $n2) {}
+}
+
+$flow = Flow::do(static function() {
+    yield fn (D1 $data1) => new D2($data1->n1 += 1);
+    yield fn (D2 $data2) => $data2->n2 * 2;
+});
+
+$ip = new Ip(new D1(4));
+$flow($ip, fn ($ip) => printf("my number %d\n", $ip->data->n2)); // display 'my number 10'
 ```
 
 ## Examples

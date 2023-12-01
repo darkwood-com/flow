@@ -82,9 +82,10 @@ $errorJob2 = static function (Ip $ip, ExceptionInterface $exception): void {
     $ip->data->number = null;
 };
 
-$flow = (new Flow($job1, $errorJob1, new MaxIpStrategy(2), $driver))
-    ->fn(new Flow($job2, $errorJob2, new MaxIpStrategy(2), $driver))
-;
+$flow = Flow::do(static function () use ($job1, $job2, $errorJob1, $errorJob2) {
+    yield [$job1, $errorJob1, new MaxIpStrategy(2)];
+    yield [$job2, $errorJob2, new MaxIpStrategy(2)];
+}, ['driver' => $driver]);
 
 $ipPool = new SplObjectStorage();
 
