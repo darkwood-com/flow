@@ -37,4 +37,9 @@ abstract class FlowDecorator implements FlowInterface
     {
         return Flow::do($callable, $config);
     }
+
+    public function await(): void
+    {
+        $this->flow->await();
+    }
 }

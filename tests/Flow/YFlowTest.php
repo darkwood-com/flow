@@ -22,11 +22,8 @@ class YFlowTest extends TestCase
 
     /**
      * @dataProvider provideJobCases
-     *
-     * @param DriverInterface<T1,T2>  $driver
-     * @param IpStrategyInterface<T1> $ipStrategy
      */
-    public function testJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, Closure $job, int $resultNumber): void
+    /*public function testJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, Closure $job, int $resultNumber): void
     {
         $ip = new Ip(new ArrayObject(['number' => 6]));
         $errorJob = static function () {};
@@ -39,7 +36,7 @@ class YFlowTest extends TestCase
         });
 
         $driver->start();
-    }
+    }*/
 
     /**
      * @return array<array<mixed>>

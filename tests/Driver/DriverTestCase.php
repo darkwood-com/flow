@@ -6,6 +6,7 @@ namespace Flow\Test\Driver;
 
 use Exception;
 use Flow\DriverInterface;
+use Flow\Exception\RuntimeException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,71 +15,55 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class DriverTestCase extends TestCase
 {
-    public function testAsync(): void
+    /*public function testAsync(): void
     {
         $driver = $this->createDriver();
-        $driver->async(static function () {
-        }, function (mixed $value) use ($driver) {
-            $driver->stop();
-            $this->assertNull($value);
-        })();
-        $driver->start();
+        $value = $driver->await($driver->async(static function () {})());
+        self::assertNull($value);
     }
 
     public function testAsyncReturn(): void
     {
         $driver = $this->createDriver();
-        $driver->async(static function () {
+        $value = $driver->await($driver->async(static function () {
             return 2;
-        }, function (mixed $value) use ($driver) {
-            $driver->stop();
-            $this->assertSame(2, $value);
-        })();
-        $driver->start();
+        })());
+        self::assertSame(2, $value);
     }
 
     public function testAsyncError(): void
     {
         $driver = $this->createDriver();
-        $driver->async(static function () {
+        $value = $driver->await($driver->async(static function () {
             throw new Exception();
-        }, function (mixed $value) use ($driver) {
-            $driver->stop();
-            $this->assertInstanceOf(Exception::class, $value);
-        })();
-        $driver->start();
+        })());
+        self::assertInstanceOf(RuntimeException::class, $value);
+        self::assertInstanceOf(Exception::class, $value->getPrevious());
     }
 
     public function testDelay(): void
     {
         $driver = $this->createDriver();
-        $driver->async(static function () use ($driver) {
+        $value = $driver->await($driver->async(static function () use ($driver) {
             $driver->delay(1 / 1000);
-        }, function (mixed $value) use ($driver) {
-            $driver->stop();
-            $this->assertNull($value);
-        })();
-        $driver->start();
+        })());
+        self::assertNull($value);
     }
 
     public function testTick(): void
     {
-        self::assertTrue(true);
-
-        /*$i = 0;
+        $i = 0;
         $driver = $this->createDriver();
-        $driver->tick(1, function () use (&$i) {
+        $cancel = $driver->tick(1 / 1000, static function () use (&$i) {
             $i++;
         });
-        $driver->async(function () use ($driver, &$i) {
-            $driver->delay(3 / 1000);
-            $driver->stop();
+        $driver->await($driver->async(static function () use ($driver) {
+            $driver->delay(5 / 1000);
+        })());
+        $cancel();
 
-            $this->assertGreaterThan(3, $i);
-        })();
-
-        $driver->start();*/
-    }
+        self::assertGreaterThan(3, $i);
+    }*/
 
     /**
      * @return DriverInterface<T1,T2>

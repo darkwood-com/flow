@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.2.0
+
+- Add event system for processing IpStrategy
+- Remove `start` and `stop` in favor of `await` for Flow\DriverInterface
+
 ## v1.1.5
 
 - Add Flow\FlowInterface::do notation from https://github.com/fp4php/functional
@@ -8,12 +13,12 @@
     - array : constructor arguments for Flow instanciation
     - array (view as shape) : configuration for Flow instanciation
     - FlowInterface : the FlowInterface instance itself
+    - array : map of all possible above choices
 - Update to Symfony 7.0
 
 ## v1.1.4
 
 - Add generic templating
-- Add Flow\Driver\RevoltDriver
 - Add Flow\Driver\SpatieDriver
 - Add more quality tools from https://github.com/IngeniozIT/php-skeleton
 
