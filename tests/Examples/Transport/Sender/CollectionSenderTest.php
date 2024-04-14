@@ -21,9 +21,7 @@ class CollectionSenderTest extends TestCase
                 /**
                  * @param ArrayObject<string, int> $counter
                  */
-                public function __construct(private ArrayObject $counter)
-                {
-                }
+                public function __construct(private ArrayObject $counter) {}
 
                 public function send(Envelope $envelope): Envelope
                 {

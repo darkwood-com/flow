@@ -20,9 +20,7 @@ class CollectionReceiver implements ReceiverInterface
     /**
      * @param iterable<ReceiverInterface> $receivers
      */
-    public function __construct(private iterable $receivers)
-    {
-    }
+    public function __construct(private iterable $receivers) {}
 
     public function get(): iterable
     {

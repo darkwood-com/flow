@@ -15,9 +15,7 @@ class CollectionSender implements SenderInterface
     /**
      * @param iterable<SenderInterface> $senders
      */
-    public function __construct(private iterable $senders)
-    {
-    }
+    public function __construct(private iterable $senders) {}
 
     public function send(Envelope $envelope): Envelope
     {

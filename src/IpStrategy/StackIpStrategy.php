@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Flow\IpStrategy;
 
+use Flow\Event\PullEvent;
+use Flow\Event\PushEvent;
 use Flow\Ip;
+use Flow\IpStrategyEvent;
 use Flow\IpStrategyInterface;
 
 /**
@@ -19,26 +22,27 @@ class StackIpStrategy implements IpStrategyInterface
      */
     private array $ips = [];
 
-    /**
-     * @param Ip<T> $ip
-     */
-    public function push(Ip $ip): void
+    public static function getSubscribedEvents()
     {
-        $this->ips[] = $ip;
+        return [
+            IpStrategyEvent::PUSH => 'push',
+            IpStrategyEvent::PULL => 'pull',
+        ];
     }
 
     /**
-     * @return null|Ip<T> $ip
+     * @param PushEvent<T> $event
      */
-    public function pop(): ?Ip
+    public function push(PushEvent $event): void
     {
-        return array_pop($this->ips);
+        $this->ips[] = $event->getIp();
     }
 
     /**
-     * @param Ip<T> $ip
+     * @param PullEvent<T> $event
      */
-    public function done(Ip $ip): void
+    public function pull(PullEvent $event): void
     {
+        $event->setIp(array_pop($this->ips));
     }
 }

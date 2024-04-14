@@ -1,8 +1,10 @@
 <?php
 
 declare(strict_types=1);
+use PhpCsFixer\Config;
+use PhpCsFixer\Finder;
 
-$finder = PhpCsFixer\Finder::create()
+$finder = Finder::create()
     ->ignoreVCSIgnored(true)
     ->ignoreDotFiles(false)
     ->in(dirname(__DIR__, 2))
@@ -12,7 +14,7 @@ $finder = PhpCsFixer\Finder::create()
     ->notPath('.castor.stub.php')
 ;
 
-return (new PhpCsFixer\Config())
+return (new Config())
     ->setRiskyAllowed(true)
     ->setRules([
         '@PSR12' => true,

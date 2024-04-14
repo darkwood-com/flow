@@ -111,9 +111,7 @@ class CollectionReceiverTest extends TestCase
                  * @param array<mixed, ReceiverInterface> $expectedAckIpsReceivers
                  * @param array<mixed, ReceiverInterface> $expectedRejectIpsReceivers
                  */
-                public function __construct(private $envelopes, private $expectedAckIpsReceivers, private $expectedRejectIpsReceivers)
-                {
-                }
+                public function __construct(private $envelopes, private $expectedAckIpsReceivers, private $expectedRejectIpsReceivers) {}
 
                 public function get(): iterable
                 {

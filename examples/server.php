@@ -8,7 +8,6 @@ use Doctrine\DBAL\DriverManager;
 use Flow\Driver\AmpDriver;
 use Flow\Driver\FiberDriver;
 use Flow\Driver\ReactDriver;
-use Flow\Driver\RevoltDriver;
 use Flow\Driver\SpatieDriver;
 use Flow\Driver\SwooleDriver;
 use Flow\Examples\Transport\DoctrineIpTransport;
@@ -17,13 +16,12 @@ use Flow\Flow\TransportFlow;
 use Flow\Ip;
 use Flow\IpStrategy\MaxIpStrategy;
 
-$driver = match (random_int(1, 6)) {
+$driver = match (random_int(1, 4)) {
     1 => new AmpDriver(),
     2 => new FiberDriver(),
     3 => new ReactDriver(),
-    4 => new RevoltDriver(),
-    5 => new SpatieDriver(),
-    6 => new SwooleDriver(),
+    4 => new SwooleDriver(),
+    // 5 => new SpatieDriver(),
 };
 printf("Use %s\n", $driver::class);
 
@@ -67,10 +65,11 @@ $errorJob = static function (Ip $ip, Throwable $exception): void {
     $ip->data->offsetSet('number', null);
 };
 
-$flow = (new Flow($addOneJob, $errorJob, new MaxIpStrategy(1), $driver))
-    ->fn(new Flow($multbyTwoJob, $errorJob, new MaxIpStrategy(3), $driver))
-    ->fn(new Flow($minusThreeJob, $errorJob, new MaxIpStrategy(2), $driver))
-;
+$flow = Flow::do(static function () use ($addOneJob, $multbyTwoJob, $minusThreeJob, $errorJob) {
+    yield [$addOneJob, $errorJob, new MaxIpStrategy(1)];
+    yield [$multbyTwoJob, $errorJob, new MaxIpStrategy(3)];
+    yield [$minusThreeJob, $errorJob, new MaxIpStrategy(2)];
+}, ['driver' => $driver]);
 
 $connection = DriverManager::getConnection(['url' => 'mysql://flow:flow@127.0.0.1:3306/flow?serverVersion=8.1']);
 $transport = new DoctrineIpTransport($connection);

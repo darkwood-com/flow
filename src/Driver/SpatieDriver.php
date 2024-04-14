@@ -8,10 +8,17 @@ namespace Flow\Driver;
 
 use Closure;
 use Flow\DriverInterface;
+use Flow\Event\PopEvent;
+use Flow\Event\PullEvent;
+use Flow\Event\PushEvent;
 use Flow\Exception\RuntimeException;
+use Flow\Ip;
+use Flow\IpStrategyEvent;
 use RuntimeException as NativeRuntimeException;
 use Spatie\Async\Pool;
 use Throwable;
+
+use function array_key_exists;
 
 /**
  * @template TArgs
@@ -21,13 +28,9 @@ use Throwable;
  */
 class SpatieDriver implements DriverInterface
 {
-    /** @phpstan-ignore-next-line */
-    private Pool $pool;
+    private int $ticks = 0;
 
-    /**
-     * @var array<string>
-     */
-    private array $ticksIds = [];
+    private Pool $pool;
 
     public function __construct()
     {
@@ -41,21 +44,55 @@ class SpatieDriver implements DriverInterface
         }
     }
 
-    public function async(Closure $callback, Closure $onResolve = null): Closure
+    public function async(Closure $callback): Closure
     {
-        return function (...$args) use ($callback, $onResolve): void {
-            $this->pool->add(static function () use ($callback, $args) {// @phpstan-ignore-line
-                return $callback(...$args, ...($args = []));
-            })->then(static function ($return) use ($onResolve) {
-                if ($onResolve) {
+        return function ($onResolve) use ($callback) {
+            return function (...$args) use ($onResolve, $callback) {
+                $this->pool->add(static function () use ($callback, $args) {
+                    return $callback(...$args, ...($args = []));
+                })->then(static function ($return) use ($onResolve) {
                     $onResolve($return);
-                }
-            })->catch(static function (Throwable $exception) use ($onResolve) {
-                if ($onResolve) {
+                })->catch(static function (Throwable $exception) use ($onResolve) {
                     $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
-                }
-            });
+                });
+            };
         };
+    }
+
+    public function await(array &$stream): void
+    {
+        $async = function ($ip, $fnFlows, $index, $onResolve) {
+            $async = $this->async($fnFlows[$index]['job']);
+
+            if ($ip->data === null) {
+                return $async($onResolve)();
+            }
+
+            return $async($onResolve)($ip->data);
+        };
+
+        $nextIp = null;
+        while ($stream['ips'] > 0 or $this->ticks > 0) {
+            do {
+                foreach ($stream['dispatchers'] as $index => $dispatcher) {
+                    $nextIp = $dispatcher->dispatch(new PullEvent(), IpStrategyEvent::PULL)->getIp();
+                    if ($nextIp !== null) {
+                        $async($nextIp, $stream['fnFlows'], $index, static function ($data) use (&$stream, $index, $nextIp) {
+                            if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
+                                $stream['fnFlows'][$index]['errorJob']($data);
+                            } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
+                                $ip = new Ip($data);
+                                $stream['ips']++;
+                                $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), IpStrategyEvent::PUSH);
+                            }
+
+                            $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), IpStrategyEvent::POP);
+                            $stream['ips']--;
+                        });
+                    }
+                }
+            } while ($nextIp !== null);
+        }
     }
 
     public function delay(float $seconds): void
@@ -63,34 +100,15 @@ class SpatieDriver implements DriverInterface
         sleep((int) $seconds);
     }
 
-    public function tick(int $interval, Closure $callback): Closure
+    public function tick($interval, Closure $callback): Closure
     {
-        $tickId = uniqid('flow_spatie_tick_id');
-
+        $this->ticks++;
         $closure = static fn () => $callback();
         register_tick_function($closure);
 
-        $cancel = function () use ($tickId, $closure) {
-            unset($this->ticksIds[$tickId]);
+        return function () use ($closure) {
             unregister_tick_function($closure);
+            $this->ticks--;
         };
-
-        $this->ticksIds[$tickId] = $cancel;
-
-        return $cancel;
-    }
-
-    public function start(): void
-    {
-        $this->pool->wait(); // @phpstan-ignore-line
-    }
-
-    public function stop(): void
-    {
-        foreach ($this->ticksIds as $cancel) {
-            $cancel();
-        }
-
-        $this->pool->stop(); // @phpstan-ignore-line
     }
 }
