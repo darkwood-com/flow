@@ -64,11 +64,13 @@ interface FlowInterface
      *  0: Closure|array,
      *  1?: Closure|array,
      *  2?: IpStrategyInterface<mixed>,
-     *  3?: DriverInterface
+     *  3?: AsyncHandlerInterface,
+     *  4?: DriverInterface
      * }|array{
      *  "jobs"?: Closure|array,
      *  "errorJobs"?: Closure|array,
      *  "ipStrategy"?: IpStrategyInterface<mixed>,
+     *  "asyncHandler"?: AsyncHandlerInterface,
      *  "driver"?: DriverInterface
      * } $config
      *

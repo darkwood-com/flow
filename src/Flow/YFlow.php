@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Flow\Flow;
 
 use Closure;
+use Flow\AsyncHandlerInterface;
 use Flow\DriverInterface;
 use Flow\ExceptionInterface;
 use Flow\IpStrategyInterface;
@@ -23,11 +24,11 @@ class YFlow extends FlowDecorator
      * @param null|IpStrategyInterface<T1>           $ipStrategy
      * @param null|DriverInterface<T1,T2>            $driver
      */
-    public function __construct(Closure $job, ?Closure $errorJob = null, ?IpStrategyInterface $ipStrategy = null, ?EventDispatcherInterface $dispatcher = null, ?DriverInterface $driver = null)
+    public function __construct(Closure $job, ?Closure $errorJob = null, ?IpStrategyInterface $ipStrategy = null, ?EventDispatcherInterface $dispatcher = null, ?AsyncHandlerInterface $asyncHandler = null, ?DriverInterface $driver = null)
     {
         $U = static fn (Closure $f) => $f($f);
         $Y = static fn (Closure $f) => $U(static fn (Closure $x) => $f(static fn ($y) => $U($x)($y)));
 
-        parent::__construct(new Flow($Y($job), $errorJob, $ipStrategy, $dispatcher, $driver));
+        parent::__construct(new Flow($Y($job), $errorJob, $ipStrategy, $dispatcher, $asyncHandler, $driver));
     }
 }

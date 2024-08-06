@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Flow;
 
-final class IpStrategyEvent
+final class Event
 {
     /**
      * The PUSH event occurs at the very beginning of Flow dispatching before any async process execution.
@@ -13,7 +13,16 @@ final class IpStrategyEvent
      *
      * @Event("Flow\Event\PushEvent")
      */
-    public const PUSH = 'ip_strategy.push';
+    public const PUSH = 'push';
+
+    /**
+     * The ASYNC event occurs when Flow dispatch async process execution.
+     *
+     * This event allows you to process async for an IP in the Flow execution.
+     *
+     * @Event("Flow\Event\AsyncEvent")
+     */
+    public const ASYNC = 'async';
 
     /**
      * The PULL event occurs when Flow need a next IP to async process.
@@ -22,7 +31,7 @@ final class IpStrategyEvent
      *
      * @Event("Flow\Event\PullEvent")
      */
-    public const PULL = 'ip_strategy.pull';
+    public const PULL = 'pull';
 
     /**
      * The POP event occurs when Flow finish async process of an IP.
@@ -31,5 +40,5 @@ final class IpStrategyEvent
      *
      * @Event("Flow\Event\PopEvent")
      */
-    public const POP = 'ip_strategy.pop';
+    public const POP = 'pop';
 }

@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace Flow\Flow;
 
 use Closure;
+use Flow\AsyncHandler\AsyncHandler;
+use Flow\AsyncHandlerInterface;
 use Flow\Driver\FiberDriver;
 use Flow\DriverInterface;
+use Flow\Event;
 use Flow\Event\PushEvent;
 use Flow\Exception\LogicException;
 use Flow\ExceptionInterface;
 use Flow\FlowInterface;
 use Flow\Ip;
 use Flow\IpStrategy\LinearIpStrategy;
-use Flow\IpStrategyEvent;
 use Flow\IpStrategyInterface;
 use Generator;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -67,6 +69,7 @@ class Flow implements FlowInterface
         ?Closure $errorJob = null,
         ?IpStrategyInterface $ipStrategy = null,
         ?EventDispatcherInterface $dispatcher = null,
+        ?AsyncHandlerInterface $asyncHandler = null,
         ?DriverInterface $driver = null,
     ) {
         $this->job = $job;
@@ -77,6 +80,7 @@ class Flow implements FlowInterface
         ];
         $this->dispatcher = $dispatcher ?? new EventDispatcher();
         $this->dispatcher->addSubscriber($ipStrategy ?? new LinearIpStrategy());
+        $this->dispatcher->addSubscriber($asyncHandler ?? new AsyncHandler());
         $this->stream['dispatchers'][] = $this->dispatcher;
         $this->driver = $driver ?? new FiberDriver();
     }
@@ -84,7 +88,7 @@ class Flow implements FlowInterface
     public function __invoke(Ip $ip): void
     {
         $this->stream['ips']++;
-        $this->stream['dispatchers'][0]->dispatch(new PushEvent($ip), IpStrategyEvent::PUSH);
+        $this->stream['dispatchers'][0]->dispatch(new PushEvent($ip), Event::PUSH);
     }
 
     public static function do(callable $callable, ?array $config = null): FlowInterface
@@ -145,10 +149,12 @@ class Flow implements FlowInterface
      *  1?: Closure,
      *  2?: IpStrategyInterface,
      *  3?: EventDispatcherInterface,
-     *  4?: DriverInterface
+     *  4?: AsyncHandlerInterface,
+     *  5?: DriverInterface
      * }|array{
      *  "ipStrategy"?: IpStrategyInterface,
      *  "dispatcher"?: EventDispatcherInterface,
+     *  "asyncHandler"?: AsyncHandlerInterface,
      *  "driver"?: DriverInterface
      * } $config
      */

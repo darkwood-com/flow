@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Flow\IpStrategy;
 
+use Flow\Event;
 use Flow\Event\PullEvent;
 use Flow\Event\PushEvent;
 use Flow\Ip;
-use Flow\IpStrategyEvent;
 use Flow\IpStrategyInterface;
 
 /**
@@ -25,8 +25,8 @@ class LinearIpStrategy implements IpStrategyInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            IpStrategyEvent::PUSH => 'push',
-            IpStrategyEvent::PULL => 'pull',
+            Event::PUSH => 'push',
+            Event::PULL => 'pull',
         ];
     }
 

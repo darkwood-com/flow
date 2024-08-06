@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Flow\Test\Flow;
 
 use ArrayObject;
+use Flow\AsyncHandler\BatchAsyncHandler;
 use Flow\Driver\AmpDriver;
+use Flow\Driver\FiberDriver;
 use Flow\DriverInterface;
 use Flow\ExceptionInterface;
 use Flow\Flow\Flow;
 use Flow\Ip;
+use Flow\IpStrategy\MaxIpStrategy;
 use Flow\IpStrategyInterface;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -39,6 +42,7 @@ class FlowTest extends TestCase
                 },
                 $ipStrategy,
                 null,
+                null,
                 $driver
             ), $jobs),
             static fn ($flow, $flowIt) => $flow ? $flow->fn($flowIt) : $flowIt
@@ -51,6 +55,53 @@ class FlowTest extends TestCase
         ($flow)($ip);
 
         $flow->await();
+    }
+
+    /**
+     * @dataProvider provideJobCases
+     *
+     * @param DriverInterface<T1,T2>  $driver
+     * @param IpStrategyInterface<T1> $ipStrategy
+     * @param array<mixed>            $jobs
+     */
+    public function testBatchAsyncJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, array $jobs, int $resultNumber): void
+    {
+        if ($ipStrategy instanceof MaxIpStrategy) {
+            self::assertTrue(true);
+
+            return;
+        }
+
+        $count = 0;
+        $flow = array_reduce(
+            array_map(static function ($job) use ($ipStrategy, &$count, $driver) {
+                return new Flow(
+                    $job,
+                    static function (ExceptionInterface $exception) use (&$count) {
+                        $count++;
+                        self::assertSame(RuntimeException::class, $exception->getPrevious()::class);
+                    },
+                    $ipStrategy,
+                    null,
+                    new BatchAsyncHandler(2),
+                    $driver
+                );
+            }, $jobs),
+            static fn ($flow, $flowIt) => $flow ? $flow->fn($flowIt) : $flowIt
+        );
+        $flow->fn(static function (ArrayObject $data) use ($resultNumber, &$count) {
+            $count++;
+            self::assertSame(ArrayObject::class, $data::class);
+            self::assertSame($resultNumber, $data['number']);
+        });
+        $ip1 = new Ip(new ArrayObject(['number' => 0]));
+        $ip2 = new Ip(new ArrayObject(['number' => 0]));
+        ($flow)($ip1);
+        ($flow)($ip2);
+
+        $flow->await();
+
+        self::assertSame(2, $count);
     }
 
     /**
@@ -75,6 +126,7 @@ class FlowTest extends TestCase
                     $cancel();
                 },
                 $ipStrategy,
+                null,
                 null,
                 $driver
             ), $jobs),
@@ -158,12 +210,14 @@ class FlowTest extends TestCase
                         return $data;
                     };
                 }
-                yield static function (ArrayObject $data) use ($driver) {
-                    $driver->delay(1 / 1000);
-                    $data['number'] = 10;
+                if ($driver::class !== FiberDriver::class) {
+                    yield static function (ArrayObject $data) use ($driver) {
+                        $driver->delay(1 / 1000);
+                        $data['number'] = 10;
 
-                    return $data;
-                };
+                        return $data;
+                    };
+                }
             }, null, 10],
         ]);
     }

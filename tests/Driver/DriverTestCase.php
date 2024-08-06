@@ -6,10 +6,10 @@ namespace Flow\Test\Driver;
 
 use Exception;
 use Flow\DriverInterface;
+use Flow\Event;
 use Flow\Event\PushEvent;
 use Flow\Exception\RuntimeException;
 use Flow\Ip;
-use Flow\IpStrategyEvent;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -74,7 +74,7 @@ abstract class DriverTestCase extends TestCase
         });
 
         $dispatcher = new EventDispatcher();
-        $dispatcher->dispatch(new PushEvent(new Ip()), IpStrategyEvent::PUSH);
+        $dispatcher->dispatch(new PushEvent(new Ip()), Event::PUSH);
 
         $stream = [
             'ips' => 1,
