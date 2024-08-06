@@ -14,7 +14,7 @@ Flow concept aims to solve
 
 ## Installation
 
-PHP 8.2 is the minimal version to use Flow
+PHP 8.3 is the minimal version to use Flow
 The recommended way to install it through [Composer](http://getcomposer.org) and execute
 
 ```bash
