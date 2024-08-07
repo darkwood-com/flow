@@ -20,9 +20,9 @@ __TLDR__: We do not use cookies and we do not collect any personal data.
 
 ### Information we collect and what we use it for
 
-We run [Matomo](https://matomo.org/) analytics on darkwood-fr.github.io. The following information is collected:
+We run [Matomo](https://matomo.org/) analytics on darkwood-com.github.io. The following information is collected:
 
-- __Page URL__. We track the page URL of each page view on this website. We use this to understand which pages have been viewed and how many times a particular page has been viewed. For example: _https://darkwood-fr.github.io/flow/_.
+- __Page URL__. We track the page URL of each page view on this website. We use this to understand which pages have been viewed and how many times a particular page has been viewed. For example: _https://darkwood-com.github.io/flow/_.
 - __HTTP Referrer__. We use the referrer string to understand the number of visitors referred to this website from links on other sites. For example: _https://github.com/_.
 - __Browser__. We use this to understand what browsers people use when visiting this website. This is derived from the User-Agent HTTP header. The full User-Agent is discarded. For example: _Brave_.
 - __Operating system__. We use this to understand what operating systems people use when visiting this website. We only use the brand of the operating system and don’t include the version number or any other details. This is derived from the User-Agent HTTP header. The full User-Agent is discarded. For example: _GNU/Linux_.

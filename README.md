@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/darkwood-fr/flow">
+  <a href="https://github.com/darkwood-com/flow">
     <img src="docs/src/images/logo.png" width="auto" height="128px" alt="Flow">
   </a>
 </p>
@@ -69,7 +69,7 @@ A working script is available in the bundled `examples` directory
 
 ## Documentation
 
-[https://darkwood-fr.github.io/flow](https://darkwood-fr.github.io/flow)
+[https://darkwood-com.github.io/flow](https://darkwood-com.github.io/flow)
 
 ## License
 

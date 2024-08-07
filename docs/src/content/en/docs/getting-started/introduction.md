@@ -44,7 +44,7 @@ Messaging part require to install [Docker](https://www.docker.com) and execute `
 
 ## Documentation
 
-[https://darkwood-fr.github.io/flow](https://darkwood-fr.github.io/flow)
+[https://darkwood-com.github.io/flow](https://darkwood-com.github.io/flow)
 
 ## License
 
