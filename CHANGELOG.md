@@ -3,9 +3,9 @@
 ## v1.2.x
 
 - Add Batch IP from
-  - https://speakerdeck.com/alli83/symfony-messenger-et-ses-messages-a-la-queleuleu-dot-dot-dot-et-sil-etait-temps-de-grouper
-  - https://wolfgang-klinger.medium.com/how-to-handle-messages-in-batches-with-symfony-messenger-c91b5aa1c8b1
-  - https://github.com/wazum/symfony-messenger-batch
+    - https://speakerdeck.com/alli83/symfony-messenger-et-ses-messages-a-la-queleuleu-dot-dot-dot-et-sil-etait-temps-de-grouper
+    - https://wolfgang-klinger.medium.com/how-to-handle-messages-in-batches-with-symfony-messenger-c91b5aa1c8b1
+    - https://github.com/wazum/symfony-messenger-batch
 
 ## v1.2.0
 
@@ -32,8 +32,8 @@
 ## v1.1.3
 
 - Update DX for Flow\DriverInterface
-  - Update `async` that now $onResolve get called with async $callback result or Flow\Exception as first argument
-  - Update `tick` that now return a Closure to cleanup tick interval
+    - Update `async` that now $onResolve get called with async $callback result or Flow\Exception as first argument
+    - Update `tick` that now return a Closure to cleanup tick interval
 - Add Flow\Driver\FiberDriver from https://github.com/jolicode/castor/blob/main/src/functions.php
 - Upgrade to Symfony 6.3 and PHPUnit 10.3
 - Refactor docs structure
