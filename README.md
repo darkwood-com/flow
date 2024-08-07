@@ -41,13 +41,22 @@ class D3 {
     public function __construct(public int $n3) {}
 }
 
+class D4 {
+    public function __construct(public int $n4) {}
+}
+
 $flow = Flow::do(static function() {
     yield fn (D1 $data1) => new D2($data1->n1 += 1);
     yield fn (D2 $data2) => new D3($data2->n2 * 2);
+	yield function(D3 $data3) {
+		printf("my number %d\n", $ip->data->n3)); // display 'my number 10'
+
+		return new D4($data3->n3);
+	};
 });
 
 $ip = new Ip(new D1(4));
-$flow($ip, fn ($ip) => printf("my number %d\n", $ip->data->n3)); // display 'my number 10'
+$flow($ip);
 ```
 
 ## Examples
