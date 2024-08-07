@@ -1,0 +1,62 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "8c6f1188e62d626d69d848fb5c7b2293",
+    "packages": [],
+    "packages-dev": [
+        {
+            "name": "tomasvotruba/editorconfig-fixer",
+            "version": "0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/TomasVotruba/editorconfig-fixer.git",
+                "reference": "b3a64e0f0eca63d37d870af08184c72e966353ef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/TomasVotruba/editorconfig-fixer/zipball/b3a64e0f0eca63d37d870af08184c72e966353ef",
+                "reference": "b3a64e0f0eca63d37d870af08184c72e966353ef",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "bin": [
+                "bin/editorconfig-fixer",
+                "bin/editorconfig-fixer.php"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Fix your files indent based on .editorconfig",
+            "support": {
+                "issues": "https://github.com/TomasVotruba/editorconfig-fixer/issues",
+                "source": "https://github.com/TomasVotruba/editorconfig-fixer/tree/0.1.2"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.me/rectorphp",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/tomasvotruba",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-09-26T11:01:15+00:00"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}

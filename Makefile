@@ -8,6 +8,9 @@ dev: ## Start dev server
 docs-serve: ## Start documentation server locally
 	composer docs-serve
 
+editorconfig-fixer: ## Fixes text files based on given .editorconfig declarations
+	composer editorconfig-fixer
+
 infection: ## Run Infection
 	composer infection
 
