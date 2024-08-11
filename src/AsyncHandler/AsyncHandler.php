@@ -21,6 +21,10 @@ final class AsyncHandler implements AsyncHandlerInterface
 
     public function async(AsyncEvent $event): void
     {
-        call_user_func_array($event->getAsync(), $event->getArgs());
+        $args = array_merge([$event->getWrapper()], $event->getArgs());
+
+        call_user_func_array($event->getAsync(), $args);
+
+        // call_user_func_array($event->getAsync(), $event->getArgs())($event->getWrapper());
     }
 }

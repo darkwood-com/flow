@@ -17,7 +17,7 @@ final class AsyncEvent extends Event
     /**
      * @param array<mixed> $args
      */
-    public function __construct(private Closure $async, ...$args)
+    public function __construct(private Closure $async, private Closure $wrapper, ...$args)
     {
         $this->args = $args;
     }
@@ -25,6 +25,11 @@ final class AsyncEvent extends Event
     public function getAsync(): Closure
     {
         return $this->async;
+    }
+
+    public function getWrapper(): Closure
+    {
+        return $this->wrapper;
     }
 
     /**

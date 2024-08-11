@@ -22,9 +22,20 @@ final class YAsyncHandler implements AsyncHandlerInterface
 
     public function async(AsyncEvent $event): void
     {
-        $U = static fn (Closure $f) => $f($f);
+        $wrapper = static function ($job) use ($event) {
+            $U = static fn (Closure $f) => $f($f);
+            $Y = static fn (Closure $f) => $U(static fn (Closure $x) => $f(static fn ($y) => $U($x)($y)));
+
+            return $Y($event->getWrapper()($job));
+        };
+
+        $args = array_merge([$wrapper], $event->getArgs());
+
+        call_user_func_array($event->getAsync(), $args);
+
+        /*$U = static fn (Closure $f) => $f($f);
         $Y = static fn (Closure $f) => $U(static fn (Closure $x) => $f(static fn ($y) => $U($x)($y)));
 
-        call_user_func_array($Y($event->getAsync()), $event->getArgs());
+        call_user_func_array($event->getAsync(), $event->getArgs())($Y($event->getWrapper()));*/
     }
 }
