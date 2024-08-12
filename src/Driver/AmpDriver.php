@@ -91,9 +91,10 @@ class AmpDriver implements DriverInterface
                         };
 
                         $async = $stream['fnFlows'][$index]['job'];
-                        $future = $async($nextIp->data);
+                        $future = $async([$nextIp->data, $defer]);
 
-                        $future->map(static function ($data) use (&$stream, $index, $nextIp) {
+                        $future->map(static function ($args) use (&$stream, $index, $nextIp) {
+                            [$data, $defer] = $args;
                             if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
                                 $stream['fnFlows'][$index]['errorJob']($data);
                             } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {

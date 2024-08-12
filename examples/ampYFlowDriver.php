@@ -19,45 +19,28 @@ use Revolt\EventLoop;
 $U = static fn (Closure $f) => $f($f);
 $Y = static fn (Closure $f) => $U(static fn (Closure $x) => $f(static fn ($y) => $U($x)($y)));
 
-function wrapWithDeferred(Closure $job): Future
-{
-    $deferred = new DeferredFuture();
-
-    // Queue the operation to be executed in the event loop
-    EventLoop::queue(static function () use ($job, $deferred) {
-        try {
-            $job(static function ($return) use ($deferred) {
-                $deferred->complete($return);
-            }, static function (Future $future, $next) {
-                $future->map($next);
-            });
-        } catch (Throwable $exception) {
-            $deferred->complete(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
-        }
-    });
-
-    return $deferred->getFuture();
-}
-
 $asyncFactorial = $Y(static function ($factorial) {
-    return static function (YFlowData $data) use ($factorial) {
-        return wrapWithDeferred(static function ($complete, $async) use ($data, $factorial) {
+    return static function ($args) use ($factorial): Future{
+        [$data, $defer] = $args;
+        return $defer(static function ($complete, $async) use ($data, $defer, $factorial) {
             if ($data->result <= 1) {
-                $complete(new YFlowData($data->id, $data->number, 1));
+                $complete([new YFlowData($data->id, $data->number, 1), $defer]);
             } else {
-                $async($factorial(new YFlowData($data->id, $data->number, $data->result - 1)), static function ($resultData) use ($data, $complete) {
-                    $complete(new YFlowData($data->id, $data->number, $data->result * $resultData->result));
+                $async($factorial([new YFlowData($data->id, $data->number, $data->result - 1), $defer]), static function ($result) use ($data, $complete) {
+                    [$resultData, $defer] = $result;
+                    $complete([new YFlowData($data->id, $data->number, $data->result * $resultData->result), $defer]);
                 });
             }
         });
     };
 });
 
-$factorialYJobAfter = static function (YFlowData $data): Future {
-    return wrapWithDeferred(static function ($complete) use ($data) {
+$factorialYJobAfter = static function ($args): Future {
+    [$data, $defer] = $args;
+    return $defer(static function ($complete) use ($data, $defer) {
         printf("* #%d - Job : Result for factorial(%d) = %d\n", $data->id, $data->number, $data->result);
 
-        $complete(new YFlowData($data->id, $data->number));
+        $complete([new YFlowData($data->id, $data->number), $defer]);
     });
 };
 
