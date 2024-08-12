@@ -19,6 +19,12 @@ interface DriverInterface
      */
     public function async(Closure $callback): Closure;
 
+    /**
+     * This allow more granular control on async
+     * $callback will be given two callbacks
+     * - an complete callback to store result
+     * - an async callback to go to the next async call.
+     */
     public function defer(Closure $callback): mixed;
 
     /**

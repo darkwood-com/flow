@@ -59,7 +59,7 @@ class AmpDriver implements DriverInterface
         };
     }
 
-    public function defer(Closure $callback): mixed
+    public function defer(Closure $callback): Future
     {
         $deferred = new DeferredFuture();
 
@@ -136,66 +136,6 @@ class AmpDriver implements DriverInterface
         EventLoop::defer($loop);
 
         EventLoop::run();
-
-        /*$async = function (Closure $wrapper, $ip, $fnFlows, $index, $map) {
-            $async = $this->async($wrapper($fnFlows[$index]['job']));
-
-            $wrap = function(Closure $job) {
-                $deferred = new DeferredFuture();
-
-                EventLoop::queue(function () use ($job, $deferred) {
-                    $job(static function($value) use ($deferred) {
-                        $deferred->complete($value);
-                    }, static function(Future $future, $next) {
-                        $future->map($next);
-                    });
-                });
-
-                return $deferred->getFuture();
-            };
-
-            if ($ip->data === null) {
-                $future = $async($wrap);
-            } else {
-                $future = $async($ip->data, $wrap);
-            }
-
-            $future->map($map);
-        };
-
-        $loop = function () use (&$loop, &$stream, $async) {
-            $nextIp = null;
-            do {
-                foreach ($stream['dispatchers'] as $index => $dispatcher) {
-                    $nextIp = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIp();
-                    if ($nextIp !== null) {
-                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, static function($job) {
-                            return $job;
-                        }, $nextIp, $stream['fnFlows'], $index, static function ($data) use (&$stream, $index, $nextIp) {
-                            if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
-                                $stream['fnFlows'][$index]['errorJob']($data);
-                            } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
-                                $ip = new Ip($data);
-                                $stream['ips']++;
-                                $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), Event::PUSH);
-                            }
-
-                            $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
-                            $stream['ips']--;
-                        }), Event::ASYNC);
-                    }
-                }
-            } while ($nextIp !== null);
-
-            if ($stream['ips'] > 0 or $this->ticks > 0) {
-                EventLoop::defer($loop);
-            } else {
-                EventLoop::getDriver()->stop();
-            }
-        };
-        EventLoop::defer($loop);
-
-        EventLoop::run();*/
     }
 
     public function delay(float $seconds): void

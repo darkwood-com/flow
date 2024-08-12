@@ -4,66 +4,57 @@ declare(strict_types=1);
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Amp\DeferredFuture;
-use Amp\Future;
-use Revolt\EventLoop;
-
-use function Amp\async;
+use Flow\AsyncHandler\DeferAsyncHandler;
+use Flow\Driver\ReactDriver;
+use Flow\Examples\Data\YFlowData;
+use Flow\Flow\Flow;
+use Flow\Ip;
 
 // Define the Y-Combinator
 $U = static fn (Closure $f) => $f($f);
 $Y = static fn (Closure $f) => $U(static fn (Closure $x) => $f(static fn ($y) => $U($x)($y)));
 
-function wrapWithDeferred(Closure $job): Future
-{
-    $deferred = new DeferredFuture();
+$factorialYJobDeferBefore = static function (YFlowData $data) {
+    printf("* #%d - Job : Calculating factorial(%d)\n", $data->id, $data->number);
 
-    // Queue the operation to be executed in the event loop
-    EventLoop::queue(static function () use ($job, $deferred) {
-        $job(static function ($value) use ($deferred) {
-            $deferred->complete($value);
-        }, static function (Future $future, $next) {
-            $future->map($next);
-        });
-    });
+    return new YFlowData($data->id, $data->number, $data->number);
+};
 
-    return $deferred->getFuture();
-}
+$asyncFactorialDefer = $Y(static function ($factorial) {
+    return static function ($args) use ($factorial) {
+        [$data, $defer] = $args;
 
-/*function factorialGen(callable $func): Closure
-{
-    return static function (int $n) use ($func): int {
-        return ($n <= 1) ? 1 : $n * $func($n - 1);
-    };
-}*/
-
-// Define the async factorial function using the Y-Combinator
-$asyncFactorial = $Y(static function ($factorial) {
-    return static function ($n) use ($factorial): Future {
-        return wrapWithDeferred(static function ($complete, $async) use ($n, $factorial) {
-            if ($n <= 1) {
-                $complete(1);
+        return $defer(static function ($complete, $async) use ($data, $defer, $factorial) {
+            if ($data->result <= 1) {
+                $complete([new YFlowData($data->id, $data->number, 1), $defer]);
             } else {
-                $async($factorial($n - 1), static function ($result) use ($n, $complete) {
-                    $complete($n * $result);
+                $async($factorial([new YFlowData($data->id, $data->number, $data->result - 1), $defer]), static function ($result) use ($data, $complete) {
+                    [$resultData, $defer] = $result;
+                    $complete([new YFlowData($data->id, $data->number, $data->result * $resultData->result), $defer]);
                 });
             }
         });
     };
 });
 
-// The main loop that runs the async task
-$loop = static function () use ($asyncFactorial) {
-    $future = $asyncFactorial(5);
+$factorialYJobDeferAfter = static function ($args) {
+    [$data, $defer] = $args;
 
-    // Use the map method to handle the result when it's ready
-    $future->map(static function ($result) {
-        echo 'Factorial: ' . $result . PHP_EOL;
+    return $defer(static function ($complete) use ($data, $defer) {
+        printf("* #%d - Job : Result for factorial(%d) = %d\n", $data->id, $data->number, $data->result);
+
+        $complete([new YFlowData($data->id, $data->number), $defer]);
     });
 };
 
-// Defer the loop execution to run after the event loop starts
-EventLoop::defer($loop);
+$driver = new ReactDriver();
 
-// Run the event loop to process async tasks
-EventLoop::run();
+$flow = (new Flow($factorialYJobDeferBefore, null, null, null, null, $driver))
+    ->fn(new Flow($asyncFactorialDefer, null, null, null, new DeferAsyncHandler(), $driver))
+    ->fn(new Flow($factorialYJobDeferAfter, null, null, null, new DeferAsyncHandler(), $driver))
+;
+
+$ip = new Ip(new YFlowData(5, 5, 5));
+$flow($ip);
+
+$flow->await();

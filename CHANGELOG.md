@@ -7,6 +7,7 @@
     - https://wolfgang-klinger.medium.com/how-to-handle-messages-in-batches-with-symfony-messenger-c91b5aa1c8b1
     - https://github.com/wazum/symfony-messenger-batch
 - YFlow rework
+- Update DX for Flow\DriverInterface : add `defer` to gain much granular control on asynchronous callbacks
 
 ## v1.2.0
 
