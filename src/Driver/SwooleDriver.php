@@ -54,6 +54,11 @@ class SwooleDriver implements DriverInterface
         };
     }
 
+    public function defer(Closure $callback): mixed
+    {
+        return null;
+    }
+
     public function await(array &$stream): void
     {
         $async = function ($ip, $fnFlows, $index, $onResolve) {

@@ -25,6 +25,12 @@ This is the default one. Ip is async processed immediately.
 
 This async process Ip as batch capability : the handler will wait for a certain amount of async messages ($batchSize) to be processed before pushing them.
 
+## DeferAsyncHandler
+
+This async process Ip to offer defer capability : the handler will pass [$data, $defer] as entry for the job. In that case, the job can fine control the async process. $defer is a callable that embark two callbacks
+- an complete callback to store result
+- an async callback to go to the next async call.
+
 ## Make your Async Handler
 
 You can make your custom Ip strategy by implementing `Flow\AsyncHandlerInterface`

@@ -60,16 +60,32 @@ class SpatieDriver implements DriverInterface
         };
     }
 
+    public function defer(Closure $callback): mixed
+    {
+        return null;
+    }
+
     public function await(array &$stream): void
     {
-        $async = function ($ip, $fnFlows, $index, $onResolve) {
-            $async = $this->async($fnFlows[$index]['job']);
+        $async = function (Closure $job) {
+            return function (mixed $data) use ($job) {
+                $async = $this->async($job);
 
-            if ($ip->data === null) {
-                return $async($onResolve)();
-            }
+                $next = fn($value) => $value;
+                if ($data === null) {
+                    $async($next)();
+                } else {
+                    $async($next)($data);
+                }
 
-            return $async($onResolve)($ip->data);
+                return static function($onResolve) use ($next) {
+                    $next($onResolve);
+                };
+            };
+        };
+
+        $defer = function (Closure $job) use ($async) {
+            return $async($job);
         };
 
         $nextIp = null;
@@ -78,7 +94,7 @@ class SpatieDriver implements DriverInterface
                 foreach ($stream['dispatchers'] as $index => $dispatcher) {
                     $nextIp = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIp();
                     if ($nextIp !== null) {
-                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $nextIp, $stream['fnFlows'], $index, static function ($data) use (&$stream, $index, $nextIp) {
+                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $stream['fnFlows'][$index]['job'], $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
                             if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
                                 $stream['fnFlows'][$index]['errorJob']($data);
                             } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
