@@ -5,7 +5,7 @@ declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 
 use Flow\AsyncHandler\DeferAsyncHandler;
-use Flow\Driver\ReactDriver;
+use Flow\Driver\FiberDriver;
 use Flow\Examples\Data\YFlowData;
 use Flow\Flow\Flow;
 use Flow\Ip;
@@ -47,7 +47,7 @@ $factorialYJobDeferAfter = static function ($args) {
     });
 };
 
-$driver = new ReactDriver();
+$driver = new FiberDriver();
 
 $flow = (new Flow($factorialYJobDeferBefore, null, null, null, null, $driver))
     ->fn(new Flow($asyncFactorialDefer, null, null, null, new DeferAsyncHandler(), $driver))

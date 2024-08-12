@@ -39,30 +39,45 @@ class FiberDriver implements DriverInterface
         return static function () {};
     }
 
+    public function defer(Closure $callback): mixed
+    {
+        return null;
+    }
+
     public function await(array &$stream): void
     {
-        $async = static function ($ip, $fnFlows, $index, $isTick) use (&$fiberDatas) {
-            $fiber = new Fiber($fnFlows[$index]['job']);
+        $async = static function ($ip, $index, $isTick) use (&$fiberDatas) {
+            return static function (Closure $job) use (&$fiberDatas, $ip, $index, $isTick) {
+                return static function (mixed $data) use (&$fiberDatas, $ip, $index, $isTick, $job) {
+                    $fiber = new Fiber($job);
 
-            $exception = null;
+                    $exception = null;
 
-            try {
-                if ($ip->data === null) {
-                    $fiber->start();
-                } else {
-                    $fiber->start($ip->data);
-                }
-            } catch (Throwable $fiberException) {
-                $exception = $fiberException;
-            }
+                    try {
+                        if ($data === null) {
+                            $fiber->start();
+                        } else {
+                            $fiber->start($data);
+                        }
+                    } catch (Throwable $fiberException) {
+                        $exception = $fiberException;
+                    }
 
-            $fiberDatas[] = [
-                'index' => $index,
-                'fiber' => $fiber,
-                'exception' => $exception,
-                'ip' => $ip,
-                'isTick' => $isTick,
-            ];
+                    $fiberDatas[] = [
+                        'fiber' => $fiber,
+                        'exception' => $exception,
+                        'ip' => $ip,
+                        'index' => $index,
+                        'isTick' => $isTick,
+                    ];
+
+                    return static function () {};
+                };
+            };
+        };
+
+        $defer = static function ($ip, $index, $isTick) use ($async) {
+            return $async($ip, $index, $isTick);
         };
 
         $tick = 0;
@@ -75,7 +90,7 @@ class FiberDriver implements DriverInterface
                 if ($tick % $interval === 0) {
                     $ip = new Ip();
                     $stream['ips']++;
-                    $async($ip, [['job' => $callback]], 0, true);
+                    $async($ip, 0, true)($callback)($ip->data);
                 }
             }
 
@@ -84,7 +99,11 @@ class FiberDriver implements DriverInterface
                 foreach ($stream['dispatchers'] as $index => $dispatcher) {
                     $nextIp = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIp();
                     if ($nextIp !== null) {
-                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $nextIp, $stream['fnFlows'], $index, false), Event::ASYNC);
+                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent(static function (Closure $job) use ($async, $nextIp, $index) {
+                            return $async($nextIp, $index, false)($job);
+                        }, static function (Closure $job) use ($defer, $nextIp, $index) {
+                            return $defer($nextIp, $index, false)($job);
+                        }, $stream['fnFlows'][$index]['job'], $nextIp, static function () {}), Event::ASYNC);
                     }
                 }
             } while ($nextIp !== null);
