@@ -15,6 +15,8 @@ use Flow\Exception\RuntimeException;
 use Flow\Ip;
 use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
+use React\Promise\Deferred;
+use React\Promise\Promise;
 use RuntimeException as NativeRuntimeException;
 use Throwable;
 
@@ -57,9 +59,21 @@ class ReactDriver implements DriverInterface
         };
     }
 
-    public function defer(Closure $callback): mixed
+    public function defer(Closure $callback): Promise
     {
-        return null;
+        $deferred = new Deferred();
+
+        try {
+            $callback(static function ($return) use ($deferred) {
+                $deferred->resolve($return);
+            }, static function ($fn, $next) {
+                $fn($next);
+            });
+        } catch (Throwable $exception) {
+            $deferred->resolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
+        }
+
+        return $deferred->promise();
     }
 
     public function await(array &$stream): void
@@ -80,7 +94,12 @@ class ReactDriver implements DriverInterface
             };
         };
 
-        $defer = static function (Closure $job) {};
+        $defer = function (Closure $job) {
+            return function ($then) use ($job) {
+                $promise = $this->defer($job);
+                $promise->then($then);
+            };
+        };
 
         $loop = function () use (&$loop, &$stream, $async, $defer) {
             $nextIp = null;

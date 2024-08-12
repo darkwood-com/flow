@@ -67,8 +67,8 @@ class AmpDriver implements DriverInterface
             try {
                 $callback(static function ($return) use ($deferred) {
                     $deferred->complete($return);
-                }, static function ($callback, $next) {
-                    $callback($next);
+                }, static function ($fn, $next) {
+                    $fn($next);
                 });
             } catch (Throwable $exception) {
                 $deferred->complete(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
