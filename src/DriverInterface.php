@@ -19,6 +19,8 @@ interface DriverInterface
      */
     public function async(Closure $callback): Closure;
 
+    public function defer(Closure $callback): mixed;
+
     /**
      * @param array{'ips': int, 'fnFlows': array<mixed>, 'dispatchers': array<mixed>} $stream
      */

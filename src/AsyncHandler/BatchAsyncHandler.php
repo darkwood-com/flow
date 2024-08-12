@@ -12,15 +12,18 @@ use Symfony\Component\Messenger\Handler\BatchHandlerInterface;
 use Symfony\Component\Messenger\Handler\BatchHandlerTrait;
 use Throwable;
 
-use function call_user_func_array;
-
 final class BatchAsyncHandler implements BatchHandlerInterface, AsyncHandlerInterface
 {
     use BatchHandlerTrait;
 
+    private AsyncHandlerInterface $asyncHandler;
+
     public function __construct(
         private int $batchSize = 10,
-    ) {}
+        ?AsyncHandlerInterface $asyncHandler = null,
+    ) {
+        $this->asyncHandler = $asyncHandler ?? new AsyncHandler();
+    }
 
     public static function getSubscribedEvents()
     {
@@ -31,8 +34,8 @@ final class BatchAsyncHandler implements BatchHandlerInterface, AsyncHandlerInte
 
     public function async(AsyncEvent $event): void
     {
-        $ack = new Acknowledger(get_debug_type($this), static function (?Throwable $e = null, $event = null) {
-            call_user_func_array($event->getAsync(), $event->getArgs());
+        $ack = new Acknowledger(get_debug_type($this), function (?Throwable $e = null, $event = null) {
+            $this->asyncHandler->async($event);
         });
 
         $this->handle($event, $ack);

@@ -53,48 +53,65 @@ class AmpDriver implements DriverInterface
                 try {
                     return $callback(...$args, ...($args = []));
                 } catch (Throwable $exception) {
-                    dd($exception);
-
                     return new RuntimeException($exception->getMessage(), $exception->getCode(), $exception);
                 }
             }, $callback, $args);
         };
     }
 
+    public function defer(Closure $callback): mixed
+    {
+        $deferred = new DeferredFuture();
+
+        EventLoop::queue(static function () use ($callback, $deferred) {
+            try {
+                $callback(static function ($return) use ($deferred) {
+                    $deferred->complete($return);
+                }, static function ($callback, $next) {
+                    $callback($next);
+                });
+            } catch (Throwable $exception) {
+                $deferred->complete(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
+            }
+        });
+
+        return $deferred->getFuture();
+    }
+
     public function await(array &$stream): void
     {
-        $loop = function () use (&$loop, &$stream) {
+        $async = function (Closure $job) {
+            return function (mixed $data) use ($job) {
+                $async = $this->async($job);
+
+                if ($data === null) {
+                    $future = $async();
+                } else {
+                    $future = $async($data);
+                }
+
+                return static function ($map) use ($future) {
+                    $future->map($map);
+                };
+            };
+        };
+
+        $defer = function (Closure $job) {
+            return function ($map) use ($job) {
+                $future = $this->defer($job);
+                $future->map($map);
+            };
+        };
+
+        $loop = function () use (&$loop, &$stream, $async, $defer) {
             $nextIp = null;
             do {
                 foreach ($stream['dispatchers'] as $index => $dispatcher) {
                     $nextIp = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIp();
                     if ($nextIp !== null) {
-                        $defer = function(Closure $job): Future
-                        {
-                            $deferred = new DeferredFuture();
+                        $job = $stream['fnFlows'][$index]['job'];
 
-                            // Queue the operation to be executed in the event loop
-                            EventLoop::queue(static function () use ($job, $deferred) {
-                                try {
-                                    $job(static function ($return) use ($deferred) {
-                                        $deferred->complete($return);
-                                    }, static function (Future $future, $next) {
-                                        $future->map($next);
-                                    });
-                                } catch (Throwable $exception) {
-                                    dd($exception);
-                                    $deferred->complete(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
-                                }
-                            });
-
-                            return $deferred->getFuture();
-                        };
-
-                        $async = $stream['fnFlows'][$index]['job'];
-                        $future = $async([$nextIp->data, $defer]);
-
-                        $future->map(static function ($args) use (&$stream, $index, $nextIp) {
-                            [$data, $defer] = $args;
+                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $job, $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
                             if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
                                 $stream['fnFlows'][$index]['errorJob']($data);
                             } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
@@ -105,7 +122,7 @@ class AmpDriver implements DriverInterface
 
                             $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
                             $stream['ips']--;
-                        });
+                        }), Event::ASYNC);
                     }
                 }
             } while ($nextIp !== null);
