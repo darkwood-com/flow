@@ -71,20 +71,20 @@ class SpatieDriver implements DriverInterface
             return function (mixed $data) use ($job) {
                 $async = $this->async($job);
 
-                $next = fn($value) => $value;
+                $next = static fn ($value) => $value;
                 if ($data === null) {
                     $async($next)();
                 } else {
                     $async($next)($data);
                 }
 
-                return static function($onResolve) use ($next) {
+                return static function ($onResolve) use ($next) {
                     $next($onResolve);
                 };
             };
         };
 
-        $defer = function (Closure $job) use ($async) {
+        $defer = static function (Closure $job) use ($async) {
             return $async($job);
         };
 

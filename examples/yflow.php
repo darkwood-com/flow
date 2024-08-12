@@ -5,7 +5,6 @@ declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 
 use Flow\AsyncHandler\DeferAsyncHandler;
-use Flow\AsyncHandler\YAsyncHandler;
 use Flow\Driver\AmpDriver;
 use Flow\Driver\FiberDriver;
 use Flow\Driver\ReactDriver;
