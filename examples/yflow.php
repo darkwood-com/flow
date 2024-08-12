@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Amp\Future;
+use Flow\AsyncHandler\DeferAsyncHandler;
 use Flow\AsyncHandler\YAsyncHandler;
 use Flow\Driver\AmpDriver;
 use Flow\Driver\FiberDriver;
@@ -16,61 +16,11 @@ use Flow\Flow\Flow;
 use Flow\Flow\YFlow;
 use Flow\Ip;
 
-use function Amp\async;
-
-$U = static fn ($f) => $f($f);
-$Y = static fn (callable $f) => $U(static fn (Closure $x) => $f(static fn ($y) => $U($x)($y)));
-
-$asyncFactorial = $Y(static function ($fact) {
-    return static function ($n) use ($fact): Future {
-        return async(static function () use ($n, $fact) {
-            if ($n <= 1) {
-                return 1;
-            }
-
-            $result = yield $fact($n - 1);
-
-            return $n * $result;
-        });
-    };
-});
-
-$future = $asyncFactorial(5);
-
-$future->map(static function ($result) {
-    echo 'Factorial: ' . $result . PHP_EOL;
-});
-
-// $driver = new AmpDriver();
-// $driver->
-
-/*$factorialYJob = static function ($factorial) {
-    return static function (YFlowData $data) use ($factorial): YFlowData {
-        return new YFlowData(
-            $data->id,
-            $data->number,
-            ($data->result <= 1) ? 1 : $data->result * $factorial(new YFlowData($data->id, $data->number, $data->result - 1))->result
-        );
-    };
-};
-
-$flow = (new Flow($factorialYJob, null, null, null, new YAsyncHandler(), $driver))
-    ->fn(static function (YFlowData $data): YFlowData {
-        printf("* #%d - Job 4 : Result for factorial(%d) = %d\n", $data->id, $data->number, $data->result);
-
-        return new YFlowData($data->id, $data->number);
-    });
-
-$ip = new Ip(new YFlowData(5, 5, 5));
-$flow($ip);
-
-$flow->await();*/
-
-/*$driver = match (random_int(1, 1)) {
+$driver = match (random_int(1, 2)) {
     1 => new AmpDriver(),
-    2 => new FiberDriver(),
-    3 => new ReactDriver(),
-    4 => new SwooleDriver(),
+    2 => new ReactDriver(),
+    // 3 => new FiberDriver(),
+    // 4 => new SwooleDriver(),
     // 5 => new SpatieDriver(),
 };
 printf("Use %s\n", $driver::class);
@@ -116,86 +66,9 @@ function factorialGen(callable $func): Closure
 function factorialYMemo(int $n): int
 {
     return Ymemo('factorialGen')($n);
-}*/
-
-/*
-use Amp\Promise;
-use Amp\Deferred;
-
-function Ywrap(callable $f, callable $wrapperFunc) {
-    $U = fn($x) => $x($x);
-    return $U(fn($x) => $f($wrapperFunc(fn($y) => Promise\wait($U($x)($y)))));
 }
 
-function asyncWrapper(callable $f) {
-    return function($y) use ($f) {
-        $deferred = new Deferred();
-        $deferred->resolve($f($y));  // Resolve immediately
-        return $deferred->promise();
-    };
-}
-
-function Ymemo($f) {
-    return Ywrap($f, 'asyncWrapper');
-}
-
-function factorialGen(callable $func) {
-    return function (int $n) use ($func) {
-        $deferred = new Deferred();
-        $result = ($n <= 1) ? 1 : $n * Promise\wait($func($n - 1));
-        $deferred->resolve($result);  // Resolve immediately
-        return $deferred->promise();
-    };
-}
-
-function factorialYMemo(int $n) {
-    return Promise\wait(Ymemo('factorialGen')($n));
-}
-
-// Usage
-Amp\Loop::run(function() {
-    $result = factorialYMemo(5);
-    echo $result; // Expected: 120
-});
-*/
-
-/*
-use Amp\Promise;
-
-class Flow {
-    // ... other combinators ...
-
-    public static function Y($f) {
-        return (function ($x) use ($f) {
-            return $f(function ($y) use ($x) {
-                return Promise\wait($x($x)($y));
-            });
-        })(function ($x) {
-            return $f(function ($y) use ($x) {
-                return Promise\wait($x($x)($y));
-            });
-        });
-    }
-
-    // ... rest of the class ...
-}
-
-use Amp\Loop;
-
-Loop::run(function() {
-    $factorial = Flow::Y(function ($f) {
-        return function ($x) use ($f) {
-            return $x == 0 ? 1 : $x * $f($x - 1);
-        };
-    });
-
-    echo $factorial(5); // Outputs: 120
-});
-*/
-
-// factorialYMemo(6) . ' ' . factorialYMemo(5);
-
-/*$factorialJob = static function (YFlowData $data): YFlowData {
+$factorialJob = static function (YFlowData $data): YFlowData {
     printf("*... #%d - Job 1 : Calculating factorial(%d)\n", $data->id, $data->number);
 
     // raw factorial calculation
@@ -207,7 +80,7 @@ Loop::run(function() {
 };
 
 $factorialYJobBefore = static function (YFlowData $data): YFlowData {
-    printf(".*.. #%d - Job 2 : Calculating factorial(%d)\n", $data->id, $data->number);
+    printf(".*.. #%d - Job 2 : Calculating factorialYJob(%d)\n", $data->id, $data->number);
 
     return new YFlowData($data->id, $data->number, $data->number);
 };
@@ -223,7 +96,7 @@ $factorialYJob = static function ($factorial) {
 };
 
 $factorialYJobAfter = static function (YFlowData $data): YFlowData {
-    printf(".*.. #%d - Job 2 : Result for factorial(%d) = %d\n", $data->id, $data->number, $data->result);
+    printf(".*.. #%d - Job 2 : Result for factorialYJob(%d) = %d\n", $data->id, $data->number, $data->result);
 
     return new YFlowData($data->id, $data->number);
 };
@@ -238,16 +111,41 @@ $factorialYMemoJob = static function (YFlowData $data): YFlowData {
     return new YFlowData($data->id, $data->number);
 };
 
-$factorialYAsyncHandlerJobBefore = static function (YFlowData $data): YFlowData {
-    printf("...* #%d - Job 4 : Calculating factorial(%d)\n", $data->id, $data->number);
+// Define the Y-Combinator
+$U = static fn (Closure $f) => $f($f);
+$Y = static fn (Closure $f) => $U(static fn (Closure $x) => $f(static fn ($y) => $U($x)($y)));
+
+$factorialYJobDeferBefore = static function (YFlowData $data) {
+    printf("...* #%d - Job 4 : Calculating factorialYJobDefer(%d)\n", $data->id, $data->number);
 
     return new YFlowData($data->id, $data->number, $data->number);
 };
 
-$factorialYAsyncHandlerJobAfter = static function (YFlowData $data): YFlowData {
-    printf("...* #%d - Job 4 : Result for factorial(%d) = %d\n", $data->id, $data->number, $data->result);
+$factorialYJobDefer = $Y(static function ($factorial) {
+    return static function ($args) use ($factorial) {
+        [$data, $defer] = $args;
 
-    return new YFlowData($data->id, $data->number);
+        return $defer(static function ($complete, $async) use ($data, $defer, $factorial) {
+            if ($data->result <= 1) {
+                $complete([new YFlowData($data->id, $data->number, 1), $defer]);
+            } else {
+                $async($factorial([new YFlowData($data->id, $data->number, $data->result - 1), $defer]), static function ($result) use ($data, $complete) {
+                    [$resultData, $defer] = $result;
+                    $complete([new YFlowData($data->id, $data->number, $data->result * $resultData->result), $defer]);
+                });
+            }
+        });
+    };
+});
+
+$factorialYJobDeferAfter = static function ($args) {
+    [$data, $defer] = $args;
+
+    return $defer(static function ($complete) use ($data, $defer) {
+        printf("...* #%d - Job 4 : Result for factorialYJobDefer(%d) = %d\n", $data->id, $data->number, $data->result);
+
+        $complete([new YFlowData($data->id, $data->number), $defer]);
+    });
 };
 
 $flow = Flow::do(static function () use (
@@ -256,22 +154,23 @@ $flow = Flow::do(static function () use (
     $factorialYJob,
     $factorialYJobAfter,
     $factorialYMemoJob,
-    $factorialYAsyncHandlerJobBefore,
-    $factorialYAsyncHandlerJobAfter
+    $factorialYJobDeferBefore,
+    $factorialYJobDefer,
+    $factorialYJobDeferAfter
 ) {
-    //yield [$factorialJob];
-    //yield [$factorialYJobBefore];
-    //yield new YFlow($factorialYJob);
-    //yield [$factorialYJobAfter];
-    //yield [$factorialYMemoJob];
-    yield [$factorialYAsyncHandlerJobBefore];
-    yield [$factorialYJob, null, null, null, new YAsyncHandler()];
-    yield [$factorialYAsyncHandlerJobAfter];
+    yield [$factorialJob];
+    yield [$factorialYJobBefore];
+    yield new YFlow($factorialYJob);
+    yield [$factorialYJobAfter];
+    yield [$factorialYMemoJob];
+    yield [$factorialYJobDeferBefore];
+    yield [$factorialYJobDefer, null, null, null, new DeferAsyncHandler()];
+    yield [$factorialYJobDeferAfter, null, null, null, new DeferAsyncHandler()];
 }, ['driver' => $driver]);
 
-for ($i = 5; $i <= 5; $i++) {
+for ($i = 1; $i <= 5; $i++) {
     $ip = new Ip(new YFlowData($i, $i));
     $flow($ip);
 }
 
-$flow->await();*/
+$flow->await();

@@ -107,4 +107,3 @@ $asyncTask = static function ($job1, $job2, $job3, $errorJob1, $errorJob2, $driv
 };
 $asyncTask($job1, $job2, $job3, $errorJob1, $errorJob2, $driver);
 echo "ended - synchronous\n";
-echo 'maths - 4 + 4 = ' . (4 + 4) . "\n";
