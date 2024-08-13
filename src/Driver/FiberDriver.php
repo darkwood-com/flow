@@ -36,12 +36,34 @@ class FiberDriver implements DriverInterface
 
     public function async(Closure $callback): Closure
     {
-        return static function () {};
+        return static function (...$args) use ($callback) {
+            return new Fiber(static function () use ($callback, $args) {
+                try {
+                    return $callback(...$args);
+                } catch (Throwable $exception) {
+                    return new RuntimeException($exception->getMessage(), $exception->getCode(), $exception);
+                }
+            });
+        };
     }
 
     public function defer(Closure $callback): mixed
     {
-        return null;
+        $fiber = new Fiber(static function () use ($callback) {
+            try {
+                $callback(static function ($result) {
+                    Fiber::suspend($result);
+                }, static function ($fn, $next) {
+                    $fn($next);
+                });
+            } catch (Throwable $exception) {
+                Fiber::suspend(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
+            }
+        });
+
+        $fiber->start();
+
+        return $fiber->resume();
     }
 
     public function await(array &$stream): void
