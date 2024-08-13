@@ -26,7 +26,7 @@ class YFlowTest extends TestCase
      * @param DriverInterface<T1,T2>  $driver
      * @param IpStrategyInterface<T1> $ipStrategy
      */
-    public function testJob(DriverInterface $driver, IpStrategyInterface $ipStrategy, Closure $job, int $resultNumber): void
+    public function testJob(DriverInterface $driver, Closure $job, IpStrategyInterface $ipStrategy, int $resultNumber): void
     {
         $ip = new Ip(new ArrayObject(['number' => 6]));
         $errorJob = static function () {};
@@ -45,14 +45,14 @@ class YFlowTest extends TestCase
      */
     public static function provideJobCases(): iterable
     {
-        return self::matrix(static fn () => [
+        return self::matrix(static fn (DriverInterface $driver, $strategyBuilder) => [
             'job' => [static function (callable $factorial): Closure {
                 return static function (ArrayObject $data) use ($factorial) {
                     return new ArrayObject([
                         'number' => ($data['number'] <= 1) ? 1 : $data['number'] * $factorial(new ArrayObject(['number' => $data['number'] - 1]))['number'],
                     ]);
                 };
-            }, 720],
+            }, $strategyBuilder(), 720],
         ]);
     }
 }

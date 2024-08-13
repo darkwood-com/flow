@@ -37,12 +37,11 @@ trait FlowTrait
 
         $matrixDatas = [];
         foreach ($drivers as $keyDriver => $driverBuilder) {
-            $driver = $driverBuilder();
-            $dataValues = $datas($driver);
             foreach ($strategies as $keyStrategy => $strategyBuilder) {
-                $strategy = $strategyBuilder();
+                $driver = $driverBuilder();
+                $dataValues = $datas($driver, $strategyBuilder);
                 foreach ($dataValues as $key => $values) {
-                    $matrixDatas["{$keyDriver}.{$keyStrategy}.{$key}"] = [$driver, $strategy, ...$values];
+                    $matrixDatas["{$keyDriver}.{$keyStrategy}.{$key}"] = [$driver, ...$values];
                 }
             }
         }
