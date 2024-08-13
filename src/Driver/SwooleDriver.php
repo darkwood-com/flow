@@ -40,8 +40,8 @@ class SwooleDriver implements DriverInterface
 
     public function async(Closure $callback): Closure
     {
-        return static function ($onResolve) use ($callback) {
-            return static function (...$args) use ($onResolve, $callback) {
+        return static function (...$args) use ($callback) {
+            return static function ($onResolve) use ($callback, $args) {
                 go(static function () use ($args, $callback, $onResolve) {
                     try {
                         $return = $callback(...$args, ...($args = []));
@@ -65,16 +65,13 @@ class SwooleDriver implements DriverInterface
             return function (mixed $data) use ($job) {
                 $async = $this->async($job);
 
-                $next = static fn ($value) => $value;
                 if ($data === null) {
-                    $async($next)();
+                    $fn = $async();
                 } else {
-                    $async($next)($data);
+                    $fn = $async($data);
                 }
 
-                return static function ($onResolve) use ($next) {
-                    $next($onResolve);
-                };
+                return $fn;
             };
         };
 
