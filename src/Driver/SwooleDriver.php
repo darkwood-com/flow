@@ -65,13 +65,7 @@ class SwooleDriver implements DriverInterface
             return function (mixed $data) use ($job) {
                 $async = $this->async($job);
 
-                if ($data === null) {
-                    $fn = $async();
-                } else {
-                    $fn = $async($data);
-                }
-
-                return $fn;
+                return $async($data);
             };
         };
 

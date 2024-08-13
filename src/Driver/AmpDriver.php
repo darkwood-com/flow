@@ -46,6 +46,9 @@ class AmpDriver implements DriverInterface
         }
     }
 
+    /**
+     * @return Closure(TArgs): Future<TReturn>
+     */
     public function async(Closure $callback): Closure
     {
         return static function (...$args) use ($callback) {
@@ -59,6 +62,9 @@ class AmpDriver implements DriverInterface
         };
     }
 
+    /**
+     * @return Future<TReturn>
+     */
     public function defer(Closure $callback): Future
     {
         $deferred = new DeferredFuture();
@@ -84,20 +90,18 @@ class AmpDriver implements DriverInterface
             return function (mixed $data) use ($job) {
                 $async = $this->async($job);
 
-                if ($data === null) {
-                    $future = $async();
-                } else {
-                    $future = $async($data);
-                }
+                $future = $async($data);
 
-                return static function ($map) use ($future) {
+                return static function (Closure $map) use ($future) {
+                    /** @var Closure(TReturn): mixed $map */
                     $future->map($map);
                 };
             };
         };
 
         $defer = function (Closure $job) {
-            return function ($map) use ($job) {
+            return function (Closure $map) use ($job) {
+                /** @var Closure(TReturn): mixed $map */
                 $future = $this->defer($job);
                 $future->map($map);
             };
@@ -143,7 +147,7 @@ class AmpDriver implements DriverInterface
         delay($seconds);
     }
 
-    public function tick($interval, Closure $callback): Closure
+    public function tick(float $interval, Closure $callback): Closure
     {
         $this->ticks++;
         $tickId = EventLoop::repeat($interval, $callback);

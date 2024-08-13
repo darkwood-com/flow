@@ -62,6 +62,7 @@ class Flow implements FlowInterface
      * @param Closure(T1): T2                   $job
      * @param Closure(ExceptionInterface): void $errorJob
      * @param null|IpStrategyInterface<T1>      $ipStrategy
+     * @param null|AsyncHandlerInterface<T1>    $asyncHandler
      * @param null|DriverInterface<T1,T2>       $driver
      */
     public function __construct(

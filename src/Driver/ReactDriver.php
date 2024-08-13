@@ -59,6 +59,9 @@ class ReactDriver implements DriverInterface
         };
     }
 
+    /**
+     * @return Promise<TReturn>
+     */
     public function defer(Closure $callback): Promise
     {
         $deferred = new Deferred();
@@ -82,11 +85,7 @@ class ReactDriver implements DriverInterface
             return function (mixed $data) use ($job) {
                 $async = $this->async($job);
 
-                if ($data === null) {
-                    $promise = $async();
-                } else {
-                    $promise = $async($data);
-                }
+                $promise = $async($data);
 
                 return static function ($then) use ($promise) {
                     $promise->then($then);

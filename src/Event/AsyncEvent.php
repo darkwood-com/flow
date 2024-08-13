@@ -8,8 +8,14 @@ use Closure;
 use Flow\Ip;
 use Symfony\Contracts\EventDispatcher\Event;
 
+/**
+ * @template T
+ */
 final class AsyncEvent extends Event
 {
+    /**
+     * @param Ip<T> $ip
+     */
     public function __construct(
         private Closure $async,
         private Closure $defer,
@@ -33,6 +39,9 @@ final class AsyncEvent extends Event
         return $this->job;
     }
 
+    /**
+     * @return Ip<T>
+     */
     public function getIp(): Ip
     {
         return $this->ip;

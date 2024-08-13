@@ -24,6 +24,8 @@ interface DriverInterface
      * $callback will be given two callbacks
      * - an complete callback to store result
      * - an async callback to go to the next async call.
+     *
+     * @param Closure(callable(TReturn): void, callable(mixed, callable): void): void $callback
      */
     public function defer(Closure $callback): mixed;
 

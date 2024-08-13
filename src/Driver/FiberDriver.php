@@ -54,11 +54,7 @@ class FiberDriver implements DriverInterface
                     $exception = null;
 
                     try {
-                        if ($data === null) {
-                            $fiber->start();
-                        } else {
-                            $fiber->start($data);
-                        }
+                        $fiber->start($data);
                     } catch (Throwable $fiberException) {
                         $exception = $fiberException;
                     }

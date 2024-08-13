@@ -8,6 +8,11 @@ use Flow\AsyncHandlerInterface;
 use Flow\Event;
 use Flow\Event\AsyncEvent;
 
+/**
+ * @template T
+ *
+ * @implements AsyncHandlerInterface<T>
+ */
 final class DeferAsyncHandler implements AsyncHandlerInterface
 {
     public static function getSubscribedEvents()

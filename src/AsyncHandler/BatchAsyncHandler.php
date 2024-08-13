@@ -12,12 +12,24 @@ use Symfony\Component\Messenger\Handler\BatchHandlerInterface;
 use Symfony\Component\Messenger\Handler\BatchHandlerTrait;
 use Throwable;
 
+/**
+ * @template T1
+ * @template T2
+ *
+ * @implements AsyncHandlerInterface<T1>
+ */
 final class BatchAsyncHandler implements BatchHandlerInterface, AsyncHandlerInterface
 {
     use BatchHandlerTrait;
 
+    /**
+     * @var AsyncHandlerInterface<T2>
+     */
     private AsyncHandlerInterface $asyncHandler;
 
+    /**
+     * @param null|AsyncHandlerInterface<T2> $asyncHandler
+     */
     public function __construct(
         private int $batchSize = 10,
         ?AsyncHandlerInterface $asyncHandler = null,
@@ -46,7 +58,7 @@ final class BatchAsyncHandler implements BatchHandlerInterface, AsyncHandlerInte
      * https://github.com/phpstan/phpstan/issues/6039
      * https://phpstan.org/r/8f7de023-9888-4dcb-b12c-e2fcf9547b6c.
      *
-     * @param array{0: AsyncEvent, 1: Acknowledger}[] $jobs
+     * @param array{0: AsyncEvent<T1>, 1: Acknowledger}[] $jobs
      *
      * @phpstan-ignore method.unused
      */
