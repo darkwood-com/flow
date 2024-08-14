@@ -15,11 +15,11 @@ use Flow\Flow\Flow;
 use Flow\Flow\YFlow;
 use Flow\Ip;
 
-$driver = match (random_int(1, 3)) {
+$driver = match (random_int(1, 4)) {
     1 => new AmpDriver(),
     2 => new ReactDriver(),
     3 => new FiberDriver(),
-    // 4 => new SwooleDriver(),
+    4 => new SwooleDriver(),
     // 5 => new SpatieDriver(),
 };
 printf("Use %s\n", $driver::class);

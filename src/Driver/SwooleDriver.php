@@ -69,8 +69,18 @@ class SwooleDriver implements DriverInterface
             };
         };
 
-        $defer = static function (Closure $job) use ($async) {
-            return $async($job);
+        $defer = static function (Closure $job) {
+            return static function (Closure $onResolve) use ($job) {
+                go(static function () use ($job, $onResolve) {
+                    try {
+                        $job($onResolve, static function ($fn, $next) {
+                            $fn($next);
+                        });
+                    } catch (Throwable $exception) {
+                        $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
+                    }
+                });
+            };
         };
 
         co::run(function () use (&$stream, $async, $defer) {

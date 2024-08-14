@@ -75,8 +75,16 @@ class SpatieDriver implements DriverInterface
             };
         };
 
-        $defer = static function (Closure $job) use ($async) {
-            return $async($job);
+        $defer = function (Closure $job) {
+            return function (Closure $onResolve) use ($job) {
+                $this->pool->add(static function () use ($job, $onResolve) {
+                    return $job($onResolve, static function ($fn, $next) {
+                        $fn($next);
+                    });
+                })->catch(static function (Throwable $exception) use ($onResolve) {
+                    $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
+                });
+            };
         };
 
         $nextIp = null;
