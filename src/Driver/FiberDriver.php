@@ -68,22 +68,16 @@ class FiberDriver implements DriverInterface
 
     public function await(array &$stream): void
     {
-        $async = static function ($ip, $index, $isTick) use (&$fiberDatas) {
-            return static function (Closure $job) use (&$fiberDatas, $ip, $index, $isTick) {
-                return static function (mixed $data) use (&$fiberDatas, $ip, $index, $isTick, $job) {
-                    $fiber = new Fiber($job);
+        $async = function ($ip, $index, $isTick) use (&$fiberDatas) {
+            return function (Closure $job) use (&$fiberDatas, $ip, $index, $isTick) {
+                return function (mixed $data) use (&$fiberDatas, $ip, $index, $isTick, $job) {
+                    $async = $this->async($job);
 
-                    $exception = null;
-
-                    try {
-                        $fiber->start($data);
-                    } catch (Throwable $fiberException) {
-                        $exception = $fiberException;
-                    }
+                    $fiber = $async($data);
+                    $fiber->start();
 
                     $fiberDatas[] = [
                         'fiber' => $fiber,
-                        'exception' => $exception,
                         'ip' => $ip,
                         'index' => $index,
                         'isTick' => $isTick,
@@ -95,7 +89,11 @@ class FiberDriver implements DriverInterface
         };
 
         $defer = static function ($ip, $index, $isTick) use ($async) {
-            return $async($ip, $index, $isTick);
+            return static function (Closure $job) use ($async, $ip, $index, $isTick) {
+                $asyncJob = $async($ip, $index, $isTick);
+
+                return $asyncJob($job);
+            };
         };
 
         $tick = 0;
@@ -128,25 +126,18 @@ class FiberDriver implements DriverInterface
 
             foreach ($fiberDatas as $i => $fiberData) { // @phpstan-ignore-line see https://github.com/phpstan/phpstan/issues/11468
                 if (!$fiberData['fiber']->isTerminated() and $fiberData['fiber']->isSuspended()) {
-                    try {
-                        $fiberData['fiber']->resume();
-                    } catch (Throwable $exception) {
-                        $fiberDatas[$i]['exception'] = $exception;
-                    }
+                    $fiberData['fiber']->resume();
                 } else {
-                    if ($fiberData['exception'] === null) {
-                        $data = $fiberData['fiber']->getReturn();
+                    $data = $fiberData['fiber']->getReturn();
 
-                        if ($fiberData['isTick'] === false and array_key_exists($fiberData['index'] + 1, $stream['fnFlows'])) {
-                            $ip = new Ip($data);
-                            $stream['ips']++;
-                            $stream['dispatchers'][$fiberData['index'] + 1]->dispatch(new PushEvent($ip), Event::PUSH);
-                        }
-                    } elseif (array_key_exists($fiberData['index'], $stream['fnFlows']) and $stream['fnFlows'][$fiberData['index']]['errorJob'] !== null) {
-                        $stream['fnFlows'][$fiberData['index']]['errorJob'](
-                            new RuntimeException($fiberData['exception']->getMessage(), $fiberData['exception']->getCode(), $fiberData['exception'])
-                        );
+                    if ($data instanceof RuntimeException and array_key_exists($fiberData['index'], $stream['fnFlows']) and $stream['fnFlows'][$fiberData['index']]['errorJob'] !== null) {
+                        $stream['fnFlows'][$fiberData['index']]['errorJob']($data);
+                    } elseif ($fiberData['isTick'] === false and array_key_exists($fiberData['index'] + 1, $stream['fnFlows'])) {
+                        $ip = new Ip($data);
+                        $stream['ips']++;
+                        $stream['dispatchers'][$fiberData['index'] + 1]->dispatch(new PushEvent($ip), Event::PUSH);
                     }
+
                     $stream['dispatchers'][$fiberData['index']]->dispatch(new PopEvent($fiberData['ip']), Event::POP);
                     $stream['ips']--;
                     unset($fiberDatas[$i]);
