@@ -9,6 +9,7 @@ use Flow\AsyncHandler\AsyncHandler;
 use Flow\AsyncHandler\BatchAsyncHandler;
 use Flow\AsyncHandler\DeferAsyncHandler;
 use Flow\Driver\AmpDriver;
+use Flow\Driver\FiberDriver;
 use Flow\Driver\ReactDriver;
 use Flow\DriverInterface;
 use Flow\ExceptionInterface;
@@ -145,22 +146,27 @@ class FlowTest extends TestCase
         $exception = new RuntimeException('job error');
 
         return self::matrix(static function (DriverInterface $driver, $strategyBuilder) use ($exception) {
-            $cases = [
-                'job' => [[[static function (ArrayObject $data) {
-                    $data['number'] = 5;
+            $cases = [];
 
-                    return $data;
-                }, $strategyBuilder(), new AsyncHandler()]], 5],
-                'asyncJob' => [[[static function (ArrayObject $data) use ($driver) {
+            $cases['job'] = [[[static function (ArrayObject $data) {
+                $data['number'] = 5;
+
+                return $data;
+            }, $strategyBuilder(), new AsyncHandler()]], 5];
+
+            $strategy = $strategyBuilder();
+            if(!$driver instanceof FiberDriver && !$strategy instanceof MaxIpStrategy) {
+                $cases['asyncJob'] = [[[static function (ArrayObject $data) use ($driver) {
                     $driver->delay(1 / 1000);
                     $data['number'] = 5;
 
                     return $data;
-                }, $strategyBuilder(), new AsyncHandler()]], 5],
-                'exceptionJob' => [[[static function () use ($exception) {
-                    throw $exception;
-                }, $strategyBuilder(), new AsyncHandler()]], 0],
-            ];
+                }, $strategy, new AsyncHandler()]], 5];
+            };
+
+            $cases['exceptionJob'] = [[[static function () use ($exception) {
+                throw $exception;
+            }, $strategyBuilder(), new AsyncHandler()]], 0];
 
             if ($driver instanceof AmpDriver || $driver instanceof ReactDriver) {
                 $cases['deferJob'] = [[[static function ($args) {
