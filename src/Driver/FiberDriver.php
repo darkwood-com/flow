@@ -96,11 +96,25 @@ class FiberDriver implements DriverInterface
             };
         };
 
-        $defer = static function ($isTick) use ($async) {
-            return static function (Closure $job) use ($async, $isTick) {
-                $asyncJob = $async($isTick);
+        $defer = static function ($isTick) {
+            return static function (Closure $job) use ($isTick) {
+                return static function (Closure $next) use ($isTick, $job) {
+                    $fiber = new Fiber(static function () use ($isTick, $job, $next) {
+                        try {
+                            $job(static function ($return) use ($isTick, $next) {
+                                if ($isTick === false) {
+                                    $next($return);
+                                }
+                            }, static function ($fn, $next) {
+                                $fn($next);
+                            });
+                        } catch (Throwable $exception) {
+                            return new RuntimeException($exception->getMessage(), $exception->getCode(), $exception);
+                        }
+                    });
 
-                return $asyncJob($job);
+                    $fiber->start();
+                };
             };
         };
 

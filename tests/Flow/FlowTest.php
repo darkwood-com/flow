@@ -155,14 +155,14 @@ class FlowTest extends TestCase
             }, $strategyBuilder(), new AsyncHandler()]], 5];
 
             $strategy = $strategyBuilder();
-            if(!$driver instanceof FiberDriver && !$strategy instanceof MaxIpStrategy) {
+            if (!$driver instanceof FiberDriver && !$strategy instanceof MaxIpStrategy) {
                 $cases['asyncJob'] = [[[static function (ArrayObject $data) use ($driver) {
                     $driver->delay(1 / 1000);
                     $data['number'] = 5;
 
                     return $data;
                 }, $strategy, new AsyncHandler()]], 5];
-            };
+            }
 
             $cases['exceptionJob'] = [[[static function () use ($exception) {
                 throw $exception;
