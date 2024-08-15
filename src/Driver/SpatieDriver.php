@@ -47,8 +47,8 @@ class SpatieDriver implements DriverInterface
 
     public function async(Closure $callback): Closure
     {
-        return function ($onResolve) use ($callback) {
-            return function (...$args) use ($onResolve, $callback) {
+        return function (...$args) use ($callback) {
+            return function ($onResolve) use ($callback, $args) {
                 $this->pool->add(static function () use ($callback, $args) {
                     return $callback(...$args, ...($args = []));
                 })->then(static function ($return) use ($onResolve) {
@@ -60,16 +60,31 @@ class SpatieDriver implements DriverInterface
         };
     }
 
+    public function defer(Closure $callback): mixed
+    {
+        return null;
+    }
+
     public function await(array &$stream): void
     {
-        $async = function ($ip, $fnFlows, $index, $onResolve) {
-            $async = $this->async($fnFlows[$index]['job']);
+        $async = function (Closure $job) {
+            return function (mixed $data) use ($job) {
+                $async = $this->async($job);
 
-            if ($ip->data === null) {
-                return $async($onResolve)();
-            }
+                return $async($data);
+            };
+        };
 
-            return $async($onResolve)($ip->data);
+        $defer = function (Closure $job) {
+            return function (Closure $onResolve) use ($job) {
+                $this->pool->add(static function () use ($job, $onResolve) {
+                    return $job($onResolve, static function ($fn, $next) {
+                        $fn($next);
+                    });
+                })->catch(static function (Throwable $exception) use ($onResolve) {
+                    $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
+                });
+            };
         };
 
         $nextIp = null;
@@ -78,7 +93,7 @@ class SpatieDriver implements DriverInterface
                 foreach ($stream['dispatchers'] as $index => $dispatcher) {
                     $nextIp = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIp();
                     if ($nextIp !== null) {
-                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $nextIp, $stream['fnFlows'], $index, static function ($data) use (&$stream, $index, $nextIp) {
+                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $stream['fnFlows'][$index]['job'], $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
                             if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
                                 $stream['fnFlows'][$index]['errorJob']($data);
                             } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {

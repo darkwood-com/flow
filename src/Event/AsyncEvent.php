@@ -5,33 +5,50 @@ declare(strict_types=1);
 namespace Flow\Event;
 
 use Closure;
+use Flow\Ip;
 use Symfony\Contracts\EventDispatcher\Event;
 
+/**
+ * @template T
+ */
 final class AsyncEvent extends Event
 {
     /**
-     * @var array<mixed>
+     * @param Ip<T> $ip
      */
-    private array $args;
-
-    /**
-     * @param array<mixed> $args
-     */
-    public function __construct(private Closure $async, ...$args)
-    {
-        $this->args = $args;
-    }
+    public function __construct(
+        private Closure $async,
+        private Closure $defer,
+        private Closure $job,
+        private Ip $ip,
+        private Closure $callback
+    ) {}
 
     public function getAsync(): Closure
     {
         return $this->async;
     }
 
-    /**
-     * @return array<mixed>
-     */
-    public function getArgs(): array
+    public function getDefer(): Closure
     {
-        return $this->args;
+        return $this->defer;
+    }
+
+    public function getJob(): Closure
+    {
+        return $this->job;
+    }
+
+    /**
+     * @return Ip<T>
+     */
+    public function getIp(): Ip
+    {
+        return $this->ip;
+    }
+
+    public function getCallback(): Closure
+    {
+        return $this->callback;
     }
 }

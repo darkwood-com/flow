@@ -13,7 +13,7 @@ use Flow\Event\AsyncEvent;
  *
  * @implements AsyncHandlerInterface<T>
  */
-final class AsyncHandler implements AsyncHandlerInterface
+final class DeferAsyncHandler implements AsyncHandlerInterface
 {
     public static function getSubscribedEvents()
     {
@@ -25,9 +25,12 @@ final class AsyncHandler implements AsyncHandlerInterface
     public function async(AsyncEvent $event): void
     {
         $ip = $event->getIp();
-        $async = $event->getAsync();
-        $asyncJob = $async($event->getJob());
-        $next = $asyncJob($ip->data);
-        $next($event->getCallback());
+        $job = $event->getJob();
+        $next = $job([$ip->data, $event->getDefer()]);
+        $next(static function ($result) use ($event) {
+            [$data] = $result;
+            $callback = $event->getCallback();
+            $callback($data);
+        });
     }
 }

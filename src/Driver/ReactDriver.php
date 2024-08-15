@@ -15,6 +15,8 @@ use Flow\Exception\RuntimeException;
 use Flow\Ip;
 use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
+use React\Promise\Deferred;
+use React\Promise\Promise;
 use RuntimeException as NativeRuntimeException;
 use Throwable;
 
@@ -57,27 +59,56 @@ class ReactDriver implements DriverInterface
         };
     }
 
+    /**
+     * @return Promise<TReturn>
+     */
+    public function defer(Closure $callback): Promise
+    {
+        $deferred = new Deferred();
+
+        try {
+            $callback(static function ($return) use ($deferred) {
+                $deferred->resolve($return);
+            }, static function ($fn, $next) {
+                $fn($next);
+            });
+        } catch (Throwable $exception) {
+            $deferred->resolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
+        }
+
+        return $deferred->promise();
+    }
+
     public function await(array &$stream): void
     {
-        $async = function ($ip, $fnFlows, $index, $then) {
-            $async = $this->async($fnFlows[$index]['job']);
+        $async = function (Closure $job) {
+            return function (mixed $data) use ($job) {
+                $async = $this->async($job);
 
-            if ($ip->data === null) {
-                $promise = $async();
-            } else {
-                $promise = $async($ip->data);
-            }
+                $promise = $async($data);
 
-            $promise->then($then);
+                return static function ($then) use ($promise) {
+                    $promise->then($then);
+                };
+            };
         };
 
-        $loop = function () use (&$loop, &$stream, $async) {
+        $defer = function (Closure $job) {
+            return function ($then) use ($job) {
+                $promise = $this->defer($job);
+                $promise->then($then);
+            };
+        };
+
+        $loop = function () use (&$loop, &$stream, $async, $defer) {
             $nextIp = null;
             do {
                 foreach ($stream['dispatchers'] as $index => $dispatcher) {
                     $nextIp = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIp();
                     if ($nextIp !== null) {
-                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $nextIp, $stream['fnFlows'], $index, static function ($data) use (&$stream, $index, $nextIp) {
+                        $job = $stream['fnFlows'][$index]['job'];
+
+                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $job, $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
                             if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
                                 $stream['fnFlows'][$index]['errorJob']($data);
                             } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {

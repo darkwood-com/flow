@@ -92,6 +92,7 @@ Video of Y-Combinator : [https://www.youtube.com/watch?v=QSS_ZcO8Q1g](https://ww
 - Lambda calculus language explanation : [https://tgdwyer.github.io/lambdacalculus](https://tgdwyer.github.io/lambdacalculus)
 - Combinator : [https://github.com/loophp/combinator](https://github.com/loophp/combinator)
 - Lambda-php : [https://github.com/igorw/lambda-php](https://github.com/igorw/lambda-php)
+- Deriving the y combinator in 7 easy steps : [https://gist.github.com/igstan/388351](https://gist.github.com/igstan/388351)
 
 ## Messaging approach with East oriented code from [Frédéric Hardy](https://twitter.com/mageekguy)
 

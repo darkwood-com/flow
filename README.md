@@ -64,6 +64,7 @@ $flow($ip);
 A working script is available in the bundled `examples` directory
 
 - Run Flow : `php examples/flow.php`
+- Run Y-Combinator Flow : `php examples/yflow.php`
 - Start Server : `php examples/server.php`
   Start Client(s) : `php examples/client.php`
 

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Flow\Test\AsyncHandler;
 
-use Flow\AsyncHandler\AsyncHandler;
+use Flow\AsyncHandler\DeferAsyncHandler;
 use Flow\Event\AsyncEvent;
 use Flow\Ip;
 use PHPUnit\Framework\TestCase;
 
 use function PHPUnit\Framework\assertSame;
 
-class AsyncHandlerTest extends TestCase
+class DeferAsyncHandlerTest extends TestCase
 {
     public function testAsyncEvent(): void
     {
@@ -20,19 +20,19 @@ class AsyncHandlerTest extends TestCase
         $event = new AsyncEvent(
             static fn ($x) => $x,
             static fn ($x) => $x,
-            static function ($data) use (&$result) {
-                [$n1, $n2] = $data;
+            static function ($args) use (&$result) {
+                [[$n1, $n2], $defer] = $args;
                 $result = $n1 + $n2;
 
-                return static function ($callback) {
-                    $callback();
+                return static function ($callback) use ($result) {
+                    $callback($result);
                 };
             },
-            new Ip([2, 6]),
+            new Ip([1, 7]),
             static function () {}
         );
 
-        $asyncHandler = new AsyncHandler();
+        $asyncHandler = new DeferAsyncHandler();
         $asyncHandler->async($event);
         assertSame(8, $result);
     }
