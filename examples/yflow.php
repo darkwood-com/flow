@@ -10,7 +10,7 @@ use Flow\Driver\FiberDriver;
 use Flow\Driver\ReactDriver;
 use Flow\Driver\SpatieDriver;
 use Flow\Driver\SwooleDriver;
-use Flow\Examples\Data\YFlowData;
+use Flow\Examples\Model\YFlowData;
 use Flow\Flow\Flow;
 use Flow\Flow\YFlow;
 use Flow\Ip;

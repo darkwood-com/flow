@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Flow\Examples\Data;
+namespace Flow\Examples\Model;
 
 readonly class DataC
 {
