@@ -57,6 +57,7 @@ $flow = Flow::do(static function() {
 
 $ip = new Ip(new D1(4));
 $flow($ip);
+$flow->await();
 ```
 
 ## Examples

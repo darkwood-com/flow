@@ -23,7 +23,7 @@
     "require": {
         "php": ">=8.3",
         "symfony/event-dispatcher": "^7.0",
-		"symfony/messenger": "^7.0"
+        "symfony/messenger": "^7.0"
     },
     "require-dev": {
         "amphp/amp": "^3.0",
