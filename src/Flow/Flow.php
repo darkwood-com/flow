@@ -17,6 +17,7 @@ use Flow\FlowInterface;
 use Flow\Ip;
 use Flow\IpStrategy\LinearIpStrategy;
 use Flow\IpStrategyInterface;
+use Flow\JobInterface;
 use Generator;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -42,12 +43,12 @@ class Flow implements FlowInterface
     ];
 
     /**
-     * @var Closure(T1): T2
+     * @var Closure(T1): T2|JobInterface<T1,T2>
      */
     private $job;
 
     /**
-     * @var null|Closure(ExceptionInterface): void
+     * @var null|Closure(ExceptionInterface): void|JobInterface<ExceptionInterface,void>
      */
     private $errorJob;
 
@@ -59,15 +60,15 @@ class Flow implements FlowInterface
     private DriverInterface $driver;
 
     /**
-     * @param Closure(T1): T2                   $job
-     * @param Closure(ExceptionInterface): void $errorJob
-     * @param null|IpStrategyInterface<T1>      $ipStrategy
-     * @param null|AsyncHandlerInterface<T1>    $asyncHandler
-     * @param null|DriverInterface<T1,T2>       $driver
+     * @param Closure(T1): T2|JobInterface<T1,T2>                                          $job
+     * @param null|Closure(ExceptionInterface): void|JobInterface<ExceptionInterface,void> $errorJob
+     * @param null|IpStrategyInterface<T1>                                                 $ipStrategy
+     * @param null|AsyncHandlerInterface<T1>                                               $asyncHandler
+     * @param null|DriverInterface<T1,T2>                                                  $driver
      */
     public function __construct(
-        Closure $job,
-        ?Closure $errorJob = null,
+        Closure|JobInterface $job,
+        null|Closure|JobInterface $errorJob = null,
         ?IpStrategyInterface $ipStrategy = null,
         ?EventDispatcherInterface $dispatcher = null,
         ?AsyncHandlerInterface $asyncHandler = null,
@@ -121,7 +122,7 @@ class Flow implements FlowInterface
         return self::flowUnwrap($generator, $config);
     }
 
-    public function fn(array|Closure|FlowInterface $flow): FlowInterface
+    public function fn(array|Closure|FlowInterface|JobInterface $flow): FlowInterface
     {
         $flow = self::flowUnwrap($flow, ['driver' => $this->driver]);
 
@@ -161,7 +162,7 @@ class Flow implements FlowInterface
      */
     private static function flowUnwrap($flow, ?array $config = null): FlowInterface
     {
-        if ($flow instanceof Closure) {
+        if ($flow instanceof Closure || $flow instanceof JobInterface) {
             return new self(...[...['job' => $flow], ...($config ?? [])]);
         }
         if (is_array($flow)) {

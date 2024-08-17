@@ -15,6 +15,7 @@ use Flow\Event\PullEvent;
 use Flow\Event\PushEvent;
 use Flow\Exception\RuntimeException;
 use Flow\Ip;
+use Flow\JobInterface;
 use Revolt\EventLoop;
 use Revolt\EventLoop\Driver;
 use RuntimeException as NativeRuntimeException;
@@ -49,10 +50,10 @@ class AmpDriver implements DriverInterface
     /**
      * @return Closure(TArgs): Future<TReturn>
      */
-    public function async(Closure $callback): Closure
+    public function async(Closure|JobInterface $callback): Closure
     {
         return static function (...$args) use ($callback) {
-            return async(static function (Closure $callback, array $args) {
+            return async(static function (Closure|JobInterface $callback, array $args) {
                 try {
                     return $callback(...$args, ...($args = []));
                 } catch (Throwable $exception) {
@@ -86,7 +87,7 @@ class AmpDriver implements DriverInterface
 
     public function await(array &$stream): void
     {
-        $async = function (Closure $job) {
+        $async = function (Closure|JobInterface $job) {
             return function (mixed $data) use ($job) {
                 $async = $this->async($job);
 
@@ -99,7 +100,7 @@ class AmpDriver implements DriverInterface
             };
         };
 
-        $defer = function (Closure $job) {
+        $defer = function (Closure|JobInterface $job) {
             return function (Closure $map) use ($job) {
                 /** @var Closure(TReturn): mixed $map */
                 $future = $this->defer($job);

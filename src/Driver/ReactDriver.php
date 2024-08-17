@@ -13,6 +13,7 @@ use Flow\Event\PullEvent;
 use Flow\Event\PushEvent;
 use Flow\Exception\RuntimeException;
 use Flow\Ip;
+use Flow\JobInterface;
 use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
 use React\Promise\Deferred;
@@ -46,7 +47,7 @@ class ReactDriver implements DriverInterface
         $this->eventLoop = $eventLoop ?? Loop::get();
     }
 
-    public function async(Closure $callback): Closure
+    public function async(Closure|JobInterface $callback): Closure
     {
         return static function (...$args) use ($callback) {
             return async(static function () use ($callback, $args) {
@@ -81,7 +82,7 @@ class ReactDriver implements DriverInterface
 
     public function await(array &$stream): void
     {
-        $async = function (Closure $job) {
+        $async = function (Closure|JobInterface $job) {
             return function (mixed $data) use ($job) {
                 $async = $this->async($job);
 
@@ -93,7 +94,7 @@ class ReactDriver implements DriverInterface
             };
         };
 
-        $defer = function (Closure $job) {
+        $defer = function (Closure|JobInterface $job) {
             return function ($then) use ($job) {
                 $promise = $this->defer($job);
                 $promise->then($then);

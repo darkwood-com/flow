@@ -20,7 +20,7 @@ class DeferAsyncHandlerTest extends TestCase
         $event = new AsyncEvent(
             static fn ($x) => $x,
             static fn ($x) => $x,
-            static function ($args) use (&$result) {
+            static function (array $args) use (&$result) {
                 [[$n1, $n2], $defer] = $args;
                 $result = $n1 + $n2;
 

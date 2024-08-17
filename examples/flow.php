@@ -17,6 +17,7 @@ use Flow\ExceptionInterface;
 use Flow\Flow\Flow;
 use Flow\Ip;
 use Flow\IpStrategy\MaxIpStrategy;
+use Flow\Job\ClosureJob;
 
 $driver = match (random_int(1, 4)) {
     1 => new AmpDriver(),
@@ -49,7 +50,7 @@ $job1 = static function (DataA $dataA) use ($driver): DataB {
     return new DataB($dataA->id, $d, $dataA->c);
 };
 
-$job2 = static function (DataB $dataB) use ($driver): DataC {
+$job2 = new ClosureJob(static function (DataB $dataB) use ($driver): DataC {
     printf(".* #%d - Job 2 Calculating %d * %d\n", $dataB->id, $dataB->d, $dataB->e);
 
     // simulating calculating some "heavy" operation from from 1 to 3 seconds
@@ -65,7 +66,7 @@ $job2 = static function (DataB $dataB) use ($driver): DataC {
     printf(".* #%d - Job 2 Result for %d * %d = %d and took %.01f seconds\n", $dataB->id, $dataB->d, $dataB->e, $f, $delay);
 
     return new DataC($dataB->id, $f);
-};
+});
 
 $job3 = static function (DataC $dataC): DataD {
     printf("** #%d - Job 3 Result is %d\n", $dataC->id, $dataC->f);

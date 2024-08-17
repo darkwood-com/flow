@@ -16,6 +16,7 @@ use Flow\ExceptionInterface;
 use Flow\Flow\Flow;
 use Flow\Ip;
 use Flow\IpStrategy\MaxIpStrategy;
+use Flow\Job\ClosureJob;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -148,11 +149,17 @@ class FlowTest extends TestCase
         return self::matrix(static function (DriverInterface $driver, $strategyBuilder) use ($exception) {
             $cases = [];
 
-            $cases['job'] = [[[static function (ArrayObject $data) {
+            $cases['closureJob'] = [[[static function (ArrayObject $data) {
                 $data['number'] = 5;
 
                 return $data;
             }, $strategyBuilder(), new AsyncHandler()]], 5];
+
+            $cases['classJob'] = [[[new ClosureJob(static function (ArrayObject $data) {
+                $data['number'] = 6;
+
+                return $data;
+            }), $strategyBuilder(), new AsyncHandler()]], 6];
 
             $strategy = $strategyBuilder();
             if (!$driver instanceof FiberDriver && !$strategy instanceof MaxIpStrategy) {

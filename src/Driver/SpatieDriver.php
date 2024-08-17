@@ -15,6 +15,7 @@ use Flow\Event\PullEvent;
 use Flow\Event\PushEvent;
 use Flow\Exception\RuntimeException;
 use Flow\Ip;
+use Flow\JobInterface;
 use RuntimeException as NativeRuntimeException;
 use Spatie\Async\Pool;
 use Throwable;
@@ -45,7 +46,7 @@ class SpatieDriver implements DriverInterface
         }
     }
 
-    public function async(Closure $callback): Closure
+    public function async(Closure|JobInterface $callback): Closure
     {
         return function (...$args) use ($callback) {
             return function ($onResolve) use ($callback, $args) {
@@ -67,7 +68,7 @@ class SpatieDriver implements DriverInterface
 
     public function await(array &$stream): void
     {
-        $async = function (Closure $job) {
+        $async = function (Closure|JobInterface $job) {
             return function (mixed $data) use ($job) {
                 $async = $this->async($job);
 
@@ -75,7 +76,7 @@ class SpatieDriver implements DriverInterface
             };
         };
 
-        $defer = function (Closure $job) {
+        $defer = function (Closure|JobInterface $job) {
             return function (Closure $onResolve) use ($job) {
                 $this->pool->add(static function () use ($job, $onResolve) {
                     return $job($onResolve, static function ($fn, $next) {
