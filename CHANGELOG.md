@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.2.x
+## v1.2.1
 
 - Add new Interface Flow\AsyncHandlerInterface to control the Event::SYNC step when processing an IP
     - Add Flow\AsyncHandler\AsyncHandler the default handler when Event::SYNC is dispatched
