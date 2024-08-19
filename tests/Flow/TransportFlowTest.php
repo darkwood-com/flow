@@ -8,7 +8,6 @@ use ArrayObject;
 use Flow\DriverInterface;
 use Flow\Flow\Flow;
 use Flow\Flow\TransportFlow;
-use Flow\IpStrategyInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
@@ -24,14 +23,17 @@ class TransportFlowTest extends TestCase
     /**
      * @dataProvider provideJobsCases
      *
-     * @param DriverInterface<T1,T2>  $driver
-     * @param IpStrategyInterface<T1> $ipStrategy
-     * @param array<mixed>            $jobs
+     * @param DriverInterface<T1,T2> $driver
+     * @param array<mixed>           $jobs
      */
-    public function testJobs(DriverInterface $driver, IpStrategyInterface $ipStrategy, array $jobs, int $resultNumber): void
+    public function testJobs(DriverInterface $driver, array $jobs, int $resultNumber): void
     {
         $flow = array_reduce(
-            array_map(static fn ($job) => new Flow($job, static function () {}, $ipStrategy, null, $driver), $jobs),
+            array_map(static function ($args) use ($driver) {
+                [$job, $ipStrategy] = $args;
+
+                return new Flow($job, static function () {}, $ipStrategy, null, null, $driver);
+            }, $jobs),
             static fn ($flow, $flowIt) => $flow ? $flow->fn($flowIt) : $flowIt
         );
         $flow->fn(static function (ArrayObject $data) use ($resultNumber) {
@@ -63,18 +65,18 @@ class TransportFlowTest extends TestCase
      */
     public static function provideJobsCases(): iterable
     {
-        return self::matrix(static fn (DriverInterface $driver) => [
-            'job' => [[static function (ArrayObject $data) {
+        return self::matrix(static fn (DriverInterface $driver, $strategyBuilder) => [
+            'job' => [[[static function (ArrayObject $data) {
                 $data['number'] = 1;
 
                 return $data;
-            }], 1],
-            'asyncJob' => [[static function (ArrayObject $data) use ($driver) {
+            }, $strategyBuilder()]], 1],
+            'asyncJob' => [[[static function (ArrayObject $data) use ($driver) {
                 $driver->delay(1 / 1000);
                 $data['number'] = 5;
 
                 return $data;
-            }], 5],
+            }, $strategyBuilder()]], 5],
         ]);
     }
 }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Flow\IpStrategy;
 
+use Flow\Event;
 use Flow\Event\PopEvent;
 use Flow\Event\PullEvent;
 use Flow\Event\PushEvent;
-use Flow\IpStrategyEvent;
 use Flow\IpStrategyInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -44,9 +44,9 @@ class MaxIpStrategy implements IpStrategyInterface
     public static function getSubscribedEvents()
     {
         return [
-            IpStrategyEvent::PUSH => 'push',
-            IpStrategyEvent::PULL => 'pull',
-            IpStrategyEvent::POP => 'pop',
+            Event::PUSH => 'push',
+            Event::PULL => 'pull',
+            Event::POP => 'pop',
         ];
     }
 
@@ -55,7 +55,7 @@ class MaxIpStrategy implements IpStrategyInterface
      */
     public function push(PushEvent $event): void
     {
-        $this->dispatcher->dispatch($event, IpStrategyEvent::PUSH);
+        $this->dispatcher->dispatch($event, Event::PUSH);
     }
 
     /**
@@ -64,7 +64,7 @@ class MaxIpStrategy implements IpStrategyInterface
     public function pull(PullEvent $event): void
     {
         if ($this->processing < $this->max) {
-            $ip = $this->dispatcher->dispatch($event, IpStrategyEvent::PULL)->getIp();
+            $ip = $this->dispatcher->dispatch($event, Event::PULL)->getIp();
             if ($ip) {
                 $this->processing++;
             }
@@ -78,7 +78,7 @@ class MaxIpStrategy implements IpStrategyInterface
      */
     public function pop(PopEvent $event): void
     {
-        $this->dispatcher->dispatch($event, IpStrategyEvent::POP);
+        $this->dispatcher->dispatch($event, Event::POP);
         $this->processing--;
     }
 }

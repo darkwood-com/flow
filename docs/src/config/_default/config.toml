@@ -1,4 +1,4 @@
-baseurl = "https://darkwood-fr.github.io/flow/"
+baseurl = "https://darkwood-com.github.io/flow/"
 canonifyURLs = false
 disableAliases = true
 disableHugoGeneratorInject = true

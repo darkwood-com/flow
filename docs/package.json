@@ -1,25 +1,25 @@
 {
-  "name": "@darkwood-fr/flow",
+  "name": "@darkwood-com/flow",
   "description": "Flow",
   "author": {
     "name": "Mathieu Ledru",
     "email": "mathieu@darkwood.fr"
   },
   "bugs": {
-    "url": "https://github.com/darkwood-fr/flow"
+    "url": "https://github.com/darkwood-com/flow"
   },
-  "homepage": "https://github.com/darkwood-fr/flow/tree/1.x#readme",
+  "homepage": "https://github.com/darkwood-com/flow/tree/1.x#readme",
   "keywords": [
     "flow"
   ],
-  "version": "1.1.5",
+  "version": "1.2.1",
   "browserslist": [
     "defaults"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/darkwood-fr/flow.git"
+    "url": "https://github.com/darkwood-com/flow.git"
   },
   "publishConfig": {
     "access": "public"

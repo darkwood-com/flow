@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.2.1
+
+- Add new Interface Flow\AsyncHandlerInterface to control the Event::SYNC step when processing an IP
+    - Add Flow\AsyncHandler\AsyncHandler the default handler when Event::SYNC is dispatched
+    - Add Batch IP with Flow\AsyncHandler\BatchAsyncHandler from
+        - https://speakerdeck.com/alli83/symfony-messenger-et-ses-messages-a-la-queleuleu-dot-dot-dot-et-sil-etait-temps-de-grouper
+        - https://wolfgang-klinger.medium.com/how-to-handle-messages-in-batches-with-symfony-messenger-c91b5aa1c8b1
+        - https://github.com/wazum/symfony-messenger-batch
+    - Add Flow\AsyncHandler\DeferAsyncHandler to gain granular control on the async Event::SYNC step event
+- Flow\Flow\YFlow rework
+- Add more exemples in `examples/yflow.php` to play with Y-Combinators
+- Update DX for Flow\DriverInterface : add `defer` to gain much granular control on asynchronous callbacks
+
 ## v1.2.0
 
 - Add event system for processing IpStrategy
@@ -25,8 +38,8 @@
 ## v1.1.3
 
 - Update DX for Flow\DriverInterface
-  - Update `async` that now $onResolve get called with async $callback result or Flow\Exception as first argument
-  - Update `tick` that now return a Closure to cleanup tick interval
+    - Update `async` that now $onResolve get called with async $callback result or Flow\Exception as first argument
+    - Update `tick` that now return a Closure to cleanup tick interval
 - Add Flow\Driver\FiberDriver from https://github.com/jolicode/castor/blob/main/src/functions.php
 - Upgrade to Symfony 6.3 and PHPUnit 10.3
 - Refactor docs structure

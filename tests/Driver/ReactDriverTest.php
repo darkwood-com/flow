@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Flow\Test\Driver;
 
-use Flow\Driver\FiberDriver;
 use Flow\Driver\ReactDriver;
 use Flow\DriverInterface;
 
@@ -21,7 +20,6 @@ class ReactDriverTest extends DriverTestCase
      */
     protected function createDriver(): DriverInterface
     {
-        // return new ReactDriver();
-        return new FiberDriver();
+        return new ReactDriver();
     }
 }

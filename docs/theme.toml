@@ -1,11 +1,11 @@
 name = "Flow"
 license = "MIT"
-licenselink = "https://github.com/darkwood-fr/flow/blob/1.x/LICENSE"
+licenselink = "https://github.com/darkwood-com/flow/blob/1.x/LICENSE"
 description = "Assemble your code by adopting asynchronous as native implementation and build with functional programming and monads."
 source = "docs"
 
-homepage = "https://github.com/darkwood-fr/flow"
-demosite = "https://darkwood-fr.github.io"
+homepage = "https://github.com/darkwood-com/flow"
+demosite = "https://darkwood-com.github.io"
 
 tags = ["landing page", "documentation", "blog", "minimal", "modern", "customizable", "search", "dark mode", "bootstrap"]
 features = ["security aware", "fast by default", "seo-ready", "development tools", "bootstrap framework", "netlify-ready", "full text search", "page layouts", "dark mode"]

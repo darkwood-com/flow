@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.6.0
 
-FROM php:8.2-fpm-alpine as php
+FROM php:8.3-fpm-alpine as php
 
 RUN apk add --update make curl
 

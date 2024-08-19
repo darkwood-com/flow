@@ -4,7 +4,7 @@ First of all, **thank you** for contributing, **you are awesome**!
 
 Everybody should be able to help. Here's how you can do it
 
-- [Fork it](https://github.com/darkwood-fr/flow/fork)
+- [Fork it](https://github.com/darkwood-com/flow/fork)
 - Improve it
 - Submit a [pull request](https://help.github.com/articles/creating-a-pull-request)
 
@@ -38,7 +38,7 @@ GitHub.
 Then clone your fork:
 
 ```bash
-git clone git@github.com:darkwood-fr/flow.git
+git clone git@github.com:darkwood-com/flow.git
 git checkout -b bug-or-feature-description
 ```
 

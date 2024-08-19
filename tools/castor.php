@@ -8,6 +8,7 @@ use function Castor\import;
 
 import(__DIR__ . '/dev/castor.php');
 import(__DIR__ . '/docs-serve/castor.php');
+import(__DIR__ . '/editorconfig-fixer/castor.php');
 import(__DIR__ . '/infection/castor.php');
 import(__DIR__ . '/phan/castor.php');
 import(__DIR__ . '/php-cs-fixer/castor.php');

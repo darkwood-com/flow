@@ -7,12 +7,13 @@ namespace Flow\Driver;
 use Closure;
 use co;
 use Flow\DriverInterface;
+use Flow\Event;
+use Flow\Event\AsyncEvent;
 use Flow\Event\PopEvent;
 use Flow\Event\PullEvent;
 use Flow\Event\PushEvent;
 use Flow\Exception\RuntimeException;
 use Flow\Ip;
-use Flow\IpStrategyEvent;
 use OpenSwoole\Timer;
 use RuntimeException as NativeRuntimeException;
 use Throwable;
@@ -39,8 +40,8 @@ class SwooleDriver implements DriverInterface
 
     public function async(Closure $callback): Closure
     {
-        return static function ($onResolve) use ($callback) {
-            return static function (...$args) use ($onResolve, $callback) {
+        return static function (...$args) use ($callback) {
+            return static function ($onResolve) use ($callback, $args) {
                 go(static function () use ($args, $callback, $onResolve) {
                     try {
                         $return = $callback(...$args, ...($args = []));
@@ -53,37 +54,54 @@ class SwooleDriver implements DriverInterface
         };
     }
 
+    public function defer(Closure $callback): mixed
+    {
+        return null;
+    }
+
     public function await(array &$stream): void
     {
-        $async = function ($ip, $fnFlows, $index, $onResolve) {
-            $async = $this->async($fnFlows[$index]['job']);
+        $async = function (Closure $job) {
+            return function (mixed $data) use ($job) {
+                $async = $this->async($job);
 
-            if ($ip->data === null) {
-                return $async($onResolve)();
-            }
-
-            return $async($onResolve)($ip->data);
+                return $async($data);
+            };
         };
 
-        co::run(function () use (&$stream, $async) {
+        $defer = static function (Closure $job) {
+            return static function (Closure $onResolve) use ($job) {
+                go(static function () use ($job, $onResolve) {
+                    try {
+                        $job($onResolve, static function ($fn, $next) {
+                            $fn($next);
+                        });
+                    } catch (Throwable $exception) {
+                        $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
+                    }
+                });
+            };
+        };
+
+        co::run(function () use (&$stream, $async, $defer) {
             while ($stream['ips'] > 0 or $this->ticks > 0) {
                 $nextIp = null;
                 do {
                     foreach ($stream['dispatchers'] as $index => $dispatcher) {
-                        $nextIp = $dispatcher->dispatch(new PullEvent(), IpStrategyEvent::PULL)->getIp();
+                        $nextIp = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIp();
                         if ($nextIp !== null) {
-                            $async($nextIp, $stream['fnFlows'], $index, static function ($data) use (&$stream, $index, $nextIp) {
+                            $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $stream['fnFlows'][$index]['job'], $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
                                 if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
                                     $stream['fnFlows'][$index]['errorJob']($data);
                                 } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
                                     $ip = new Ip($data);
                                     $stream['ips']++;
-                                    $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), IpStrategyEvent::PUSH);
+                                    $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), Event::PUSH);
                                 }
 
-                                $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), IpStrategyEvent::POP);
+                                $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
                                 $stream['ips']--;
-                            });
+                            }), Event::ASYNC);
                         }
                     }
                     co::sleep(1);
