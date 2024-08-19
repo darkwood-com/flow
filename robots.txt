@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://darkwood-fr.github.io/flow/sitemap.xml
+Sitemap: https://darkwood-com.github.io/flow/sitemap.xml
