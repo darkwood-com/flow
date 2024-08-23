@@ -5,11 +5,11 @@ description = "Assemble your code by adopting asynchronous as native implementat
 source = "docs"
 
 homepage = "https://github.com/darkwood-com/flow"
-demosite = "https://darkwood-com.github.io"
+demosite = "https://flow.darkwood.com"
 
 tags = ["landing page", "documentation", "blog", "minimal", "modern", "customizable", "search", "dark mode", "bootstrap"]
 features = ["security aware", "fast by default", "seo-ready", "development tools", "bootstrap framework", "netlify-ready", "full text search", "page layouts", "dark mode"]
 
 [author]
   name = "Mathieu Ledru"
-  homepage = "https://darkwood.fr"
+  homepage = "https://darkwood.com"

@@ -1,4 +1,4 @@
-baseurl = "https://darkwood-com.github.io/flow/"
+baseURL = "https://flow.darkwood.com"
 canonifyURLs = false
 disableAliases = true
 disableHugoGeneratorInject = true
@@ -86,3 +86,11 @@ rel  = "sitemap"
   [[module.mounts]]
     source = "../node_modules/mermaid"
     target = "assets/js/vendor/mermaid"
+
+[deployment]
+order = [".jpg$", ".gif$"]
+
+[[deployment.targets]]
+name = "github"
+URL = "https://flow.darkwood.com"
+branch = "gh-pages"
