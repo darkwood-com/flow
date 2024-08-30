@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.2.x
+
+- Flow can now use `Flow\JobInterface` as job input
+- Add Symfony Bridge
+    - new `Flow\Attribute\AsJob` attribute allows cast job on function or class and embed it's name and description
+
 ## v1.2.1
 
 - Add new Interface Flow\AsyncHandlerInterface to control the Event::SYNC step when processing an IP

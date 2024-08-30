@@ -16,6 +16,7 @@ use Flow\Event\PullEvent;
 use Flow\Event\PushEvent;
 use Flow\Exception\RuntimeException;
 use Flow\Ip;
+use Flow\JobInterface;
 use Throwable;
 
 use function array_key_exists;
@@ -34,7 +35,7 @@ class FiberDriver implements DriverInterface
      */
     private array $ticks = [];
 
-    public function async(Closure $callback): Closure
+    public function async(Closure|JobInterface $callback): Closure
     {
         return static function (...$args) use ($callback) {
             return new Fiber(static function () use ($callback, $args) {
@@ -69,7 +70,7 @@ class FiberDriver implements DriverInterface
     public function await(array &$stream): void
     {
         $async = function ($isTick) use (&$fiberDatas) {
-            return function (Closure $job) use (&$fiberDatas, $isTick) {
+            return function (Closure|JobInterface $job) use (&$fiberDatas, $isTick) {
                 return function (mixed $data) use (&$fiberDatas, $isTick, $job) {
                     $async = $this->async($job);
 
@@ -97,7 +98,7 @@ class FiberDriver implements DriverInterface
         };
 
         $defer = static function ($isTick) {
-            return static function (Closure $job) use ($isTick) {
+            return static function (Closure|JobInterface $job) use ($isTick) {
                 return static function (Closure $next) use ($isTick, $job) {
                     $fiber = new Fiber(static function () use ($isTick, $job, $next) {
                         try {
@@ -136,9 +137,9 @@ class FiberDriver implements DriverInterface
                 foreach ($stream['dispatchers'] as $index => $dispatcher) {
                     $nextIp = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIp();
                     if ($nextIp !== null) {
-                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent(static function (Closure $job) use ($async) {
+                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent(static function (Closure|JobInterface $job) use ($async) {
                             return $async(false)($job);
-                        }, static function (Closure $job) use ($defer) {
+                        }, static function (Closure|JobInterface $job) use ($defer) {
                             return $defer(false)($job);
                         }, $stream['fnFlows'][$index]['job'], $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
                             if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) and $stream['fnFlows'][$index]['errorJob'] !== null) {

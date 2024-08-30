@@ -9,6 +9,8 @@ use Flow\AsyncHandlerInterface;
 use Flow\DriverInterface;
 use Flow\ExceptionInterface;
 use Flow\IpStrategyInterface;
+use Flow\Job\YJob;
+use Flow\JobInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -20,22 +22,19 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class YFlow extends Flow
 {
     /**
-     * @param null|Closure(ExceptionInterface): void $errorJob
-     * @param null|IpStrategyInterface<T1>           $ipStrategy
-     * @param null|AsyncHandlerInterface<T1>         $asyncHandler
-     * @param null|DriverInterface<T1,T2>            $driver
+     * @param null|Closure(ExceptionInterface): void|JobInterface<ExceptionInterface,void> $errorJob
+     * @param null|IpStrategyInterface<T1>                                                 $ipStrategy
+     * @param null|AsyncHandlerInterface<T1>                                               $asyncHandler
+     * @param null|DriverInterface<T1,T2>                                                  $driver
      */
     public function __construct(
-        Closure $job,
-        ?Closure $errorJob = null,
+        Closure|JobInterface $job,
+        null|Closure|JobInterface $errorJob = null,
         ?IpStrategyInterface $ipStrategy = null,
         ?EventDispatcherInterface $dispatcher = null,
         ?AsyncHandlerInterface $asyncHandler = null,
         ?DriverInterface $driver = null
     ) {
-        $U = static fn (Closure $f) => $f($f);
-        $Y = static fn (Closure $f) => $U(static fn (Closure $x) => $f(static fn ($y) => $U($x)($y)));
-
-        parent::__construct($Y($job), $errorJob, $ipStrategy, $dispatcher, $asyncHandler, $driver);
+        parent::__construct(new YJob($job), $errorJob, $ipStrategy, $dispatcher, $asyncHandler, $driver);
     }
 }
