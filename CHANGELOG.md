@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.2.x
+## v1.2.2
 
 - Flow can now use `Flow\JobInterface` as job input
 - Add Symfony Bridge
