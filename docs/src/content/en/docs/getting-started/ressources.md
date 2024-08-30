@@ -99,3 +99,9 @@ Video of Y-Combinator : [https://www.youtube.com/watch?v=QSS_ZcO8Q1g](https://ww
 
 - Article : [http://blog.est.voyage/phpTour2015](http://blog.est.voyage/phpTour2015)
 - Source code : [https://github.com/estvoyage/phpTour2015](https://github.com/estvoyage/phpTour2015)
+
+## Chunk computing in PHP
+
+Article of Chunk computing : [https://blog.darkwood.com/article/chunk-computing-en-php](https://blog.darkwood.com/article/chunk-computing-en-php)
+Slides of Chunk computing : [https://speakerdeck.com/matyo91/chunk-computing](https://speakerdeck.com/matyo91/chunk-computing)
+Video of Chunk computing : [https://www.youtube.com/watch?v=JBx4bjB8HIM](https://www.youtube.com/watch?v=JBx4bjB8HIM)
