@@ -6,20 +6,22 @@ namespace Flow\Event;
 
 use Closure;
 use Flow\Ip;
+use Flow\JobInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * @template T
+ * @template T1
  */
 final class AsyncEvent extends Event
 {
     /**
-     * @param Ip<T> $ip
+     * @param Closure|JobInterface<mixed,mixed> $job
+     * @param Ip<T1>                            $ip
      */
     public function __construct(
         private Closure $async,
         private Closure $defer,
-        private Closure $job,
+        private Closure|JobInterface $job,
         private Ip $ip,
         private Closure $callback
     ) {}
@@ -34,13 +36,16 @@ final class AsyncEvent extends Event
         return $this->defer;
     }
 
-    public function getJob(): Closure
+    /**
+     * @return Closure|JobInterface<mixed,mixed>
+     */
+    public function getJob(): Closure|JobInterface
     {
         return $this->job;
     }
 
     /**
-     * @return Ip<T>
+     * @return Ip<T1>
      */
     public function getIp(): Ip
     {

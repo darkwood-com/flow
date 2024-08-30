@@ -14,6 +14,8 @@ use Flow\Examples\Model\YFlowData;
 use Flow\Flow\Flow;
 use Flow\Flow\YFlow;
 use Flow\Ip;
+use Flow\Job\YJob;
+use Flow\JobInterface;
 
 $driver = match (random_int(1, 4)) {
     1 => new AmpDriver(),
@@ -29,12 +31,14 @@ function factorial(int $n): int
     return ($n <= 1) ? 1 : $n * factorial($n - 1);
 }
 
-function Ywrap(callable $func, callable $wrapperFunc): Closure
+/**
+ * @return JobInterface<mixed, mixed>
+ */
+function Ywrap(callable $func, callable $wrapperFunc): JobInterface
 {
-    $U = static fn ($f) => $f($f);
-    $Y = static fn (callable $f, callable $g) => $U(static fn (Closure $x) => $f($g(static fn ($y) => $U($x)($y))));
+    $wrappedFunc = static fn ($recurse) => $wrapperFunc(static fn (...$args) => $func($recurse)(...$args));
 
-    return $Y($func, $wrapperFunc);
+    return new YJob($wrappedFunc);
 }
 
 function memoWrapperGenerator(callable $f): Closure
@@ -50,7 +54,10 @@ function memoWrapperGenerator(callable $f): Closure
     };
 }
 
-function Ymemo(callable $f): Closure
+/**
+ * @return JobInterface<mixed, mixed>
+ */
+function Ymemo(callable $f): JobInterface
 {
     return Ywrap($f, 'memoWrapperGenerator');
 }
@@ -110,17 +117,13 @@ $factorialYMemoJob = static function (YFlowData $data): YFlowData {
     return new YFlowData($data->id, $data->number);
 };
 
-// Define the Y-Combinator
-$U = static fn (Closure $f) => $f($f);
-$Y = static fn (Closure $f) => $U(static fn (Closure $x) => $f(static fn ($y) => $U($x)($y)));
-
 $factorialYJobDeferBefore = static function (YFlowData $data) {
     printf("...* #%d - Job 4 : Calculating factorialYJobDefer(%d)\n", $data->id, $data->number);
 
     return new YFlowData($data->id, $data->number, $data->number);
 };
 
-$factorialYJobDefer = $Y(static function ($factorial) {
+$factorialYJobDefer = new YJob(static function ($factorial) {
     return static function ($args) use ($factorial) {
         [$data, $defer] = $args;
 

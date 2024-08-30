@@ -13,11 +13,11 @@ use Closure;
 interface DriverInterface
 {
     /**
-     * #return Closure(TArgs): void when called this start async $callback.
+     * #return JobInterface<TArgs,void>|Closure(TArgs): void when called this start async $callback.
      *
-     * @param Closure(TArgs): TReturn $callback
+     * @param Closure(TArgs): TReturn|JobInterface<TArgs,TReturn> $callback
      */
-    public function async(Closure $callback): Closure;
+    public function async(Closure|JobInterface $callback): Closure;
 
     /**
      * This allow more granular control on async

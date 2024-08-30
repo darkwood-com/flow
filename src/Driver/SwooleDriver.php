@@ -14,6 +14,7 @@ use Flow\Event\PullEvent;
 use Flow\Event\PushEvent;
 use Flow\Exception\RuntimeException;
 use Flow\Ip;
+use Flow\JobInterface;
 use OpenSwoole\Timer;
 use RuntimeException as NativeRuntimeException;
 use Throwable;
@@ -38,7 +39,7 @@ class SwooleDriver implements DriverInterface
         }
     }
 
-    public function async(Closure $callback): Closure
+    public function async(Closure|JobInterface $callback): Closure
     {
         return static function (...$args) use ($callback) {
             return static function ($onResolve) use ($callback, $args) {
@@ -61,7 +62,7 @@ class SwooleDriver implements DriverInterface
 
     public function await(array &$stream): void
     {
-        $async = function (Closure $job) {
+        $async = function (Closure|JobInterface $job) {
             return function (mixed $data) use ($job) {
                 $async = $this->async($job);
 
@@ -69,7 +70,7 @@ class SwooleDriver implements DriverInterface
             };
         };
 
-        $defer = static function (Closure $job) {
+        $defer = static function (Closure|JobInterface $job) {
             return static function (Closure $onResolve) use ($job) {
                 go(static function () use ($job, $onResolve) {
                     try {

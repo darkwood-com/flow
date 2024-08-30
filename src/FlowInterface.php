@@ -20,22 +20,22 @@ interface FlowInterface
     /**
      * @template T2
      *
-     * @param array<mixed>|Closure|FlowInterface<T2> $flow can be Closure as Job, array constructor arguments for Flow instanciation, array configuration for Flow instanciation or FlowInterface instance
-     *                                                     #param ?array{
-     *                                                     0: Closure,
-     *                                                     1?: Closure,
-     *                                                     2?: IpStrategyInterface,
-     *                                                     3?: DriverInterface
-     *                                                     }|array{
-     *                                                     "job"?: Closure,
-     *                                                     "errorJob"?: Closure,
-     *                                                     "ipStrategy"?: IpStrategyInterface,
-     *                                                     "driver"?: DriverInterface
-     *                                                     }|Closure|FlowInterface<T2> $config
+     * @param array<mixed>|Closure(T1): T2|FlowInterface<T2>|JobInterface<T1,T2> $flow can be Closure as Job, array constructor arguments for Flow instanciation, array configuration for Flow instanciation or FlowInterface instance
+     *                                                                                 #param ?array{
+     *                                                                                 0: Closure,
+     *                                                                                 1?: Closure,
+     *                                                                                 2?: IpStrategyInterface,
+     *                                                                                 3?: DriverInterface
+     *                                                                                 }|array{
+     *                                                                                 "job"?: JobInterface|Closure,
+     *                                                                                 "errorJob"?: JobInterface|Closure,
+     *                                                                                 "ipStrategy"?: IpStrategyInterface,
+     *                                                                                 "driver"?: DriverInterface
+     *                                                                                 }|Closure|FlowInterface<T2> $config
      *
      * @return FlowInterface<T1>
      */
-    public function fn(array|Closure|self $flow): self;
+    public function fn(array|Closure|JobInterface|self $flow): self;
 
     /**
      * Do-notation a.k.a. for-comprehension.
@@ -68,8 +68,8 @@ interface FlowInterface
      *  4?: AsyncHandlerInterface,
      *  5?: DriverInterface
      * }|array{
-     *  "jobs"?: Closure|array,
-     *  "errorJobs"?: Closure|array,
+     *  "jobs"?: JobInterface|Closure|array,
+     *  "errorJobs"?: JobInterface|Closure|array,
      *  "ipStrategy"?: IpStrategyInterface<mixed>,
      *  "dispatcher"?: EventDispatcherInterface,
      *  "asyncHandler"?: AsyncHandlerInterface,

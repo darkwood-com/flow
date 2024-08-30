@@ -93,6 +93,7 @@ Video of Y-Combinator : [https://www.youtube.com/watch?v=QSS_ZcO8Q1g](https://ww
 - Combinator : [https://github.com/loophp/combinator](https://github.com/loophp/combinator)
 - Lambda-php : [https://github.com/igorw/lambda-php](https://github.com/igorw/lambda-php)
 - Deriving the y combinator in 7 easy steps : [https://gist.github.com/igstan/388351](https://gist.github.com/igstan/388351)
+- Y combinator real life application: recursive memoization in clojure : [https://blog.klipse.tech/lambda/2016/08/10/y-combinator-app.html](https://blog.klipse.tech/lambda/2016/08/10/y-combinator-app.html)
 
 ## Messaging approach with East oriented code from [Frédéric Hardy](https://twitter.com/mageekguy)
 
