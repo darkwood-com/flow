@@ -15,8 +15,8 @@ toc: true
 
 # More information about the code
 
-Article of this project : [https://blog.darkwood.com/article/php-railway-flow-based-programming](https://blog.darkwood.com/article/php-railway-flow-based-programming)
-Slides of this project : [https://speakerdeck.com/matyo91/php-railway-flow-based-programming](https://speakerdeck.com/matyo91/php-railway-flow-based-programming)
+Article of this project : [https://blog.darkwood.com/article/php-railway-flow-based-programming](https://blog.darkwood.com/article/php-railway-flow-based-programming)  
+Slides of this project : [https://speakerdeck.com/matyo91/php-railway-flow-based-programming](https://speakerdeck.com/matyo91/php-railway-flow-based-programming)  
 Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://www.youtube.com/watch?v=mxxdhGsaIjY)
 
 ## Railway Flow Based Programming with Elixir from [Anton Mishchuk](https://twitter.com/anton_mishchuk)
@@ -62,8 +62,8 @@ Video of this project : [https://www.youtube.com/watch?v=mxxdhGsaIjY](https://ww
 
 ## Monads and PHP
 
-Article on Monads : [https://blog.darkwood.com/article/les-monades-et-leur-utilisation-en-php](https://blog.darkwood.com/article/les-monades-et-leur-utilisation-en-php)
-Slides on Monads : [https://speakerdeck.com/matyo91/monads-and-usage-in-php](https://speakerdeck.com/matyo91/monads-and-usage-in-php)
+Article on Monads : [https://blog.darkwood.com/article/les-monades-et-leur-utilisation-en-php](https://blog.darkwood.com/article/les-monades-et-leur-utilisation-en-php)  
+Slides on Monads : [https://speakerdeck.com/matyo91/monads-and-usage-in-php](https://speakerdeck.com/matyo91/monads-and-usage-in-php)  
 Video on Monads : [https://www.youtube.com/watch?v=0M6MhUpra9o](https://www.youtube.com/watch?v=0M6MhUpra9o)
 
 - What is a monad from [Sean Riley](https://twitter.com/seanski44) : [https://www.youtube.com/watch?v=t1e8gqXLbsU](https://www.youtube.com/watch?v=t1e8gqXLbsU)
@@ -84,8 +84,8 @@ Video on Monads : [https://www.youtube.com/watch?v=0M6MhUpra9o](https://www.yout
 
 ## Y-Combinator and PHP
 
-Article of Y-Combinator : [https://blog.darkwood.com/article/y-combinator-en-php](https://blog.darkwood.com/article/y-combinator-en-php)
-Slides of Y-Combinator : [https://speakerdeck.com/matyo91/y-combinator-in-php](https://speakerdeck.com/matyo91/y-combinator-in-php)
+Article of Y-Combinator : [https://blog.darkwood.com/article/y-combinator-en-php](https://blog.darkwood.com/article/y-combinator-en-php)  
+Slides of Y-Combinator : [https://speakerdeck.com/matyo91/y-combinator-in-php](https://speakerdeck.com/matyo91/y-combinator-in-php)  
 Video of Y-Combinator : [https://www.youtube.com/watch?v=QSS_ZcO8Q1g](https://www.youtube.com/watch?v=QSS_ZcO8Q1g)
 
 - [Lambda Calculus - Wikipedia](http://en.wikipedia.org/wiki/Lambda_calculus)
@@ -102,6 +102,6 @@ Video of Y-Combinator : [https://www.youtube.com/watch?v=QSS_ZcO8Q1g](https://ww
 
 ## Chunk computing in PHP
 
-Article of Chunk computing : [https://blog.darkwood.com/article/chunk-computing-en-php](https://blog.darkwood.com/article/chunk-computing-en-php)
-Slides of Chunk computing : [https://speakerdeck.com/matyo91/chunk-computing](https://speakerdeck.com/matyo91/chunk-computing)
+Article of Chunk computing : [https://blog.darkwood.com/article/chunk-computing-en-php](https://blog.darkwood.com/article/chunk-computing-en-php)  
+Slides of Chunk computing : [https://speakerdeck.com/matyo91/chunk-computing](https://speakerdeck.com/matyo91/chunk-computing)  
 Video of Chunk computing : [https://www.youtube.com/watch?v=JBx4bjB8HIM](https://www.youtube.com/watch?v=JBx4bjB8HIM)
