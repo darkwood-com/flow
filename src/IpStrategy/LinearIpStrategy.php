@@ -8,7 +8,7 @@ use Flow\Event;
 use Flow\Event\PoolEvent;
 use Flow\Event\PullEvent;
 use Flow\Event\PushEvent;
-use Flow\Ip;
+use Flow\IpPool;
 use Flow\IpStrategyInterface;
 
 /**
@@ -19,9 +19,14 @@ use Flow\IpStrategyInterface;
 class LinearIpStrategy implements IpStrategyInterface
 {
     /**
-     * @var array<Ip<T>>
+     * @var IpPool<T>
      */
-    private array $ips = [];
+    private IpPool $ipPool;
+
+    public function __construct()
+    {
+        $this->ipPool = new IpPool();
+    }
 
     public static function getSubscribedEvents(): array
     {
@@ -37,7 +42,7 @@ class LinearIpStrategy implements IpStrategyInterface
      */
     public function push(PushEvent $event): void
     {
-        $this->ips[] = $event->getIp();
+        $this->ipPool->addIp($event->getIp());
     }
 
     /**
@@ -45,11 +50,11 @@ class LinearIpStrategy implements IpStrategyInterface
      */
     public function pull(PullEvent $event): void
     {
-        $event->setIp(array_shift($this->ips));
+        $event->setIp($this->ipPool->shiftIp());
     }
 
     public function pool(PoolEvent $event): void
     {
-        $event->addIps($this->ips);
+        $event->addIps($this->ipPool->getIps());
     }
 }

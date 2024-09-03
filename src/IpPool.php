@@ -37,4 +37,20 @@ class IpPool
     {
         return $this->ips;
     }
+
+    /**
+     * @return null|Ip<T>
+     */
+    public function shiftIp(): ?Ip
+    {
+        return array_shift($this->ips);
+    }
+
+    /**
+     * @return null|Ip<T>
+     */
+    public function popIp(): ?Ip
+    {
+        return array_pop($this->ips);
+    }
 }
