@@ -35,7 +35,7 @@ printf("- DataC(f)\n");
 $job1 = static function (DataA $dataA) use ($driver): DataB {
     printf("*. #%d - Job 1 Calculating %d + %d\n", $dataA->id, $dataA->a, $dataA->b);
 
-    // simulating calculating some "light" operation from 0.1 to 1 seconds
+    // simulating calculating some "light" operation from 1 to 3 seconds
     $delay = random_int(1, 3);
     $driver->delay($delay);
     $d = $dataA->a + $dataA->b;

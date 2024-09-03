@@ -30,6 +30,8 @@ use function extension_loaded;
  */
 class SwooleDriver implements DriverInterface
 {
+    use DriverTrait;
+
     private int $ticks = 0;
 
     public function __construct()
@@ -85,7 +87,7 @@ class SwooleDriver implements DriverInterface
         };
 
         co::run(function () use (&$stream, $async, $defer) {
-            while ($stream['ips'] > 0 or $this->ticks > 0) {
+            do {
                 $nextIp = null;
                 do {
                     foreach ($stream['dispatchers'] as $index => $dispatcher) {
@@ -96,18 +98,16 @@ class SwooleDriver implements DriverInterface
                                     $stream['fnFlows'][$index]['errorJob']($data);
                                 } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
                                     $ip = new Ip($data);
-                                    $stream['ips']++;
                                     $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), Event::PUSH);
                                 }
 
                                 $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
-                                $stream['ips']--;
                             }), Event::ASYNC);
                         }
                     }
                     co::sleep(1);
                 } while ($nextIp !== null);
-            }
+            } while ($this->countIps($stream['dispatchers']) > 0 or $this->ticks > 0);
         });
     }
 

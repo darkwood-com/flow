@@ -30,7 +30,7 @@ interface DriverInterface
     public function defer(Closure $callback): mixed;
 
     /**
-     * @param array{'ips': int, 'fnFlows': array<mixed>, 'dispatchers': array<mixed>} $stream
+     * @param array{'fnFlows': array<mixed>, 'dispatchers': array<mixed>} $stream
      */
     public function await(array &$stream): void;
 

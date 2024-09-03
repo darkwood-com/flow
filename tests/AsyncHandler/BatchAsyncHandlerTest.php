@@ -24,8 +24,8 @@ class BatchAsyncHandlerTest extends TestCase
                 [$n1, $n2] = $data;
                 $result1 = $n1 + $n2;
 
-                return static function ($callback) {
-                    $callback();
+                return static function ($callback) use ($result1) {
+                    $callback($result1);
                 };
             },
             new Ip([2, 6]),
@@ -41,8 +41,8 @@ class BatchAsyncHandlerTest extends TestCase
                 [$n1, $n2] = $data;
                 $result2 = $n1 + $n2;
 
-                return static function ($callback) {
-                    $callback();
+                return static function ($callback) use ($result2) {
+                    $callback($result2);
                 };
             },
             new Ip([6, 10]),

@@ -34,6 +34,8 @@ use function React\Async\delay;
  */
 class ReactDriver implements DriverInterface
 {
+    use DriverTrait;
+
     private int $ticks = 0;
 
     private LoopInterface $eventLoop;
@@ -114,18 +116,16 @@ class ReactDriver implements DriverInterface
                                 $stream['fnFlows'][$index]['errorJob']($data);
                             } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
                                 $ip = new Ip($data);
-                                $stream['ips']++;
                                 $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), Event::PUSH);
                             }
 
                             $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
-                            $stream['ips']--;
                         }), Event::ASYNC);
                     }
                 }
             } while ($nextIp !== null);
 
-            if ($stream['ips'] > 0 or $this->ticks > 0) {
+            if ($this->countIps($stream['dispatchers']) > 0 or $this->ticks > 0) {
                 $this->eventLoop->futureTick($loop);
             } else {
                 $this->eventLoop->stop();
