@@ -50,7 +50,10 @@ class LinearIpStrategy implements IpStrategyInterface
      */
     public function pull(PullEvent $event): void
     {
-        $event->setIp($this->ipPool->shiftIp());
+        $ip = $this->ipPool->shiftIp();
+        if ($ip !== null) {
+            $event->addIp($ip);
+        }
     }
 
     public function pool(PoolEvent $event): void

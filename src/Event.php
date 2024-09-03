@@ -27,7 +27,7 @@ final class Event
     /**
      * The PULL event occurs when Flow need a next IP to async process.
      *
-     * This event allows you to choose what IP come next from your pushed IPs and will be used for async process execution.
+     * This event allows you to choose what IPs come next from your pushed IPs and will be used for async process execution.
      *
      * @Event("Flow\Event\PullEvent")
      */

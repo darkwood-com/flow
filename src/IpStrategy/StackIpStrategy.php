@@ -50,7 +50,10 @@ class StackIpStrategy implements IpStrategyInterface
      */
     public function pull(PullEvent $event): void
     {
-        $event->setIp($this->ipPool->popIp());
+        $ip = $this->ipPool->popIp();
+        if ($ip !== null) {
+            $event->addIp($ip);
+        }
     }
 
     public function pool(PoolEvent $event): void

@@ -23,16 +23,16 @@ class StackIpStrategyTest extends TestCase
 
         $pullEvent = new PullEvent();
         $strategy->pull($pullEvent);
-        self::assertNotNull($pullEvent->getIp());
-        self::assertSame($ip2, $pullEvent->getIp());
+        self::assertNotEmpty($pullEvent->getIps());
+        self::assertSame($ip2, $pullEvent->getIps()[0]);
 
         $pullEvent = new PullEvent();
         $strategy->pull($pullEvent);
-        self::assertNotNull($pullEvent->getIp());
-        self::assertSame($ip1, $pullEvent->getIp());
+        self::assertNotEmpty($pullEvent->getIps());
+        self::assertSame($ip1, $pullEvent->getIps()[0]);
 
         $pullEvent = new PullEvent();
         $strategy->pull($pullEvent);
-        self::assertNull($pullEvent->getIp());
+        self::assertEmpty($pullEvent->getIps());
     }
 }

@@ -65,11 +65,13 @@ class MaxIpStrategy implements IpStrategyInterface
      */
     public function pull(PullEvent $event): void
     {
-        if ($this->processing < $this->max) {
-            $ip = $this->dispatcher->dispatch($event, Event::PULL)->getIp();
-            if ($ip) {
+        $ips = $this->dispatcher->dispatch(new PullEvent(), Event::PULL)->getIps();
+        foreach ($ips as $ip) {
+            if ($this->processing < $this->max) {
                 $this->processing++;
-                $event->setIp($ip);
+                $event->addIp($ip);
+            } else {
+                $this->dispatcher->dispatch(new PushEvent($ip), Event::PUSH);
             }
         }
     }
