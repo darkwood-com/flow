@@ -134,29 +134,25 @@ class FiberDriver implements DriverInterface
                 }
             }
 
-            $nextIp = null;
-            do {
-                foreach ($stream['dispatchers'] as $index => $dispatcher) {
-                    $nextIp = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIp();
+            foreach ($stream['dispatchers'] as $index => $dispatcher) {
+                $nextIps = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIps();
+                foreach ($nextIps as $nextIp) {
+                    $stream['dispatchers'][$index]->dispatch(new AsyncEvent(static function (Closure|JobInterface $job) use ($async) {
+                        return $async(false)($job);
+                    }, static function (Closure|JobInterface $job) use ($defer) {
+                        return $defer(false)($job);
+                    }, $stream['fnFlows'][$index]['job'], $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
+                        if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) and $stream['fnFlows'][$index]['errorJob'] !== null) {
+                            $stream['fnFlows'][$index]['errorJob']($data);
+                        } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
+                            $ip = new Ip($data);
+                            $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), Event::PUSH);
+                        }
 
-                    if ($nextIp !== null) {
-                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent(static function (Closure|JobInterface $job) use ($async) {
-                            return $async(false)($job);
-                        }, static function (Closure|JobInterface $job) use ($defer) {
-                            return $defer(false)($job);
-                        }, $stream['fnFlows'][$index]['job'], $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
-                            if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) and $stream['fnFlows'][$index]['errorJob'] !== null) {
-                                $stream['fnFlows'][$index]['errorJob']($data);
-                            } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
-                                $ip = new Ip($data);
-                                $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), Event::PUSH);
-                            }
-
-                            $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
-                        }), Event::ASYNC);
-                    }
+                        $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
+                    }), Event::ASYNC);
                 }
-            } while ($nextIp !== null);
+            }
 
             foreach ($fiberDatas as $i => $fiberData) { // @phpstan-ignore-line see https://github.com/phpstan/phpstan/issues/11468
                 if (!$fiberData['fiber']->isTerminated() and $fiberData['fiber']->isSuspended()) {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Flow\Event;
 
 use Flow\Ip;
+use Flow\IpPool;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
@@ -13,23 +14,28 @@ use Symfony\Contracts\EventDispatcher\Event;
 final class PullEvent extends Event
 {
     /**
-     * @var null|Ip<T>
+     * @var IpPool<T>
      */
-    private ?Ip $ip = null;
+    private IpPool $ipPool;
 
-    /**
-     * @return null|Ip<T>
-     */
-    public function getIp(): ?Ip
+    public function __construct()
     {
-        return $this->ip;
+        $this->ipPool = new IpPool();
     }
 
     /**
-     * @param null|Ip<T> $ip
+     * @return Ip<T>[]
      */
-    public function setIp(?Ip $ip): void
+    public function getIps(): array
     {
-        $this->ip = $ip;
+        return $this->ipPool->getIps();
+    }
+
+    /**
+     * @param Ip<T> $ip
+     */
+    public function addIp(Ip $ip): void
+    {
+        $this->ipPool->addIp($ip);
     }
 }

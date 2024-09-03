@@ -4,6 +4,7 @@
 
 - Add event Event::POOL occurs when Flow needs to count IPs to process.
 - Add `Flow\IpPool` for managing pools of Ips.
+- Update `Flow\Event\PullEvent` to pull multiple Ips instead one.
 
 ## v1.2.2
 
