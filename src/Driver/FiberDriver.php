@@ -30,6 +30,8 @@ use function count;
  */
 class FiberDriver implements DriverInterface
 {
+    use DriverTrait;
+
     /**
      * @var array<mixed>
      */
@@ -121,7 +123,7 @@ class FiberDriver implements DriverInterface
 
         $tick = 0;
         $fiberDatas = [];
-        while ($stream['ips'] > 0 or count($this->ticks) > 0) {
+        do {
             foreach ($this->ticks as [
                 'interval' => $interval,
                 'callback' => $callback,
@@ -136,6 +138,7 @@ class FiberDriver implements DriverInterface
             do {
                 foreach ($stream['dispatchers'] as $index => $dispatcher) {
                     $nextIp = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIp();
+
                     if ($nextIp !== null) {
                         $stream['dispatchers'][$index]->dispatch(new AsyncEvent(static function (Closure|JobInterface $job) use ($async) {
                             return $async(false)($job);
@@ -146,12 +149,10 @@ class FiberDriver implements DriverInterface
                                 $stream['fnFlows'][$index]['errorJob']($data);
                             } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
                                 $ip = new Ip($data);
-                                $stream['ips']++;
                                 $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), Event::PUSH);
                             }
 
                             $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
-                            $stream['ips']--;
                         }), Event::ASYNC);
                     }
                 }
@@ -168,7 +169,7 @@ class FiberDriver implements DriverInterface
             }
 
             $tick++;
-        }
+        } while ($this->countIps($stream['dispatchers']) > 0 or count($this->ticks) > 0);
     }
 
     public function delay(float $seconds): void

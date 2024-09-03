@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Flow\IpStrategy;
 
 use Flow\Event;
+use Flow\Event\PoolEvent;
 use Flow\Event\PopEvent;
 use Flow\Event\PullEvent;
 use Flow\Event\PushEvent;
@@ -47,6 +48,7 @@ class MaxIpStrategy implements IpStrategyInterface
             Event::PUSH => 'push',
             Event::PULL => 'pull',
             Event::POP => 'pop',
+            Event::POOL => 'pool',
         ];
     }
 
@@ -67,9 +69,8 @@ class MaxIpStrategy implements IpStrategyInterface
             $ip = $this->dispatcher->dispatch($event, Event::PULL)->getIp();
             if ($ip) {
                 $this->processing++;
+                $event->setIp($ip);
             }
-
-            $event->setIp($ip);
         }
     }
 
@@ -80,5 +81,10 @@ class MaxIpStrategy implements IpStrategyInterface
     {
         $this->dispatcher->dispatch($event, Event::POP);
         $this->processing--;
+    }
+
+    public function pool(PoolEvent $event): void
+    {
+        $event->addIps($this->dispatcher->dispatch($event, Event::POOL)->getIps());
     }
 }

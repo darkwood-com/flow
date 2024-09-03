@@ -37,7 +37,6 @@ class Flow implements FlowInterface
      * @var array<mixed>
      */
     private array $stream = [
-        'ips' => 0,
         'fnFlows' => [],
         'dispatchers' => [],
     ];
@@ -89,7 +88,6 @@ class Flow implements FlowInterface
 
     public function __invoke(Ip $ip): void
     {
-        $this->stream['ips']++;
         $this->stream['dispatchers'][0]->dispatch(new PushEvent($ip), Event::PUSH);
     }
 

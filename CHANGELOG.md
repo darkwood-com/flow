@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.2.x
+
+- Add event Event::POOL occurs when Flow needs to count IPs to process.
+- Add `Flow\IpPool` for managing pools of Ips.
+
 ## v1.2.2
 
 - Flow can now use `Flow\JobInterface` as job input

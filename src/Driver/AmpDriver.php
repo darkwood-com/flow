@@ -34,6 +34,8 @@ use function function_exists;
  */
 class AmpDriver implements DriverInterface
 {
+    use DriverTrait;
+
     private int $ticks = 0;
 
     public function __construct(?Driver $driver = null)
@@ -121,18 +123,16 @@ class AmpDriver implements DriverInterface
                                 $stream['fnFlows'][$index]['errorJob']($data);
                             } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
                                 $ip = new Ip($data);
-                                $stream['ips']++;
                                 $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), Event::PUSH);
                             }
 
                             $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
-                            $stream['ips']--;
                         }), Event::ASYNC);
                     }
                 }
             } while ($nextIp !== null);
 
-            if ($stream['ips'] > 0 or $this->ticks > 0) {
+            if ($this->countIps($stream['dispatchers']) > 0 or $this->ticks > 0) {
                 EventLoop::defer($loop);
             } else {
                 EventLoop::getDriver()->stop();

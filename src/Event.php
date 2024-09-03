@@ -41,4 +41,13 @@ final class Event
      * @Event("Flow\Event\PopEvent")
      */
     public const POP = 'pop';
+
+    /**
+     * The POOL event occurs when Flow need to get the pool IPs to process.
+     *
+     * This event allows you to get the pool IPs to process.
+     *
+     * @Event("Flow\Event\PoolEvent")
+     */
+    public const POOL = 'pool';
 }
