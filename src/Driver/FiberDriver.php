@@ -99,15 +99,16 @@ class FiberDriver implements DriverInterface
             };
         };
 
-        $defer = static function ($isTick) {
-            return static function (Closure|JobInterface $job) use ($isTick) {
-                return static function (Closure $next) use ($isTick, $job) {
+        $defer = static function ($isTick) use (&$fiberDatas) {
+            return static function (Closure|JobInterface $job) use ($isTick, &$fiberDatas) {
+                return static function (Closure $next) use ($isTick, $job, &$fiberDatas) {
                     $fiber = new Fiber(static function () use ($isTick, $job, $next) {
                         try {
                             $job(static function ($return) use ($isTick, $next) {
                                 if ($isTick === false) {
                                     $next($return);
                                 }
+                                Fiber::suspend();
                             }, static function ($fn, $next) {
                                 $fn($next);
                             });
@@ -117,6 +118,15 @@ class FiberDriver implements DriverInterface
                     });
 
                     $fiber->start();
+
+                    $fiberDatas[] = [
+                        'fiber' => $fiber,
+                        'next' => static function ($return) {}, /*function ($return) use ($isTick, $next) {
+                            if ($isTick === false) {
+                                $next($return);
+                            }
+                        },*/
+                    ];
                 };
             };
         };

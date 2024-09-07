@@ -119,7 +119,7 @@ $factorialYMemoJob = static function (YFlowData $data) use ($driver): YFlowData 
 };
 
 $factorialYJobDeferBefore = static function (YFlowData $data) {
-    printf("...*.. #%d - Job 4 : Calculating factorialYJobDefer(%d)\n", $data->id, $data->number);
+    printf("...*. #%d - Job 4 : Calculating factorialYJobDefer(%d)\n", $data->id, $data->number);
 
     return new YFlowData($data->id, $data->number, $data->number);
 };
@@ -131,14 +131,14 @@ $factorialYJobDefer = new YJob(static function ($factorial) use ($driver) {
         return $defer(static function ($complete, $async) use ($data, $defer, $factorial, $driver) {
             if ($data->result <= 1) {
                 $delay = random_int(1, 3);
-                printf("...*.. #%d - Job 4 : Step factorialYJobDefer(%d) with delay %d\n", $data->id, $data->number, $delay);
+                printf("...*. #%d - Job 4 : Step factorialYJobDefer(%d) with delay %d\n", $data->id, $data->number, $delay);
                 $driver->delay($delay);
                 $complete([new YFlowData($data->id, $data->number, 1), $defer]);
             } else {
                 $async($factorial([new YFlowData($data->id, $data->number, $data->result - 1), $defer]), static function ($result) use ($data, $complete, $driver) {
                     [$resultData, $defer] = $result;
                     $delay = random_int(1, 3);
-                    printf("...*.. #%d - Job 4 : Step async factorialYJobDefer(%d) with delay %d\n", $data->id, $data->number, $delay);
+                    printf("...*. #%d - Job 4 : Step async factorialYJobDefer(%d) with delay %d\n", $data->id, $data->number, $delay);
                     $driver->delay($delay);
                     $complete([new YFlowData($data->id, $data->number, $data->result * $resultData->result), $defer]);
                 });
@@ -151,7 +151,7 @@ $factorialYJobDeferAfter = static function ($args) {
     [$data, $defer] = $args;
 
     return $defer(static function ($complete) use ($data, $defer) {
-        printf("...*.. #%d - Job 4 : Result for factorialYJobDefer(%d) = %d\n", $data->id, $data->number, $data->result);
+        printf("...*. #%d - Job 4 : Result for factorialYJobDefer(%d) = %d\n", $data->id, $data->number, $data->result);
 
         $complete([new YFlowData($data->id, $data->number), $defer]);
     });
@@ -226,7 +226,7 @@ $flow = Flow::do(static function () use (
     yield [$fibonacciYJobDeferAfter, null, null, null, new DeferAsyncHandler()];
 }, ['driver' => $driver]);
 
-for ($i = 5; $i <= 5; $i++) {
+for ($i = 1; $i <= 5; $i++) {
     $ip = new Ip(new YFlowData($i, $i));
     $flow($ip);
 }
