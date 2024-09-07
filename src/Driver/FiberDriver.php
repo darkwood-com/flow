@@ -108,7 +108,7 @@ class FiberDriver implements DriverInterface
                                 if ($isTick === false) {
                                     $next($return);
                                 }
-                                Fiber::suspend();
+                                //Fiber::suspend();
                             }, static function ($fn, $next) {
                                 $fn($next);
                             });
