@@ -118,7 +118,7 @@ $factorialYMemoJob = static function (YFlowData $data) use ($driver): YFlowData 
     return new YFlowData($data->id, $data->number);
 };
 
-$factorialYJobDeferBefore = static function (YFlowData $data) use ($driver) {
+$factorialYJobDeferBefore = static function (YFlowData $data) {
     printf("...*.. #%d - Job 4 : Calculating factorialYJobDefer(%d)\n", $data->id, $data->number);
 
     return new YFlowData($data->id, $data->number, $data->number);
@@ -157,7 +157,7 @@ $factorialYJobDeferAfter = static function ($args) {
     });
 };
 
-$fibonacciYJobDeferBefore = static function (YFlowData $data) use ($driver) {
+$fibonacciYJobDeferBefore = static function (YFlowData $data) {
     printf("....* #%d - Job 5 : Calculating fibonacciYJobDefer(%d)\n", $data->id, $data->number);
 
     return new YFlowData($data->id, $data->number, $data->number);
@@ -174,9 +174,9 @@ $fibonacciYJobDefer = new YJob(static function ($fibonacci) use ($driver) {
                 $driver->delay($delay);
                 $complete([new YFlowData($data->id, $data->number, 1), $defer]);
             } else {
-                $async($fibonacci([new YFlowData($data->id, $data->number, $data->result - 1), $defer]), function ($result1) use ($data, $complete, $driver, $async, $fibonacci, $defer) {
+                $async($fibonacci([new YFlowData($data->id, $data->number, $data->result - 1), $defer]), static function ($result1) use ($data, $complete, $driver, $async, $fibonacci) {
                     [$resultData1, $defer1] = $result1;
-                    $async($fibonacci([new YFlowData($data->id, $data->number, $data->result - 2), $defer1]), function ($result2) use ($data, $complete, $driver, $resultData1) {
+                    $async($fibonacci([new YFlowData($data->id, $data->number, $data->result - 2), $defer1]), static function ($result2) use ($data, $complete, $driver, $resultData1) {
                         [$resultData2, $defer2] = $result2;
                         $delay = random_int(1, 3);
                         printf("....* #%d - Job 5 : Step async fibonacciYJobDefer(%d) with delay %d\n", $data->id, $data->number, $delay);
@@ -199,7 +199,6 @@ $fibonacciYJobDeferAfter = static function ($args) {
         $complete([new YFlowData($data->id, $data->number), $defer]);
     });
 };
-
 
 $flow = Flow::do(static function () use (
     $factorialJob,
