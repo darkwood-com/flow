@@ -30,9 +30,12 @@ interface DriverInterface
     public function defer(Closure $callback): mixed;
 
     /**
-     * @param array{'fnFlows': array<mixed>, 'dispatchers': array<mixed>} $stream
+     * Waits for all asynchronous operations in the stream to complete and rolls back to synchronous execution.
+     *
+     * @param array{'fnFlows': array<mixed>, 'dispatchers': array<mixed>} $stream The stream containing asynchronous operations to await
      */
     public function await(array &$stream): void;
+
 
     public function delay(float $seconds): void;
 
