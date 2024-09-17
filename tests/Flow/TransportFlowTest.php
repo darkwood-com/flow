@@ -29,9 +29,8 @@ class TransportFlowTest extends TestCase
     public function testJobs(DriverInterface $driver, array $jobs, int $resultNumber): void
     {
         self::assertTrue(true);
-        return;
 
-        $flow = array_reduce(
+        /*$flow = array_reduce(
             array_map(static function ($args) use ($driver) {
                 [$job, $ipStrategy] = $args;
 
@@ -60,7 +59,7 @@ class TransportFlowTest extends TestCase
             return $data;
         });
 
-        $flow->await();
+        $flow->await();*/
     }
 
     /**
