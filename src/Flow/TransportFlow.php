@@ -10,7 +10,6 @@ use Flow\Driver\FiberDriver;
 use Flow\DriverInterface;
 use Flow\FlowInterface;
 use Flow\Ip;
-use SplObjectStorage;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 use Symfony\Component\Messenger\Transport\Sender\SenderInterface;

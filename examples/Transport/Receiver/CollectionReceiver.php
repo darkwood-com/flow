@@ -4,30 +4,30 @@ declare(strict_types=1);
 
 namespace Flow\Examples\Transport\Receiver;
 
-use Flow\EnvelopeTrait;
+use SplObjectStorage;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
 
 class CollectionReceiver implements ReceiverInterface
 {
-    use EnvelopeTrait;
-
     /**
-     * @var array<mixed, ReceiverInterface>
+     * @var SplObjectStorage<Envelope, ReceiverInterface>
      */
-    private array $envelopePool;
+    private SplObjectStorage $envelopePool;
 
     /**
      * @param iterable<ReceiverInterface> $receivers
      */
-    public function __construct(private iterable $receivers) {}
+    public function __construct(private iterable $receivers)
+    {
+        $this->envelopePool = new SplObjectStorage();
+    }
 
     public function get(): iterable
     {
         foreach ($this->receivers as $receiver) {
             foreach ($receiver->get() as $envelope) {
-                $id = $this->getEnvelopeId($envelope);
-                $this->envelopePool[$id] = $receiver;
+                $this->envelopePool[$envelope] = $receiver;
                 yield $envelope;
             }
         }
@@ -35,13 +35,11 @@ class CollectionReceiver implements ReceiverInterface
 
     public function ack(Envelope $envelope): void
     {
-        $id = $this->getEnvelopeId($envelope);
-        $this->envelopePool[$id]->ack($envelope);
+        $this->envelopePool[$envelope]->ack($envelope);
     }
 
     public function reject(Envelope $envelope): void
     {
-        $id = $this->getEnvelopeId($envelope);
-        $this->envelopePool[$id]->reject($envelope);
+        $this->envelopePool[$envelope]->reject($envelope);
     }
 }

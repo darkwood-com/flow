@@ -18,7 +18,7 @@ use Flow\Ip;
 use Flow\IpStrategy\MaxIpStrategy;
 use Symfony\Component\Messenger\Envelope;
 
-$driver = match (random_int(1, 1)) {
+$driver = match (random_int(1, 4)) {
     1 => new AmpDriver(),
     2 => new FiberDriver(),
     3 => new ReactDriver(),
