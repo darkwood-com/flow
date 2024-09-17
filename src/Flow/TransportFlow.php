@@ -8,7 +8,6 @@ use Closure;
 use Exception;
 use Flow\Driver\FiberDriver;
 use Flow\DriverInterface;
-use Flow\EnvelopeTrait;
 use Flow\FlowInterface;
 use Flow\Ip;
 use SplObjectStorage;
@@ -24,18 +23,6 @@ use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
  */
 class TransportFlow extends FlowDecorator
 {
-    use EnvelopeTrait;
-
-    /**
-     * @var SplObjectStorage<Ip<T1>, Envelope>
-     */
-    private SplObjectStorage $envelopePool;
-
-    /**
-     * @var array<int, Envelope>
-     */
-    private array $envelopeIds;
-
     /**
      * @var DriverInterface<T1,T2>
      */
@@ -51,8 +38,21 @@ class TransportFlow extends FlowDecorator
         ?DriverInterface $driver = null
     ) {
         parent::__construct($flow);
+        $this->fn(function (Envelope $envelope) {
+            try {
+                $this->consumer->send(Envelope::wrap($envelope->getMessage(), array_reduce($envelope->all(), static function (array $all, array $stamps) {
+                    foreach ($stamps as $stamp) {
+                        $all[] = $stamp;
+                    }
 
-        $this->envelopePool = new SplObjectStorage();
+                    return $all;
+                }, [])));
+                $this->producer->ack($envelope);
+            } catch (Exception $e) {
+                $this->producer->reject($envelope);
+            }
+        });
+
         $this->driver = $driver ?? new FiberDriver();
     }
 
@@ -73,36 +73,7 @@ class TransportFlow extends FlowDecorator
 
     private function emit(Envelope $envelope): void
     {
-        $id = $this->getEnvelopeId($envelope);
-        if (!isset($this->envelopeIds[$id])) {
-            $this->envelopeIds[$id] = $envelope;
-            $ip = new Ip($envelope->getMessage());
-            $this->envelopePool->offsetSet($ip, $envelope);
-
-            try {
-                $this->flow->fn(function ($ip) {
-                    $envelope = $this->envelopePool->offsetGet($ip);
-                    $this->consumer->send(Envelope::wrap($ip->data, array_reduce($envelope->all(), static function (array $all, array $stamps) {
-                        foreach ($stamps as $stamp) {
-                            $all[] = $stamp;
-                        }
-
-                        return $all;
-                    }, [])));
-                    $this->producer->ack($envelope);
-
-                    $this->envelopePool->offsetUnset($ip);
-                    $id = $this->getEnvelopeId($envelope);
-                    unset($this->envelopeIds[$id]);
-                });
-                ($this->flow)($ip);
-            } catch (Exception $e) {
-                $envelope = $this->envelopePool->offsetGet($ip);
-                $this->producer->reject($envelope);
-                $this->envelopePool->offsetUnset($ip);
-                $id = $this->getEnvelopeId($envelope);
-                unset($this->envelopeIds[$id]);
-            }
-        }
+        $ip = new Ip($envelope);
+        ($this->flow)($ip);
     }
 }

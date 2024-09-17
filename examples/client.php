@@ -45,7 +45,10 @@ class client
     }
 }
 
-$connection = DriverManager::getConnection(['url' => 'mysql://flow:flow@127.0.0.1:3306/flow?serverVersion=8.1']);
+$connection = DriverManager::getConnection([
+    'driver' => 'pdo_sqlite',
+    'path' => __DIR__ . '/flow.sqlite',
+]);
 $transport = new DoctrineIpTransport($connection, uniqid('transport_', true));
 
 $client = new client($transport, $transport);

@@ -11,12 +11,14 @@ use Flow\Driver\ReactDriver;
 use Flow\Driver\SpatieDriver;
 use Flow\Driver\SwooleDriver;
 use Flow\Examples\Transport\DoctrineIpTransport;
+use Flow\ExceptionInterface;
 use Flow\Flow\Flow;
 use Flow\Flow\TransportFlow;
 use Flow\Ip;
 use Flow\IpStrategy\MaxIpStrategy;
+use Symfony\Component\Messenger\Envelope;
 
-$driver = match (random_int(1, 4)) {
+$driver = match (random_int(1, 1)) {
     1 => new AmpDriver(),
     2 => new FiberDriver(),
     3 => new ReactDriver(),
@@ -25,17 +27,21 @@ $driver = match (random_int(1, 4)) {
 };
 printf("Use %s\n", $driver::class);
 
-$addOneJob = static function (object $data) use ($driver): void {
-    printf("Client %s #%d : Calculating %d + 1\n", $data['client'], $data['id'], $data['number']);
+$addOneJob = static function (Envelope $envelope) use ($driver): Envelope {
+    $message = $envelope->getMessage();
+    printf("Client %s #%d : Calculating %d + 1\n", $message['client'], $message['id'], $message['number']);
 
     // simulating calculating some "light" operation from 0.1 to 1 seconds
     $delay = random_int(1, 10) / 10;
     $driver->delay($delay);
-    $data['number']++;
+    $message['number']++;
+
+    return $envelope;
 };
 
-$multbyTwoJob = static function (object $data) use ($driver): void {
-    printf("Client %s #%d : Calculating %d * 2\n", $data['client'], $data['id'], $data['number']);
+$multbyTwoJob = static function (Envelope $envelope) use ($driver): Envelope {
+    $message = $envelope->getMessage();
+    printf("Client %s #%d : Calculating %d * 2\n", $message['client'], $message['id'], $message['number']);
 
     // simulating calculating some "heavy" operation from from 1 to 3 seconds
     $delay = random_int(1, 3);
@@ -43,26 +49,29 @@ $multbyTwoJob = static function (object $data) use ($driver): void {
 
     // simulating 1 chance on 3 to produce an exception from the "heavy" operation
     if (1 === random_int(1, 3)) {
-        throw new Error('Failure when processing "Mult by two"');
+        throw new Error(sprintf('Client %s #%d : Exception Failure when processing "Mult by two"', $message['client'], $message['id']));
     }
 
-    $data['number'] *= 2;
+    $message['number'] *= 2;
+
+    return $envelope;
 };
 
-$minusThreeJob = static function (object $data): void {
-    printf("Client %s #%d : Calculating %d - 3\n", $data['client'], $data['id'], $data['number']);
+$minusThreeJob = static function (Envelope $envelope): Envelope {
+    $message = $envelope->getMessage();
+    printf("Client %s #%d : Calculating %d - 3\n", $message['client'], $message['id'], $message['number']);
 
     // simulating calculating some "instant" operation
-    $data['number'] -= 3;
+    $message['number'] -= 3;
+
+    return $envelope;
 };
 
 /**
  * @param Ip<ArrayObject> $ip
  */
-$errorJob = static function (Ip $ip, Throwable $exception): void {
-    printf("Client %s #%d : Exception %s\n", $ip->data['client'], $ip->data['id'], $exception->getMessage());
-
-    $ip->data->offsetSet('number', null);
+$errorJob = static function (ExceptionInterface $exception): void {
+    printf("%s\n", $exception->getMessage());
 };
 
 $flow = Flow::do(static function () use ($addOneJob, $multbyTwoJob, $minusThreeJob, $errorJob) {
@@ -71,7 +80,10 @@ $flow = Flow::do(static function () use ($addOneJob, $multbyTwoJob, $minusThreeJ
     yield [$minusThreeJob, $errorJob, new MaxIpStrategy(2)];
 }, ['driver' => $driver]);
 
-$connection = DriverManager::getConnection(['url' => 'mysql://flow:flow@127.0.0.1:3306/flow?serverVersion=8.1']);
+$connection = DriverManager::getConnection([
+    'driver' => 'pdo_sqlite',
+    'path' => __DIR__ . '/flow.sqlite',
+]);
 $transport = new DoctrineIpTransport($connection);
 
 $transportFlow = new TransportFlow(
@@ -81,3 +93,4 @@ $transportFlow = new TransportFlow(
     $driver
 );
 $transportFlow->pull(1);
+$flow->await();
