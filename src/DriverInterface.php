@@ -36,7 +36,6 @@ interface DriverInterface
      */
     public function await(array &$stream): void;
 
-
     public function delay(float $seconds): void;
 
     /**
