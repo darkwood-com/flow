@@ -26,23 +26,20 @@ $driver = match (random_int(1, 4)) {
 };
 printf("Use %s\n", $driver::class);
 
-function factorial(int $n): int
-{
-    return ($n <= 1) ? 1 : $n * factorial($n - 1);
-}
+$factorial = static function (int $n) use (&$factorial): int {
+    return ($n <= 1) ? 1 : $n * $factorial($n - 1);
+};
 
 /**
  * @return JobInterface<mixed, mixed>
  */
-function Ywrap(callable $func, callable $wrapperFunc): JobInterface
-{
+$Ywrap = static function (callable $func, callable $wrapperFunc): JobInterface {
     $wrappedFunc = static fn ($recurse) => $wrapperFunc(static fn (...$args) => $func($recurse)(...$args));
 
     return new YJob($wrappedFunc);
-}
+};
 
-function memoWrapperGenerator(callable $f): Closure
-{
+$memoWrapperGenerator = static function (callable $f): Closure {
     static $cache = [];
 
     return static function ($y) use ($f, &$cache) {
@@ -52,33 +49,30 @@ function memoWrapperGenerator(callable $f): Closure
 
         return $cache[$y];
     };
-}
+};
 
 /**
  * @return JobInterface<mixed, mixed>
  */
-function Ymemo(callable $f): JobInterface
-{
-    return Ywrap($f, 'memoWrapperGenerator');
-}
+$Ymemo = static function (callable $f) use ($Ywrap, $memoWrapperGenerator): JobInterface {
+    return $Ywrap($f, $memoWrapperGenerator);
+};
 
-function factorialGen(callable $func): Closure
-{
+$factorialGen = static function (callable $func): Closure {
     return static function (int $n) use ($func): int {
         return ($n <= 1) ? 1 : $n * $func($n - 1);
     };
-}
+};
 
-function factorialYMemo(int $n): int
-{
-    return Ymemo('factorialGen')($n);
-}
+$factorialYMemo = static function (int $n) use ($Ymemo, $factorialGen): int {
+    return $Ymemo($factorialGen)($n);
+};
 
-$factorialJob = static function (YFlowData $data): YFlowData {
+$factorialJob = static function (YFlowData $data) use ($factorial): YFlowData {
     printf("*.... #%d - Job 1 : Calculating factorial(%d)\n", $data->id, $data->number);
 
     // raw factorial calculation
-    $result = factorial($data->number);
+    $result = $factorial($data->number);
 
     printf("*.... #%d - Job 1 : Result for factorial(%d) = %d\n", $data->id, $data->number, $result);
 
@@ -107,11 +101,11 @@ $factorialYJobAfter = static function (YFlowData $data): YFlowData {
     return new YFlowData($data->id, $data->number);
 };
 
-$factorialYMemoJob = static function (YFlowData $data) use ($driver): YFlowData {
+$factorialYMemoJob = static function (YFlowData $data) use ($driver, $factorialYMemo): YFlowData {
     printf("..*.. #%d - Job 3 : Calculating factorialYMemo(%d)\n", $data->id, $data->number);
 
     $driver->delay(3);
-    $result = factorialYMemo($data->number);
+    $result = $factorialYMemo($data->number);
 
     printf("..*.. #%d - Job 3 : Result for factorialYMemo(%d) = %d\n", $data->id, $data->number, $result);
 

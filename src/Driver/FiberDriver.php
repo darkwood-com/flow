@@ -108,7 +108,6 @@ class FiberDriver implements DriverInterface
                                 if ($isTick === false) {
                                     $next($return);
                                 }
-                                // Fiber::suspend();
                             }, static function ($fn, $next) {
                                 $fn($next);
                             });
@@ -152,7 +151,7 @@ class FiberDriver implements DriverInterface
                     }, static function (Closure|JobInterface $job) use ($defer) {
                         return $defer(false)($job);
                     }, $stream['fnFlows'][$index]['job'], $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
-                        if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) and $stream['fnFlows'][$index]['errorJob'] !== null) {
+                        if ($data instanceof RuntimeException && array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
                             $stream['fnFlows'][$index]['errorJob']($data);
                         } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
                             $ip = new Ip($data);

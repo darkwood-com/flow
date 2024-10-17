@@ -117,7 +117,7 @@ class AmpDriver implements DriverInterface
                     $job = $stream['fnFlows'][$index]['job'];
 
                     $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $job, $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
-                        if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
+                        if ($data instanceof RuntimeException && array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
                             $stream['fnFlows'][$index]['errorJob']($data);
                         } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
                             $ip = new Ip($data);
@@ -129,7 +129,7 @@ class AmpDriver implements DriverInterface
                 }
             }
 
-            if ($this->countIps($stream['dispatchers']) > 0 or $this->ticks > 0) {
+            if ($this->countIps($stream['dispatchers']) > 0 || $this->ticks > 0) {
                 EventLoop::defer($loop);
             } else {
                 EventLoop::getDriver()->stop();
