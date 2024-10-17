@@ -7,28 +7,28 @@ namespace Flow\AsyncHandler;
 use Flow\AsyncHandlerInterface;
 use Flow\Event;
 use Flow\Event\AsyncEvent;
+use Flow\Event\PoolEvent;
 use Symfony\Component\Messenger\Handler\Acknowledger;
 use Symfony\Component\Messenger\Handler\BatchHandlerInterface;
 use Symfony\Component\Messenger\Handler\BatchHandlerTrait;
 use Throwable;
 
 /**
- * @template T1
- * @template T2
+ * @template T
  *
- * @implements AsyncHandlerInterface<T1>
+ * @implements AsyncHandlerInterface<T>
  */
 final class BatchAsyncHandler implements BatchHandlerInterface, AsyncHandlerInterface
 {
     use BatchHandlerTrait;
 
     /**
-     * @var AsyncHandlerInterface<T2>
+     * @var AsyncHandlerInterface<T>
      */
     private AsyncHandlerInterface $asyncHandler;
 
     /**
-     * @param null|AsyncHandlerInterface<T2> $asyncHandler
+     * @param null|AsyncHandlerInterface<T> $asyncHandler
      */
     public function __construct(
         private int $batchSize = 10,
@@ -41,6 +41,7 @@ final class BatchAsyncHandler implements BatchHandlerInterface, AsyncHandlerInte
     {
         return [
             Event::ASYNC => 'async',
+            Event::POOL => 'pool',
         ];
     }
 
@@ -53,12 +54,17 @@ final class BatchAsyncHandler implements BatchHandlerInterface, AsyncHandlerInte
         $this->handle($event, $ack);
     }
 
+    public function pool(PoolEvent $event): void
+    {
+        $this->asyncHandler->pool($event);
+    }
+
     /**
      * PHPStan should normaly pass for method.unused
      * https://github.com/phpstan/phpstan/issues/6039
      * https://phpstan.org/r/8f7de023-9888-4dcb-b12c-e2fcf9547b6c.
      *
-     * @param array{0: AsyncEvent<T1>, 1: Acknowledger}[] $jobs
+     * @param array{0: AsyncEvent<T>, 1: Acknowledger}[] $jobs
      *
      * @phpstan-ignore method.unused
      */

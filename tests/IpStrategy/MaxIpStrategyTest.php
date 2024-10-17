@@ -27,24 +27,24 @@ class MaxIpStrategyTest extends TestCase
 
         $pullEvent = new PullEvent();
         $strategy->pull($pullEvent);
-        $ips[] = $pullEvent->getIp();
+        $ips[] = $pullEvent->getIps()[0] ?? null;
         self::assertNotNull($ips[0]);
 
         $pullEvent = new PullEvent();
         $strategy->pull($pullEvent);
-        $ips[] = $pullEvent->getIp();
+        $ips[] = $pullEvent->getIps()[0] ?? null;
         self::assertNotNull($ips[1]);
 
         $pullEvent = new PullEvent();
         $strategy->pull($pullEvent);
-        $ips[] = $pullEvent->getIp();
+        $ips[] = $pullEvent->getIps()[0] ?? null;
         self::assertNull($ips[2]);
 
         $strategy->pop(new PopEvent($ips[$doneIndex]));
 
         $pullEvent = new PullEvent();
         $strategy->pull($pullEvent);
-        $ips[] = $pullEvent->getIp();
+        $ips[] = $pullEvent->getIps()[0] ?? null;
         self::assertNotNull($ips[3]);
     }
 

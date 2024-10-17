@@ -34,6 +34,8 @@ use function React\Async\delay;
  */
 class ReactDriver implements DriverInterface
 {
+    use DriverTrait;
+
     private int $ticks = 0;
 
     private LoopInterface $eventLoop;
@@ -102,30 +104,25 @@ class ReactDriver implements DriverInterface
         };
 
         $loop = function () use (&$loop, &$stream, $async, $defer) {
-            $nextIp = null;
-            do {
-                foreach ($stream['dispatchers'] as $index => $dispatcher) {
-                    $nextIp = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIp();
-                    if ($nextIp !== null) {
-                        $job = $stream['fnFlows'][$index]['job'];
+            foreach ($stream['dispatchers'] as $index => $dispatcher) {
+                $nextIps = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIps();
+                foreach ($nextIps as $nextIp) {
+                    $job = $stream['fnFlows'][$index]['job'];
 
-                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $job, $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
-                            if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
-                                $stream['fnFlows'][$index]['errorJob']($data);
-                            } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
-                                $ip = new Ip($data);
-                                $stream['ips']++;
-                                $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), Event::PUSH);
-                            }
+                    $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $job, $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
+                        if ($data instanceof RuntimeException && array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
+                            $stream['fnFlows'][$index]['errorJob']($data);
+                        } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
+                            $ip = new Ip($data);
+                            $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), Event::PUSH);
+                        }
 
-                            $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
-                            $stream['ips']--;
-                        }), Event::ASYNC);
-                    }
+                        $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
+                    }), Event::ASYNC);
                 }
-            } while ($nextIp !== null);
+            }
 
-            if ($stream['ips'] > 0 or $this->ticks > 0) {
+            if ($this->countIps($stream['dispatchers']) > 0 || $this->ticks > 0) {
                 $this->eventLoop->futureTick($loop);
             } else {
                 $this->eventLoop->stop();

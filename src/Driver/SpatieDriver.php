@@ -30,6 +30,8 @@ use function array_key_exists;
  */
 class SpatieDriver implements DriverInterface
 {
+    use DriverTrait;
+
     private int $ticks = 0;
 
     private Pool $pool;
@@ -88,28 +90,23 @@ class SpatieDriver implements DriverInterface
             };
         };
 
-        $nextIp = null;
-        while ($stream['ips'] > 0 or $this->ticks > 0) {
-            do {
-                foreach ($stream['dispatchers'] as $index => $dispatcher) {
-                    $nextIp = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIp();
-                    if ($nextIp !== null) {
-                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $stream['fnFlows'][$index]['job'], $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
-                            if ($data instanceof RuntimeException and array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
-                                $stream['fnFlows'][$index]['errorJob']($data);
-                            } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
-                                $ip = new Ip($data);
-                                $stream['ips']++;
-                                $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), Event::PUSH);
-                            }
+        do {
+            foreach ($stream['dispatchers'] as $index => $dispatcher) {
+                $nextIps = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIps();
+                foreach ($nextIps as $nextIp) {
+                    $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $stream['fnFlows'][$index]['job'], $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
+                        if ($data instanceof RuntimeException && array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
+                            $stream['fnFlows'][$index]['errorJob']($data);
+                        } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
+                            $ip = new Ip($data);
+                            $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), Event::PUSH);
+                        }
 
-                            $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
-                            $stream['ips']--;
-                        }), Event::ASYNC);
-                    }
+                        $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
+                    }), Event::ASYNC);
                 }
-            } while ($nextIp !== null);
-        }
+            }
+        } while ($this->countIps($stream['dispatchers']) > 0 or $this->ticks > 0);
     }
 
     public function delay(float $seconds): void

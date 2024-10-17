@@ -24,8 +24,8 @@ class AsyncHandlerTest extends TestCase
                 [$n1, $n2] = $data;
                 $result = $n1 + $n2;
 
-                return static function ($callback) {
-                    $callback();
+                return static function ($callback) use ($result) {
+                    $callback($result);
                 };
             },
             new Ip([2, 6]),

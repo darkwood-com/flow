@@ -5,45 +5,8 @@ declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 
 use Doctrine\DBAL\DriverManager;
+use Flow\Examples\Transport\Client;
 use Flow\Examples\Transport\DoctrineIpTransport;
-use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Handler\HandlerDescriptor;
-use Symfony\Component\Messenger\Handler\HandlersLocator;
-use Symfony\Component\Messenger\MessageBus;
-use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
-use Symfony\Component\Messenger\Stamp\DelayStamp;
-use Symfony\Component\Messenger\Transport\Receiver\ReceiverInterface;
-use Symfony\Component\Messenger\Transport\Sender\SenderInterface;
-use Symfony\Component\Messenger\Worker;
-
-class client
-{
-    public function __construct(
-        private SenderInterface $sender,
-        private ReceiverInterface $receiver
-    ) {}
-
-    /**
-     * @param ?int $delay The delay in milliseconds
-     */
-    public function call(object $data, ?int $delay = null): void
-    {
-        $ip = Envelope::wrap($data, $delay ? [new DelayStamp($delay)] : []);
-        $this->sender->send($ip);
-    }
-
-    /**
-     * @param callable[][]|HandlerDescriptor[][] $handlers
-     */
-    public function wait(array $handlers): void
-    {
-        $bus = new MessageBus([
-            new HandleMessageMiddleware(new HandlersLocator($handlers)),
-        ]);
-        $worker = new Worker(['transport' => $this->receiver], $bus);
-        $worker->run();
-    }
-}
 
 $connection = DriverManager::getConnection([
     'driver' => 'pdo_sqlite',
@@ -51,7 +14,7 @@ $connection = DriverManager::getConnection([
 ]);
 $transport = new DoctrineIpTransport($connection, uniqid('transport_', true));
 
-$client = new client($transport, $transport);
+$client = new Client($transport, $transport);
 
 $ip = long2ip(random_int(ip2long('10.0.0.0'), ip2long('10.255.255.255')));
 for ($i = 0; $i < 3; $i++) {

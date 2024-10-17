@@ -11,7 +11,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 /**
  * @template T
  */
-final class PullEvent extends Event
+final class PoolEvent extends Event
 {
     /**
      * @var IpPool<T>
@@ -24,18 +24,20 @@ final class PullEvent extends Event
     }
 
     /**
-     * @return Ip<T>[]
+     * @param array<Ip<T>> $ips
+     */
+    public function addIps(array $ips): void
+    {
+        foreach ($ips as $ip) {
+            $this->ipPool->addIp($ip);
+        }
+    }
+
+    /**
+     * @return array<Ip<T>>
      */
     public function getIps(): array
     {
         return $this->ipPool->getIps();
-    }
-
-    /**
-     * @param Ip<T> $ip
-     */
-    public function addIp(Ip $ip): void
-    {
-        $this->ipPool->addIp($ip);
     }
 }
