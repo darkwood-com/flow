@@ -2,6 +2,7 @@
 
 ## v1.2.6
 
+- Update to Open Swoole 26.2.0
 - Remove symfony messenger
 
 ## v1.2.5
