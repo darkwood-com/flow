@@ -1,0 +1,28 @@
+{
+	"require": {
+        "php": ">=8.3",
+        "symfony/event-dispatcher": "^8.0",
+		"symfony/messenger": "^8.0"
+    },
+    "require-dev": {
+        "amphp/amp": "^3.1",
+        "doctrine/dbal": "^4.3",
+        "openswoole/ide-helper": "^4.11.6",
+        "phpunit/phpunit": "^11.4",
+        "react/async": "^4.3",
+        "spatie/async": "^1.6",
+        "symfony/doctrine-messenger": "^8.0",
+        "symfony/http-client": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Flow\\": "../../src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Flow\\Examples\\": "../../examples",
+            "Flow\\Test\\": "../../tests"
+        }
+    }
+}

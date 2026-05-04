@@ -1,0 +1,32 @@
+name: Docs Deploy
+
+on:
+  push:
+    branches:
+      - 1.x
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'docs/package-lock.json'
+
+      - name: Install dependencies
+        run: cd docs && npm install
+
+      # - name: Check for linting errors
+      #   run: cd docs && npm test
+
+      - name: Build production website
+        run: cd docs && npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/src/public

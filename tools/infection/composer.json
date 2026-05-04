@@ -1,0 +1,22 @@
+{
+    "require-dev": {
+        "infection/infection": "^0.27",
+        "phpunit/phpunit": "^10.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Flow\\": "../../src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Flow\\Examples\\": "../../examples",
+            "Flow\\Test\\": "../../tests"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
+    }
+}
