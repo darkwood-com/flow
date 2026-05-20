@@ -24,12 +24,12 @@ class AsyncHandlerTest extends TestCase
                 [$n1, $n2] = $data;
                 $result = $n1 + $n2;
 
-                return static function ($callback) use ($result) {
+                return static function ($callback) use ($result): void {
                     $callback($result);
                 };
             },
             new Ip([2, 6]),
-            static function () {}
+            static function (): void {}
         );
 
         $asyncHandler = new AsyncHandler();

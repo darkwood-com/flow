@@ -43,7 +43,7 @@ final class AsyncHandler implements AsyncHandlerInterface
 
         $popIp = $this->ipPool->addIp($ip);
         $next = $asyncJob($ip->data);
-        $next(static function ($data) use ($event, $popIp) {
+        $next(static function ($data) use ($event, $popIp): void {
             $event->getCallback()($data);
             $popIp();
         });

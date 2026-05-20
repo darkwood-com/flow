@@ -125,14 +125,14 @@ $factorialYJobDefer = new YJob(static function ($factorial) use ($driver) {
     return static function ($args) use ($factorial, $driver) {
         [$data, $defer] = $args;
 
-        return $defer(static function ($complete, $async) use ($data, $defer, $factorial, $driver) {
+        return $defer(static function ($complete, $async) use ($data, $defer, $factorial, $driver): void {
             if ($data->result <= 1) {
                 $delay = random_int(1, 3);
                 printf("...*. #%d - Job 4 : Step factorialYJobDefer(%d) with delay %d\n", $data->id, $data->number, $delay);
                 $driver->delay($delay);
                 $complete([new YFlowData($data->id, $data->number, 1), $defer]);
             } else {
-                $async($factorial([new YFlowData($data->id, $data->number, $data->result - 1), $defer]), static function ($result) use ($data, $complete, $driver) {
+                $async($factorial([new YFlowData($data->id, $data->number, $data->result - 1), $defer]), static function ($result) use ($data, $complete, $driver): void {
                     [$resultData, $defer] = $result;
                     $delay = random_int(1, 3);
                     printf("...*. #%d - Job 4 : Step async factorialYJobDefer(%d) with delay %d\n", $data->id, $data->number, $delay);
@@ -147,7 +147,7 @@ $factorialYJobDefer = new YJob(static function ($factorial) use ($driver) {
 $factorialYJobDeferAfter = static function ($args) {
     [$data, $defer] = $args;
 
-    return $defer(static function ($complete) use ($data, $defer) {
+    return $defer(static function ($complete) use ($data, $defer): void {
         printf("...*. #%d - Job 4 : Result for factorialYJobDefer(%d) = %d\n", $data->id, $data->number, $data->result);
 
         $complete([new YFlowData($data->id, $data->number), $defer]);
@@ -164,16 +164,16 @@ $fibonacciYJobDefer = new YJob(static function ($fibonacci) use ($driver) {
     return static function ($args) use ($fibonacci, $driver) {
         [$data, $defer] = $args;
 
-        return $defer(static function ($complete, $async) use ($data, $defer, $fibonacci, $driver) {
+        return $defer(static function ($complete, $async) use ($data, $defer, $fibonacci, $driver): void {
             if ($data->result <= 1) {
                 $delay = random_int(1, 3);
                 printf("....* #%d - Job 5 : Step fibonacciYJobDefer(%d) with delay %d\n", $data->id, $data->number, $delay);
                 $driver->delay($delay);
                 $complete([new YFlowData($data->id, $data->number, 1), $defer]);
             } else {
-                $async($fibonacci([new YFlowData($data->id, $data->number, $data->result - 1), $defer]), static function ($result1) use ($data, $complete, $driver, $async, $fibonacci) {
+                $async($fibonacci([new YFlowData($data->id, $data->number, $data->result - 1), $defer]), static function ($result1) use ($data, $complete, $driver, $async, $fibonacci): void {
                     [$resultData1, $defer1] = $result1;
-                    $async($fibonacci([new YFlowData($data->id, $data->number, $data->result - 2), $defer1]), static function ($result2) use ($data, $complete, $driver, $resultData1) {
+                    $async($fibonacci([new YFlowData($data->id, $data->number, $data->result - 2), $defer1]), static function ($result2) use ($data, $complete, $driver, $resultData1): void {
                         [$resultData2, $defer2] = $result2;
                         $delay = random_int(1, 3);
                         printf("....* #%d - Job 5 : Step async fibonacciYJobDefer(%d) with delay %d\n", $data->id, $data->number, $delay);
@@ -190,7 +190,7 @@ $fibonacciYJobDefer = new YJob(static function ($fibonacci) use ($driver) {
 $fibonacciYJobDeferAfter = static function ($args) {
     [$data, $defer] = $args;
 
-    return $defer(static function ($complete) use ($data, $defer) {
+    return $defer(static function ($complete) use ($data, $defer): void {
         printf("....* #%d - Job 5 : Result for fibonacciYJobDefer(%d) = %d\n", $data->id, $data->number, $data->result);
 
         $complete([new YFlowData($data->id, $data->number), $defer]);

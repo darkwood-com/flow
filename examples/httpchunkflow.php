@@ -127,9 +127,6 @@ $processChunksJob = static function ($processChunks) {
 
         // Handle both single user object and array of users
         $users = $chunkData->additionalRequests;
-        if (!is_array($users)) {
-            return $chunkData;
-        }
 
         // If it's a single user object (not indexed array), wrap it in an array
         if (isset($users['id']) && !isset($users[0])) {

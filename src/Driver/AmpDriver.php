@@ -72,11 +72,11 @@ class AmpDriver implements DriverInterface
     {
         $deferred = new DeferredFuture();
 
-        EventLoop::queue(static function () use ($callback, $deferred) {
+        EventLoop::queue(static function () use ($callback, $deferred): void {
             try {
-                $callback(static function ($return) use ($deferred) {
+                $callback(static function ($return) use ($deferred): void {
                     $deferred->complete($return);
-                }, static function ($fn, $next) {
+                }, static function ($fn, $next): void {
                     $fn($next);
                 });
             } catch (Throwable $exception) {
@@ -95,7 +95,7 @@ class AmpDriver implements DriverInterface
 
                 $future = $async($data);
 
-                return static function (Closure $map) use ($future) {
+                return static function (Closure $map) use ($future): void {
                     /** @var Closure(TReturn): mixed $map */
                     $future->map($map);
                 };
@@ -103,20 +103,20 @@ class AmpDriver implements DriverInterface
         };
 
         $defer = function (Closure|JobInterface $job) {
-            return function (Closure $map) use ($job) {
+            return function (Closure $map) use ($job): void {
                 /** @var Closure(TReturn): mixed $map */
                 $future = $this->defer($job);
                 $future->map($map);
             };
         };
 
-        $loop = function () use (&$loop, &$stream, $async, $defer) {
+        $loop = function () use (&$loop, &$stream, $async, $defer): void {
             foreach ($stream['dispatchers'] as $index => $dispatcher) {
                 $nextIps = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIps();
                 foreach ($nextIps as $nextIp) {
                     $job = $stream['fnFlows'][$index]['job'];
 
-                    $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $job, $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
+                    $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $job, $nextIp, static function ($data) use (&$stream, $index, $nextIp): void {
                         if ($data instanceof RuntimeException && array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
                             $stream['fnFlows'][$index]['errorJob']($data);
                         } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
@@ -150,7 +150,7 @@ class AmpDriver implements DriverInterface
         $this->ticks++;
         $tickId = EventLoop::repeat($interval, $callback);
 
-        return function () use ($tickId) {
+        return function () use ($tickId): void {
             EventLoop::cancel($tickId);
             $this->ticks--;
         };

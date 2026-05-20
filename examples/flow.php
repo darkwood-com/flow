@@ -91,7 +91,7 @@ $errorJob2 = static function (ExceptionInterface $exception): void {
 };
 
 echo "begin - synchronous\n";
-$asyncTask = static function ($job1, $job2, $job3, $errorJob1, $errorJob2, $driver) {
+$asyncTask = static function ($job1, $job2, $job3, $errorJob1, $errorJob2, $driver): void {
     echo "begin - flow asynchronous\n";
 
     $flow = (new FlowFactory())->create(static function () use ($job1, $job2, $job3, $errorJob1, $errorJob2) {

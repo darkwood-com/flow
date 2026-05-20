@@ -17,8 +17,8 @@ use Symfony\Component\Messenger\Transport\TransportInterface;
 
 class DoctrineIpTransport implements TransportInterface
 {
-    private ?SerializerInterface $serializer;
-    private ?DoctrineReceiver $receiver;
+    private SerializerInterface $serializer;
+    private DoctrineReceiver $receiver;
     /** @var array<mixed, DoctrineSender> */
     private array $senders;
 
@@ -33,17 +33,17 @@ class DoctrineIpTransport implements TransportInterface
 
     public function get(): iterable
     {
-        return ($this->receiver ?? $this->getReceiver())->get();
+        return $this->getReceiver()->get();
     }
 
     public function ack(Envelope $envelope): void
     {
-        ($this->receiver ?? $this->getReceiver())->ack($envelope);
+        $this->getReceiver()->ack($envelope);
     }
 
     public function reject(Envelope $envelope): void
     {
-        ($this->receiver ?? $this->getReceiver())->reject($envelope);
+        $this->getReceiver()->reject($envelope);
     }
 
     public function send(Envelope $envelope): Envelope
@@ -65,8 +65,10 @@ class DoctrineIpTransport implements TransportInterface
 
     private function getReceiver(): DoctrineReceiver
     {
-        $connection = new Connection($this->queue($this->id), $this->connection);
-        $this->receiver = new DoctrineReceiver($connection, $this->serializer);
+        if (!isset($this->receiver)) {
+            $connection = new Connection($this->queue($this->id), $this->connection);
+            $this->receiver = new DoctrineReceiver($connection, $this->serializer);
+        }
 
         return $this->receiver;
     }

@@ -44,8 +44,8 @@ class SwooleDriver implements DriverInterface
     public function async(Closure|JobInterface $callback): Closure
     {
         return static function (...$args) use ($callback) {
-            return static function ($onResolve) use ($callback, $args) {
-                go(static function () use ($args, $callback, $onResolve) {
+            return static function ($onResolve) use ($callback, $args): void {
+                go(static function () use ($args, $callback, $onResolve): void {
                     try {
                         $return = $callback(...$args, ...($args = []));
                         $onResolve($return);
@@ -73,10 +73,10 @@ class SwooleDriver implements DriverInterface
         };
 
         $defer = static function (Closure|JobInterface $job) {
-            return static function (Closure $onResolve) use ($job) {
-                go(static function () use ($job, $onResolve) {
+            return static function (Closure $onResolve) use ($job): void {
+                go(static function () use ($job, $onResolve): void {
                     try {
-                        $job($onResolve, static function ($fn, $next) {
+                        $job($onResolve, static function ($fn, $next): void {
                             $fn($next);
                         });
                     } catch (Throwable $exception) {
@@ -86,12 +86,12 @@ class SwooleDriver implements DriverInterface
             };
         };
 
-        co::run(function () use (&$stream, $async, $defer) {
+        co::run(function () use (&$stream, $async, $defer): void {
             do {
                 foreach ($stream['dispatchers'] as $index => $dispatcher) {
                     $nextIps = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIps();
                     foreach ($nextIps as $nextIp) {
-                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $stream['fnFlows'][$index]['job'], $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
+                        $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $stream['fnFlows'][$index]['job'], $nextIp, static function ($data) use (&$stream, $index, $nextIp): void {
                             if ($data instanceof RuntimeException && array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
                                 $stream['fnFlows'][$index]['errorJob']($data);
                             } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
@@ -118,8 +118,8 @@ class SwooleDriver implements DriverInterface
         $this->ticks++;
         $tickId = Timer::tick((int) $interval, $callback);
 
-        return function () use ($tickId) {
-            Timer::clear($tickId); // @phpstan-ignore-line
+        return function () use ($tickId): void {
+            Timer::clear($tickId);
             $this->ticks--;
         };
     }

@@ -37,7 +37,7 @@ class TransportFlow extends FlowDecorator
         ?DriverInterface $driver = null
     ) {
         parent::__construct($flow);
-        $this->fn(function (Envelope $envelope) {
+        $this->fn(function (Envelope $envelope): void {
             try {
                 $this->consumer->send(Envelope::wrap($envelope->getMessage(), array_reduce($envelope->all(), static function (array $all, array $stamps) {
                     foreach ($stamps as $stamp) {
@@ -62,7 +62,7 @@ class TransportFlow extends FlowDecorator
      */
     public function pull(int $interval): Closure
     {
-        return $this->driver->tick($interval, function () {
+        return $this->driver->tick($interval, function (): void {
             $envelopes = $this->producer->get();
             foreach ($envelopes as $envelope) {
                 $this->emit($envelope);

@@ -18,6 +18,7 @@ use Flow\FlowFactory;
 use Flow\Ip;
 use Flow\IpStrategy\MaxIpStrategy;
 use Flow\Job\ClosureJob;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -30,11 +31,10 @@ class FlowTest extends TestCase
     use FlowTrait;
 
     /**
-     * @dataProvider provideJobCases
-     *
      * @param DriverInterface<T1,T2> $driver
      * @param array<mixed>           $jobs
      */
+    #[DataProvider('provideJobCases')]
     public function testJob(DriverInterface $driver, array $jobs, int $resultNumber): void
     {
         $count = 0;
@@ -44,7 +44,7 @@ class FlowTest extends TestCase
 
                 return new Flow(
                     $job,
-                    static function (ExceptionInterface $exception) use (&$count) {
+                    static function (ExceptionInterface $exception) use (&$count): void {
                         $count++;
                         self::assertSame(RuntimeException::class, $exception->getPrevious()::class);
                     },
@@ -56,7 +56,7 @@ class FlowTest extends TestCase
             }, $jobs),
             static fn ($flow, $flowIt) => $flow ? $flow->fn($flowIt) : $flowIt
         );
-        $flow->fn(static function (ArrayObject $data) use ($resultNumber, &$count) {
+        $flow->fn(static function (ArrayObject $data) use ($resultNumber, &$count): void {
             $count++;
             self::assertSame(ArrayObject::class, $data::class);
             self::assertSame($resultNumber, $data['number']);
@@ -72,14 +72,13 @@ class FlowTest extends TestCase
     }
 
     /**
-     * @dataProvider provideJobCases
-     *
      * @param DriverInterface<T1,T2> $driver
      * @param array<mixed>           $jobs
      */
+    #[DataProvider('provideJobCases')]
     public function testTick(DriverInterface $driver, array $jobs, int $resultNumber): void
     {
-        $cancel = $driver->tick(1, static function () use (&$flow) {
+        $cancel = $driver->tick(1, static function () use (&$flow): void {
             $ip = new Ip(new ArrayObject(['number' => 0]));
             ($flow)($ip); // @phpstan-ignore-line
         });
@@ -90,7 +89,7 @@ class FlowTest extends TestCase
 
                 return new Flow(
                     $job,
-                    static function (ExceptionInterface $exception) use ($cancel) {
+                    static function (ExceptionInterface $exception) use ($cancel): void {
                         self::assertSame(RuntimeException::class, $exception->getPrevious()::class);
                         $cancel();
                     },
@@ -109,7 +108,7 @@ class FlowTest extends TestCase
             return $data;
         });
 
-        $flow->fn(static function () use ($cancel) {
+        $flow->fn(static function () use ($cancel): void {
             $cancel();
         });
 
@@ -148,7 +147,7 @@ class FlowTest extends TestCase
                 }, $strategy, new AsyncHandler()]], 5];
             }
 
-            $cases['exceptionJob'] = [[[static function () use ($exception) {
+            $cases['exceptionJob'] = [[[static function () use ($exception): void {
                 throw $exception;
             }, $strategyBuilder(), new AsyncHandler()]], 0];
 
@@ -156,7 +155,7 @@ class FlowTest extends TestCase
                 $cases['deferJob'] = [[[static function ($args) {
                     [$data, $defer] = $args;
 
-                    return $defer(static function ($complete) use ($data, $defer) {
+                    return $defer(static function ($complete) use ($data, $defer): void {
                         $data['number'] = 8;
                         $complete([$data, $defer]);
                     });
@@ -177,11 +176,10 @@ class FlowTest extends TestCase
     }
 
     /**
-     * @dataProvider provideDoCases
-     *
      * @param DriverInterface<T1,T2> $driver
      * @param array<mixed>           $config
      */
+    #[DataProvider('provideDoCases')]
     public function testDo(DriverInterface $driver, callable $callable, ?array $config, int $resultNumber): void
     {
         $ip = new Ip(new ArrayObject(['number' => 0]));

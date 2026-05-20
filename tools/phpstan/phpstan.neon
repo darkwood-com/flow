@@ -1,7 +1,11 @@
 parameters:
 	level: 6
+	scanDirectories:
+		- vendor/openswoole/ide-helper/src
 	bootstrapFiles:
+		- bootstrap.php
 		- vendor/autoload.php
+		- ../phpunit/vendor/autoload.php
 	paths:
 		- ../../examples
 		- ../../src

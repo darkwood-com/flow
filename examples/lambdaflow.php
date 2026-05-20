@@ -26,7 +26,7 @@ printf("Use %s\n", $driver::class);
 
 // from https://github.com/loophp/combinator?tab=readme-ov-file#available-combinators
 
-$handle = static function (string $expression, array $params) {
+$handle = static function (string $expression, array $params): void {
     $job = new LambdaJob($expression);
     $result = array_reduce($params, static fn ($carry, $param) => empty($carry) ? $job($param) : $carry($param));
     $encodedParams = array_map(static fn ($param) => $param instanceof Closure ? 'Closure' : (is_object($param) ? get_class($param) : $param), $params);

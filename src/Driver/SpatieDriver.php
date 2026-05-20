@@ -51,12 +51,12 @@ class SpatieDriver implements DriverInterface
     public function async(Closure|JobInterface $callback): Closure
     {
         return function (...$args) use ($callback) {
-            return function ($onResolve) use ($callback, $args) {
+            return function ($onResolve) use ($callback, $args): void {
                 $this->pool->add(static function () use ($callback, $args) {
                     return $callback(...$args, ...($args = []));
-                })->then(static function ($return) use ($onResolve) {
+                })->then(static function ($return) use ($onResolve): void {
                     $onResolve($return);
-                })->catch(static function (Throwable $exception) use ($onResolve) {
+                })->catch(static function (Throwable $exception) use ($onResolve): void {
                     $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
                 });
             };
@@ -79,12 +79,12 @@ class SpatieDriver implements DriverInterface
         };
 
         $defer = function (Closure|JobInterface $job) {
-            return function (Closure $onResolve) use ($job) {
+            return function (Closure $onResolve) use ($job): void {
                 $this->pool->add(static function () use ($job, $onResolve) {
-                    return $job($onResolve, static function ($fn, $next) {
+                    return $job($onResolve, static function ($fn, $next): void {
                         $fn($next);
                     });
-                })->catch(static function (Throwable $exception) use ($onResolve) {
+                })->catch(static function (Throwable $exception) use ($onResolve): void {
                     $onResolve(new RuntimeException($exception->getMessage(), $exception->getCode(), $exception));
                 });
             };
@@ -94,7 +94,7 @@ class SpatieDriver implements DriverInterface
             foreach ($stream['dispatchers'] as $index => $dispatcher) {
                 $nextIps = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIps();
                 foreach ($nextIps as $nextIp) {
-                    $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $stream['fnFlows'][$index]['job'], $nextIp, static function ($data) use (&$stream, $index, $nextIp) {
+                    $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $stream['fnFlows'][$index]['job'], $nextIp, static function ($data) use (&$stream, $index, $nextIp): void {
                         if ($data instanceof RuntimeException && array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
                             $stream['fnFlows'][$index]['errorJob']($data);
                         } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
@@ -120,7 +120,7 @@ class SpatieDriver implements DriverInterface
         $closure = static fn () => $callback();
         register_tick_function($closure);
 
-        return function () use ($closure) {
+        return function () use ($closure): void {
             unregister_tick_function($closure);
             $this->ticks--;
         };

@@ -21,7 +21,7 @@ abstract class DriverTestCase extends TestCase
 {
     public function testAsync(): void
     {
-        self::assertTrue(true);
+        self::markTestSkipped('Driver async test is temporarily disabled.');
         /*$driver = $this->createDriver();
         $value = $driver->async(static function () {})();
         self::assertNull($value);*/

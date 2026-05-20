@@ -30,7 +30,7 @@ for ($i = 0; $i < 3; $i++) {
 }
 
 $client->wait([
-    ArrayObject::class => [static function (ArrayObject $data) {
+    ArrayObject::class => [static function (ArrayObject $data): void {
         if (null === $data['number']) {
             printf("Client %s #%d: error in process\n", $data['client'], $data['id']);
         } else {

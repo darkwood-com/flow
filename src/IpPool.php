@@ -23,7 +23,7 @@ class IpPool
     {
         $this->ips[] = $ip;
 
-        return function () use ($ip) {
+        return function () use ($ip): void {
             $this->ips = array_filter($this->ips, static function ($iteratorIp) use ($ip) {
                 return $iteratorIp !== $ip;
             });
