@@ -8,14 +8,28 @@ dev: ## Start dev server
 docs-serve: ## Start documentation server locally
 	composer docs-serve
 
+##
+##QA
+##-------------
+
+php-cs-fixer: ## Check and fix coding styles using PHP CS Fixer
+	composer php-cs-fixer
+
+phpstan: ## Execute PHPStan analysis
+	composer phpstan
+
+phpunit: ## Launch PHPUnit test suite
+	composer phpunit
+
+##
+##Optional extra tools
+##-------------
+
 editorconfig-fixer: ## Fixes text files based on given .editorconfig declarations
 	composer editorconfig-fixer
 
 infection: ## Run Infection
 	composer infection
-
-php-cs-fixer: ## Check and fix coding styles using PHP CS Fixer
-	composer php-cs-fixer
 
 phan: ## Run Phan
 	composer phan
@@ -28,12 +42,6 @@ phpcs: ## Run PHP Code Sniffer
 
 phpmd: ## Run PHP Mess Detector
 	composer phpmd
-
-phpstan: ## Execute PHPStan analysis
-	composer phpstan
-
-phpunit: ## Launch PHPUnit test suite
-	composer phpunit
 
 psalm: ## Run Psalm
 	composer psalm
