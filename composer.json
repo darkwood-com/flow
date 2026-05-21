@@ -1,5 +1,6 @@
 {
     "name": "darkwood/flow",
+    "version": "1.3.0",
     "description": "Flow",
     "type": "library",
     "license": "MIT",

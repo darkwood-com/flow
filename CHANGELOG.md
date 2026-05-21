@@ -1,5 +1,15 @@
 # Changelog
 
+Versions from **1.3.0** onward follow the unified Darkwood release line
+(see [CHANGELOG-1.x.md](../../../../CHANGELOG-1.x.md) at the monorepo root).
+
+## 1.3.0
+
+- Adopt unified Darkwood versioning (same tag as all `darkwood/*` packages)
+- No functional changes beyond the monorepo consolidation in this release
+
+## Prior releases (pre-unified versioning)
+
 ## v1.2.6
 
 - Update to Open Swoole 26.2.0
@@ -8,7 +18,7 @@
 ## v1.2.5
 
 - Update to PHP 8.5 and Symfony 8.0
-- Add exemples/httpchunkflow.php
+- Add examples/httpchunkflow.php
 
 ## v1.2.4
 
@@ -38,7 +48,7 @@
         - https://github.com/wazum/symfony-messenger-batch
     - Add Flow\AsyncHandler\DeferAsyncHandler to gain granular control on the async Event::SYNC step event
 - Flow\Flow\YFlow rework
-- Add more exemples in `examples/yflow.php` to play with Y-Combinators
+- Add more examples in `examples/yflow.php` to play with Y-Combinators
 - Update DX for Flow\DriverInterface : add `defer` to gain much granular control on asynchronous callbacks
 
 ## v1.2.0
@@ -51,8 +61,8 @@
 - Add Flow\FlowInterface::do notation from https://github.com/fp4php/functional
 - Update Flow\FlowInterface::fn to accept as first argument
     - Closure : it's the job itself
-    - array : constructor arguments for Flow instanciation
-    - array (view as shape) : configuration for Flow instanciation
+    - array : constructor arguments for Flow instantiation
+    - array (view as shape) : configuration for Flow instantiation
     - FlowInterface : the FlowInterface instance itself
     - array : map of all possible above choices
 - Update to Symfony 7.0
@@ -88,7 +98,7 @@
 - Bundle `Flow` to PHP monorepository
 - Merge from `packages/symfony` to `packages/php` and make Flow [Symfony](https://symfony.com) friendly
 - New DX interface `Flow\FlowInterface`
-- Error managment is now integrated to Flow
+- Error management is now integrated to Flow
 - Remove context associated with processing IP
 - Deprecate `Flow\Flow\SequenceFlow` in favor for `Flow\Flow\Flow`
 - Deprecate `Flow\Flow\ErrorFlow` in favor for `Flow\Flow\Flow`
