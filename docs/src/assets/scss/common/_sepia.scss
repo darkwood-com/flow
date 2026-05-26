@@ -1,0 +1,522 @@
+/** Theme variables */
+
+// Source: https://material.io/design/color/sepia-theme.html
+
+$body-bg-sepia: #F1E7D0;
+$body-overlay-sepia: sepiaen($body-bg-sepia, 2.5%);
+
+/*
+$border-sepia: sepiaen($body-bg-sepia, 2.5%);
+*/
+$border-sepia: #ded0bf;
+$body-color-sepia: #876944;
+$dots-sepia: sepiaen($body-color-sepia, 50%);
+
+$link-color-sepia: #0066CC;
+$button-color-sepia: $link-color-sepia;
+$focus-color-sepia: lighten($link-color-sepia, 2.5%);
+
+$navbar-sepia-color:                 $body-color-sepia;
+$navbar-sepia-hover-color:           $link-color-sepia;
+$navbar-sepia-active-color:          $link-color-sepia;
+$navbar-sepia-disabled-color:        $link-color-sepia;
+
+/** Theme styles */
+
+body.data-sepia-mode {
+  background: $body-bg-sepia;
+  color: $body-color-sepia;
+}
+
+body.data-sepia-mode a {
+  color: $link-color-sepia;
+}
+
+body.data-sepia-mode a.text-body {
+  color: $body-color-sepia !important;
+}
+
+body.data-sepia-mode .btn-primary {
+  @include button-variant($button-color-sepia, $button-color-sepia);
+
+  color: $body-bg-sepia !important;
+}
+
+body.data-sepia-mode .btn-outline-primary {
+  @include button-outline-variant($button-color-sepia, $button-color-sepia);
+
+  color: $link-color-sepia;
+}
+
+body.data-sepia-mode .btn-outline-primary:hover {
+  color: $body-bg-sepia;
+}
+
+body.data-sepia-mode .btn-doks-light {
+  color: $navbar-sepia-color;
+}
+
+body.data-sepia-mode .show > .btn-doks-light,
+body.data-sepia-mode .btn-doks-light:hover,
+body.data-sepia-mode .btn-doks-light:active {
+  color: $link-color-sepia;
+}
+
+body.data-sepia-mode .btn-menu svg {
+  color: $body-color-sepia;
+}
+
+body.data-sepia-mode .doks-sidebar-toggle {
+  color: $navbar-sepia-color;
+}
+
+body.data-sepia-mode .btn-menu:hover,
+body.data-sepia-mode .btn-doks-light:hover,
+body.data-sepia-mode .doks-sidebar-toggle:hover {
+  background: $body-overlay-sepia;
+}
+
+/*
+body.data-sepia-mode .dropdown-menu {
+  @extend .dropdown-menu-sepia;
+}
+*/
+
+body.data-sepia-mode .navbar,
+body.data-sepia-mode .doks-subnavbar {
+  background-color: #F1E7D0;
+  border-bottom: 1px solid $border-sepia;
+}
+
+body.data-sepia-mode.home .navbar {
+  border-bottom: 0;
+}
+
+body.data-sepia-mode .offcanvas-header {
+  border-bottom: 1px solid $gray-800;
+}
+
+body.data-sepia-mode .offcanvas .nav-link {
+  color: $body-color-sepia;
+}
+
+body.data-sepia-mode .offcanvas .nav-link:hover,
+body.data-sepia-mode .offcanvas .nav-link:focus {
+  color: $link-color-sepia;
+}
+
+body.data-sepia-mode .offcanvas .nav-link.active {
+  color: $link-color-sepia;
+}
+
+body.data-sepia-mode .navbar-light .navbar-brand {
+  color: $navbar-sepia-color !important;
+}
+
+body.data-sepia-mode .navbar-light .navbar-nav .nav-link {
+  color: $navbar-sepia-color;
+}
+
+body.data-sepia-mode .navbar-light .navbar-nav .nav-link:hover,
+body.data-sepia-mode .navbar-light .navbar-nav .nav-link:focus {
+  color: $navbar-sepia-hover-color;
+}
+
+body.data-sepia-mode .navbar-light .navbar-nav .nav-link.disabled {
+  color: $navbar-sepia-disabled-color;
+}
+
+body.data-sepia-mode .navbar-light .navbar-nav .show > .nav-link,
+body.data-sepia-mode .navbar-light .navbar-nav .active > .nav-link,
+body.data-sepia-mode .navbar-light .navbar-nav .nav-link.show,
+body.data-sepia-mode .navbar-light .navbar-nav .nav-link.active {
+  color: $navbar-sepia-active-color;
+}
+
+body.data-sepia-mode .navbar-light .navbar-text {
+  color: $navbar-sepia-color;
+}
+
+body.data-sepia-mode .alert-primary a {
+  color: $body-bg-sepia;
+}
+
+body.data-sepia-mode .alert-warning {
+  background: $body-overlay-sepia;
+  color: $body-color-sepia;
+}
+
+body.data-sepia-mode .page-links a {
+  color: $body-color-sepia;
+}
+
+body.data-sepia-mode .btn-toggle-nav a {
+  color: $body-color-sepia;
+}
+
+body.data-sepia-mode .showcase-meta a {
+  color: $body-color-sepia;
+}
+
+body.data-sepia-mode .showcase-meta a:hover,
+body.data-sepia-mode .showcase-meta a:focus {
+  color: $link-color-sepia;
+}
+
+body.data-sepia-mode .docs-link:hover,
+body.data-sepia-mode .docs-link.active,
+body.data-sepia-mode .page-links a:hover {
+  text-decoration: none;
+  color: $link-color-sepia;
+}
+
+body.data-sepia-mode .btn-toggle {
+  color: $body-color-sepia;
+  background-color: transparent;
+  border: 0;
+}
+
+body.data-sepia-mode .btn-toggle:hover,
+body.data-sepia-mode .btn-toggle:focus {
+  color: $body-color-sepia;
+}
+
+body.data-sepia-mode .btn-toggle::before {
+  width: 1.25em;
+  line-height: 0;
+  content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%28222, 226, 230, 0.75%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+  transition: transform 0.35s ease;
+  transform-origin: 0.5em 50%;
+  margin-bottom: 0.125rem;
+}
+
+body.data-sepia-mode .btn-toggle[aria-expanded="true"] {
+  color: $body-color-sepia;
+}
+
+body.data-sepia-mode .btn-toggle[aria-expanded="true"]::before {
+  transform: rotate(90deg);
+}
+
+body.data-sepia-mode .btn-toggle-nav a:hover,
+body.data-sepia-mode .btn-toggle-nav a:focus {
+  color: $link-color-sepia;
+}
+
+body.data-sepia-mode .btn-toggle-nav a.active {
+  color: $link-color-sepia;
+}
+
+body.data-sepia-mode .navbar-light .navbar-text a {
+  color: $navbar-sepia-active-color;
+}
+
+body.data-sepia-mode .docs-links h3.sidebar-link a,
+body.data-sepia-mode .page-links h3.sidebar-link a {
+  color: $body-color-sepia;
+}
+
+body.data-sepia-mode .navbar-light .navbar-text a:hover,
+body.data-sepia-mode .navbar-light .navbar-text a:focus {
+  color: $navbar-sepia-active-color;
+}
+
+body.data-sepia-mode .navbar .btn-link {
+  color: $navbar-sepia-color;
+}
+
+body.data-sepia-mode .content .btn-link {
+  color: $link-color-sepia;
+}
+
+body.data-sepia-mode .content .btn-link:hover {
+  color: $link-color-sepia;
+}
+
+body.data-sepia-mode .navbar .btn-link:hover {
+  color: $navbar-sepia-hover-color;
+}
+
+body.data-sepia-mode .navbar .btn-link:active {
+  color: $navbar-sepia-active-color;
+}
+
+body.data-sepia-mode .form-control.is-search {
+  background: $body-overlay-sepia;
+  border: 1px solid transparent;
+  color: #876944;
+
+  /*
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-search'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+  */
+}
+
+body.data-sepia-mode .form-control.is-search:focus {
+  border: 1px solid $link-color-sepia;
+}
+
+body.data-sepia-mode .doks-search::after {
+  color: #876944;
+  border: 1px solid #ded0bf;
+}
+
+body.data-sepia-mode .text-sepia {
+  color: $body-color-sepia !important;
+}
+
+/*
+body.data-sepia-mode .navbar-form::after {
+  color: $gray-600;
+  border: 1px solid $gray-800;
+}
+*/
+
+body.data-sepia-mode .form-control {
+  color: $gray-300;
+}
+
+body.data-sepia-mode .form-control::placeholder {
+  color: $gray-400;
+  opacity: 1;
+}
+
+body.data-sepia-mode .border-top {
+  border-top: 1px solid $border-sepia !important;
+}
+
+@include media-breakpoint-up(lg) {
+  body.data-sepia-mode .docs-sidebar {
+    order: 0;
+    border-right: 1px solid $border-sepia;
+  }
+}
+
+body.data-sepia-mode .docs-navigation {
+  border-top: 1px solid $border-sepia;
+}
+
+body.data-sepia-mode pre code::-webkit-scrollbar-thumb {
+  background: $gray-400;
+}
+
+body.data-sepia-mode code:not(.hljs) {
+  background: $body-overlay-sepia;
+  color: $body-color-sepia;
+}
+
+body.data-sepia-mode pre code:hover {
+  scrollbar-width: thin;
+  scrollbar-color: $border-sepia transparent;
+}
+
+body.data-sepia-mode pre code::-webkit-scrollbar-thumb:hover {
+  background: $gray-500;
+}
+
+body.data-sepia-mode blockquote {
+  border-left: 3px solid $border-sepia;
+}
+
+body.data-sepia-mode .footer {
+  border-top: 1px solid $border-sepia;
+}
+
+body.data-sepia-mode .docs-links,
+body.data-sepia-mode .docs-toc {
+  scrollbar-width: thin;
+  scrollbar-color: $body-bg-sepia $body-bg-sepia;
+}
+
+body.data-sepia-mode .docs-links::-webkit-scrollbar,
+body.data-sepia-mode .docs-toc::-webkit-scrollbar {
+  width: 5px;
+}
+
+body.data-sepia-mode .docs-links::-webkit-scrollbar-track,
+body.data-sepia-mode .docs-toc::-webkit-scrollbar-track {
+  background: $body-bg-sepia;
+}
+
+body.data-sepia-mode .docs-links::-webkit-scrollbar-thumb,
+body.data-sepia-mode .docs-toc::-webkit-scrollbar-thumb {
+  background: $body-bg-sepia;
+}
+
+body.data-sepia-mode .docs-links:hover,
+body.data-sepia-mode .docs-toc:hover {
+  scrollbar-width: thin;
+  scrollbar-color: $border-sepia $body-bg-sepia;
+}
+
+body.data-sepia-mode .docs-links:hover::-webkit-scrollbar-thumb,
+body.data-sepia-mode .docs-toc:hover::-webkit-scrollbar-thumb {
+  background: $border-sepia;
+}
+
+body.data-sepia-mode .docs-links::-webkit-scrollbar-thumb:hover,
+body.data-sepia-mode .docs-toc::-webkit-scrollbar-thumb:hover {
+  background: $border-sepia;
+}
+
+body.data-sepia-mode .docs-links h3:not(:first-child) {
+  border-top: 1px solid $border-sepia;
+}
+
+body.data-sepia-mode a.docs-link {
+  color: $body-color-sepia;
+}
+
+body.data-sepia-mode .page-links li:not(:first-child) {
+  border-top: 1px dashed $border-sepia;
+}
+
+body.data-sepia-mode .card {
+  background: $body-bg-sepia;
+  border: 1px solid $border-sepia;
+}
+
+body.data-sepia-mode .card.bg-light {
+  background: $body-overlay-sepia !important;
+}
+
+body.data-sepia-mode .navbar .menu-icon .navicon {
+  background: $navbar-sepia-color;
+}
+
+body.data-sepia-mode .navbar .menu-icon .navicon::before,
+body.data-sepia-mode .navbar .menu-icon .navicon::after {
+  background: $navbar-sepia-color;
+}
+
+body.data-sepia-mode .logo-light {
+  display: none !important;
+}
+
+body.data-sepia-mode .logo-sepia {
+  display: inline-block !important;
+}
+
+body.data-sepia-mode .bg-light {
+  background: sepiaen($body-bg-sepia, 1.5%) !important;
+}
+
+body.data-sepia-mode .bg-dots {
+  background-image: radial-gradient($dots-sepia 15%, transparent 15%);
+}
+
+body.data-sepia-mode .text-muted {
+  color: sepiaen($body-color-sepia, 7.5%) !important;
+}
+
+body.data-sepia-mode .alert-primary {
+  background: $link-color-sepia;
+  color: $body-bg-sepia;
+}
+
+body.data-sepia-mode .figure-caption {
+  color: $body-color-sepia;
+}
+
+body.data-sepia-mode table {
+  @extend .table-light;
+}
+
+body.data-sepia-mode .copy-status::after {
+  content: "Copy";
+  display: block;
+  color: $body-color-sepia;
+}
+
+body.data-sepia-mode .copy-status:hover::after {
+  content: "Copy";
+  display: block;
+  color: $link-color-sepia;
+}
+
+body.data-sepia-mode .copy-status:focus::after,
+body.data-sepia-mode .copy-status:active::after {
+  content: "Copied";
+  display: block;
+  color: $link-color-sepia;
+}
+
+/*
+body.data-sepia-mode .dropdown-toggle:focus,
+body.data-sepia-mode .doks-sidebar-toggle:focus {
+  box-shadow: 0 0 0 0.2rem $focus-color-sepia;
+}
+*/
+
+body.data-sepia-mode .offcanvas {
+  background-color: $body-bg-sepia;
+}
+
+body.data-sepia-mode .btn-close {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNkZWUyZTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLXgiPjxsaW5lIHgxPSIxOCIgeTE9IjYiIHgyPSI2IiB5Mj0iMTgiPjwvbGluZT48bGluZSB4MT0iNiIgeTE9IjYiIHgyPSIxOCIgeTI9IjE4Ij48L2xpbmU+PC9zdmc+");
+  background-size: 1.5rem;
+}
+
+@include media-breakpoint-up(md) {
+  body.data-sepia-mode .alert-dismissible .btn-close {
+    background-size: 1.25rem;
+  }
+}
+
+/*
+body.data-sepia-mode .btn-close:focus {
+  box-shadow: 0 0 0 0.2rem $focus-color-sepia;
+}
+*/
+
+[data-sepia-mode] .dropdown-item {
+  color: $body-bg-sepia;
+}
+
+body.data-sepia-mode hr.text-black-50 {
+  color: $gray-600 !important;
+}
+
+body.data-sepia-mode .email-form .form-control {
+  background: $body-overlay-sepia;
+  border: 1px solid transparent;
+}
+
+body.data-sepia-mode .email-form .form-control:focus {
+  border: 1px solid $link-color-sepia;
+}
+
+[data-sepia-mode] .page-link {
+  color: $link-color-sepia;
+  background-color: transparent;
+  border: $pagination-border-width solid $border-sepia;
+
+  &:hover {
+    color: $body-bg-sepia;
+    background-color: $body-color-sepia;
+    border-color: $body-color-sepia;
+  }
+
+  &:focus {
+    color: $body-bg-sepia;
+    background-color: $body-color-sepia;
+  }
+}
+
+[data-sepia-mode] .page-item {
+  &.active .page-link {
+    color: $body-bg-sepia;
+
+    @include gradient-bg($link-color-sepia);
+
+    border-color: $link-color-sepia;
+  }
+
+  &.disabled .page-link {
+    color: $pagination-disabled-color;
+    background-color: $body-overlay-sepia;
+    border-color: $border-sepia;
+  }
+}
