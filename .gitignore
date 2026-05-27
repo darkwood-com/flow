@@ -1,8 +1,2 @@
-# Docs
-/docs/node_modules/
-/docs/src/public/
-/docs/src/resources/
-
-# PHP
-/composer.lock
-/vendor/
+vendor/
+composer.lock

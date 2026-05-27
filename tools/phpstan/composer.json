@@ -11,7 +11,7 @@
         "amphp/amp": "^3.1",
         "doctrine/dbal": "^4.3",
         "openswoole/ide-helper": "^26.2.0",
-        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan": "^2.1 <2.1.56",
         "react/async": "^4.3",
         "spatie/async": "^1.6",
         "symfony/doctrine-messenger": "^8.0",

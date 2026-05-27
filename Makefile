@@ -2,9 +2,6 @@
 ##Dev
 ##------------
 
-dev: ## Start dev server
-	composer dev
-
 docs-serve: ## Start documentation server locally
 	composer docs-serve
 
@@ -20,31 +17,6 @@ phpstan: ## Execute PHPStan analysis
 
 phpunit: ## Launch PHPUnit test suite
 	composer phpunit
-
-##
-##Optional extra tools
-##-------------
-
-editorconfig-fixer: ## Fixes text files based on given .editorconfig declarations
-	composer editorconfig-fixer
-
-infection: ## Run Infection
-	composer infection
-
-phan: ## Run Phan
-	composer phan
-
-phpcbf: ## Clean code with PHP Code Beautifier and Fixer
-	composer phpcbf
-
-phpcs: ## Run PHP Code Sniffer
-	composer phpcs
-
-phpmd: ## Run PHP Mess Detector
-	composer phpmd
-
-psalm: ## Run Psalm
-	composer psalm
 
 # DEFAULT
 .DEFAULT_GOAL := help
