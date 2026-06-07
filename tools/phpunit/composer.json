@@ -1,8 +1,8 @@
 {
 	"require": {
         "php": ">=8.5",
-        "symfony/event-dispatcher": "^8.0",
-		"symfony/messenger": "^8.0"
+        "symfony/event-dispatcher": "^8.1",
+		"symfony/messenger": "^8.1"
     },
     "require-dev": {
         "amphp/amp": "^3.1",
@@ -11,8 +11,8 @@
         "phpunit/phpunit": "^13.0",
         "react/async": "^4.3",
         "spatie/async": "^1.6",
-        "symfony/doctrine-messenger": "^8.0",
-        "symfony/http-client": "^8.0"
+        "symfony/doctrine-messenger": "^8.1",
+        "symfony/http-client": "^8.1"
     },
     "autoload": {
         "psr-4": {
