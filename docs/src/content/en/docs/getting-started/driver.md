@@ -82,6 +82,49 @@ pecl install parallel
 
 More documentation can be found [https://www.php.net/manual/en/book.parallel.php](https://www.php.net/manual/en/book.parallel.php)
 
+## TrueAsync Driver
+
+Experimental driver backed by the [TrueAsync](https://github.com/true-async/php-async) `ext-async` extension. `FiberDriver` remains the default.
+
+Requires a custom PHP 8.6+ build with the extension enabled. Composer suggests it as an optional dependency:
+
+```bash
+# ext-async is not installable via Composer — build PHP with the TrueAsync fork
+# See https://true-async.github.io/download.html
+```
+
+Check availability before instantiating the driver:
+
+```php
+use Flow\Driver\TrueAsyncDriver;
+
+if (TrueAsyncDriver::isSupported()) {
+    $driver = new TrueAsyncDriver();
+}
+```
+
+Usage:
+
+```php
+use Flow\Driver\TrueAsyncDriver;
+use Flow\Flow\Flow;
+use Flow\Ip;
+
+$flow = (new Flow(
+    job: fn (int $n) => $n * 2,
+    driver: new TrueAsyncDriver(),
+))->fn(fn (int $n) => $n + 1);
+
+$flow(new Ip(21));
+$flow->await();
+```
+
+Do not mix `TrueAsyncDriver` with `FiberDriver` in the same process — TrueAsync blocks userland `Fiber` while active.
+
+A working example is available: `php examples/flow-true-async.php`
+
+More documentation can be found [https://true-async.github.io](https://true-async.github.io)
+
 ## Make your custom driver
 
 You can make your custom driver by implementing `Flow\DriverInterface`

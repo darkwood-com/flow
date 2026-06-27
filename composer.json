@@ -33,6 +33,7 @@
     },
     "suggest": {
         "amphp/amp": "Provide asynchronous with AMP",
+        "ext-async": "Provides the experimental TrueAsync driver for Flow",
         "ext-openswoole": "Provide asynchronous with OpenSwoole",
         "react/async": "Provide asynchronous with ReactPHP",
         "symfony/messenger": "Provide Symfony Messenger support",
