@@ -3,7 +3,7 @@ name: Docs Deploy
 on:
   push:
     branches:
-      - 8.0
+      - 8.1
 
 jobs:
   deploy:
