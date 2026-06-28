@@ -1,6 +1,6 @@
 name = "Flow"
 license = "MIT"
-licenselink = "https://github.com/darkwood-com/flow/blob/8.0/LICENSE"
+licenselink = "https://github.com/darkwood-com/flow/blob/8.1/LICENSE"
 description = "Assemble your code by adopting asynchronous as native implementation and build with functional programming and monads."
 source = "docs"
 
