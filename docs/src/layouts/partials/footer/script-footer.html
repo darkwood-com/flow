@@ -35,7 +35,7 @@
 {{ end -}}
 
 {{ if .Site.Params.options.flexSearch -}}
-  {{ $flexSearch := resources.Get "js/vendor/flexsearch/dist/flexsearch.bundle.js" -}}
+  {{ $flexSearch := resources.Get "js/vendor/flexsearch/dist/flexsearch.bundle.min.js" -}}
   {{ $slice = $slice | append $flexSearch -}}
 {{ end -}}
 
