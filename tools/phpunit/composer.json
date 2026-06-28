@@ -8,9 +8,9 @@
         "amphp/amp": "^3.1",
         "doctrine/dbal": "^4.3",
         "openswoole/ide-helper": "^26.2.0",
-        "phpunit/phpunit": "^13.0",
+        "phpunit/phpunit": "^13.2",
         "react/async": "^4.3",
-        "spatie/async": "^1.6",
+        "spatie/async": "^1.8",
         "symfony/doctrine-messenger": "^8.1",
         "symfony/http-client": "^8.1"
     },

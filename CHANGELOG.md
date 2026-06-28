@@ -1,7 +1,18 @@
 # Changelog
 
 Versions from **1.3.0** onward follow the unified Darkwood release line
-(see [CHANGELOG-8.0.md](../../../../CHANGELOG-8.0.md) at the monorepo root).
+(see [CHANGELOG-8.1.md](../../../../CHANGELOG-8.1.md) at the monorepo root).
+
+## 8.1.1
+
+- Add `TrueAsyncDriver` for the experimental `ext-async` backend
+- Update to Symfony 8.1.1
+- Upgrade QA tooling (PHP CS Fixer, Rector, PHPStan, PHPUnit)
+
+## 8.1.0
+
+- Update to Symfony 8.1.0
+- Add Rector to QA tools
 
 ## 1.3.0
 
