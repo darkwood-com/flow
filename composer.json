@@ -53,7 +53,7 @@
     "scripts": {
         "env": "cd tools && castor flow:tools:env",
         "docs-serve": "cd tools && castor flow:tools:docs-serve",
-        "php-cs-fixer": "cd tools && castor flow:tools:php-cs-fixer --dry-run",
+        "php-cs-fixer": "cd tools && castor flow:tools:php-cs-fixer",
         "phpstan": "cd tools && castor flow:tools:phpstan",
         "phpunit": "cd tools && castor flow:tools:phpunit"
     },

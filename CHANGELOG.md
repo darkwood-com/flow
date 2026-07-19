@@ -3,6 +3,11 @@
 Versions from **1.3.0** onward follow the unified Darkwood release line
 (see [CHANGELOG-8.1.md](../../../../CHANGELOG-8.1.md) at the monorepo root).
 
+## Unreleased
+
+- Add `StreamSelectDriver`: Generator jobs + native `stream_select()` via yieldable `waitReadable()` / `waitWritable()` / `waitDelay()` (generic stream readiness — not an HTTP client; no Fibers)
+- Fix `MaxIpStrategy`: do not pull/re-queue IPs while at capacity (preserves FIFO order)
+
 ## 8.1.1
 
 - Add `TrueAsyncDriver` for the experimental `ext-async` backend

@@ -65,6 +65,11 @@ class MaxIpStrategy implements IpStrategyInterface
      */
     public function pull(PullEvent $event): void
     {
+        // Do not shift from the inner pool while at capacity — re-PUSH would rotate FIFO order.
+        if ($this->processing >= $this->max) {
+            return;
+        }
+
         $ips = $this->dispatcher->dispatch(new PullEvent(), Event::PULL)->getIps();
         foreach ($ips as $ip) {
             if ($this->processing < $this->max) {

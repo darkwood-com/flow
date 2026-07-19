@@ -82,6 +82,27 @@ pecl install parallel
 
 More documentation can be found [https://www.php.net/manual/en/book.parallel.php](https://www.php.net/manual/en/book.parallel.php)
 
+## StreamSelect Driver
+
+Native PHP Streams driver: cooperative **Generators** + `stream_select()`.
+
+Jobs that need overlapping I/O must be Generators and **yield** wait tokens (Fibers are not used):
+
+```php
+use Flow\Driver\StreamSelectDriver;
+
+$driver = new StreamSelectDriver();
+
+// Inside a Generator job:
+$ready = (yield $driver->waitReadable($stream, timeoutSeconds: 5.0));
+$ready = (yield $driver->waitWritable($stream, timeoutSeconds: 5.0));
+yield $driver->waitDelay(0.05);
+```
+
+`stream_set_blocking()` + `stream_select()` are the long-standing PHP async I/O primitives. The Driver only multiplexes readiness — HTTP, hashing, and persistence stay in Jobs. Pair with `MaxIpStrategy($n)` so at most `$n` IPs (and their stream waits) are in flight at a stage.
+
+`FiberDriver` remains the default. Future PHP stream polling improvements (epoll/kqueue) may replace the mux without changing the wait-token API.
+
 ## TrueAsync Driver
 
 Experimental driver backed by the [TrueAsync](https://github.com/true-async/php-async) `ext-async` extension. `FiberDriver` remains the default.
