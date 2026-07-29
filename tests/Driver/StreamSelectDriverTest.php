@@ -19,7 +19,7 @@ use Generator;
  */
 class StreamSelectDriverTest extends DriverTestCase
 {
-    public function testConcurrentSocketPairOverlap(): void
+    public function testConcurrentSocketPairOverlap()
     {
         $driver = new StreamSelectDriver();
 

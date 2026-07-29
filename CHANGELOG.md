@@ -8,6 +8,11 @@ Versions from **1.3.0** onward follow the unified Darkwood release line
 - Add `StreamSelectDriver`: Generator jobs + native `stream_select()` via yieldable `waitReadable()` / `waitWritable()` / `waitDelay()` (generic stream readiness — not an HTTP client; no Fibers)
 - Fix `MaxIpStrategy`: do not pull/re-queue IPs while at capacity (preserves FIFO order)
 
+## 8.1.2
+
+- Update to Symfony 8.1.2
+- Upgrade QA tooling (PHP CS Fixer, Rector, PHPStan, PHPUnit)
+
 ## 8.1.1
 
 - Add `TrueAsyncDriver` for the experimental `ext-async` backend
