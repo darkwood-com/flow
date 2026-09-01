@@ -55,11 +55,36 @@
         "docs-serve": "cd tools && castor flow:tools:docs-serve",
         "php-cs-fixer": "cd tools && castor flow:tools:php-cs-fixer",
         "phpstan": "cd tools && castor flow:tools:phpstan",
-        "phpunit": "cd tools && castor flow:tools:phpunit"
+        "phpunit": "cd tools && castor flow:tools:phpunit",
+        "symfony-lsp": "symfony lsp:check",
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        },
+        "post-install-cmd": [
+            "@auto-scripts"
+        ],
+        "post-update-cmd": [
+            "@auto-scripts"
+        ]
     },
     "config": {
+        "allow-plugins": {
+            "symfony/flex": true,
+            "symfony/runtime": true
+        },
         "platform": {
             "ext-openswoole": "26.2.0"
+        },
+        "sort-packages": true
+    },
+    "conflict": {
+        "symfony/symfony": "*"
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "^8.1"
         }
     },
     "minimum-stability": "stable"
