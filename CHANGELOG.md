@@ -7,6 +7,10 @@ Versions from **1.3.0** onward follow the unified Darkwood release line
 
 - Add `StreamSelectDriver`: Generator jobs + native `stream_select()` via yieldable `waitReadable()` / `waitWritable()` / `waitDelay()` (generic stream readiness — not an HTTP client; no Fibers)
 - Fix `MaxIpStrategy`: do not pull/re-queue IPs while at capacity (preserves FIFO order)
+- Fix `FiberDriver` sub-second timers, monotonic deadlines, timer cancellation and immediate `defer()` results
+- Drain incomplete `BatchAsyncHandler` batches, including with `MaxIpStrategy`
+- Release active IPs and emit one completion POP when callbacks, error jobs or downstream listeners fail
+- Document the historical contract that job failures continue as `Flow\Exception\RuntimeException` values when no `errorJob` handles them
 
 ## 8.1.6
 

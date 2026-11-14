@@ -9,10 +9,7 @@ namespace Flow\Driver;
 use Closure;
 use Flow\DriverInterface;
 use Flow\Event;
-use Flow\Event\AsyncEvent;
-use Flow\Event\PopEvent;
 use Flow\Event\PullEvent;
-use Flow\Event\PushEvent;
 use Flow\Exception\LogicException;
 use Flow\Exception\RuntimeException;
 use Flow\Ip;
@@ -20,7 +17,6 @@ use Flow\JobInterface;
 use Generator;
 use Throwable;
 
-use function array_key_exists;
 use function count;
 use function is_array;
 use function is_resource;
@@ -219,20 +215,12 @@ final class StreamSelectDriver implements DriverInterface
             foreach ($stream['dispatchers'] as $index => $dispatcher) {
                 $nextIps = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIps();
                 foreach ($nextIps as $nextIp) {
-                    $stream['dispatchers'][$index]->dispatch(new AsyncEvent(static function (Closure|JobInterface $job) use ($async) {
+                    $event = $this->createAsyncEvent($stream, static function (Closure|JobInterface $job) use ($async) {
                         return $async(false)($job);
                     }, static function (Closure|JobInterface $job) use ($defer) {
                         return $defer(false)($job);
-                    }, $stream['fnFlows'][$index]['job'], $nextIp, static function ($data) use (&$stream, $index, $nextIp): void {
-                        if ($data instanceof RuntimeException && array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
-                            $stream['fnFlows'][$index]['errorJob']($data);
-                        } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
-                            $ip = new Ip($data);
-                            $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), Event::PUSH);
-                        }
-
-                        $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
-                    }), Event::ASYNC);
+                    }, $stream['fnFlows'][$index]['job'], $nextIp, $index);
+                    $this->dispatchAsyncEvent($stream['dispatchers'][$index], $event);
                 }
             }
 

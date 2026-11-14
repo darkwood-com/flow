@@ -8,6 +8,7 @@ use Flow\AsyncHandlerInterface;
 use Flow\Event;
 use Flow\Event\AsyncEvent;
 use Flow\Event\PoolEvent;
+use Flow\Exception\LogicException;
 use Flow\IpPool;
 
 /**
@@ -40,14 +41,21 @@ final class DeferAsyncHandler implements AsyncHandlerInterface
         $ip = $event->getIp();
         $job = $event->getJob();
 
-        $popIp = $this->ipPool->addIp($ip);
-        $next = $job([$ip->data, $event->getDefer()]);
-        $next(static function ($result) use ($event, $popIp): void {
+        $complete = static function ($result) use ($event): void {
+            if (!$event->settle()) {
+                $event->fail(new LogicException('A deferred continuation completed more than once.'));
+
+                return;
+            }
+
             [$data] = $result;
-            $callback = $event->getCallback();
-            $callback($data);
-            $popIp();
-        });
+            $event->getCallback()($data);
+        };
+
+        $event->execute(static function () use ($job, $ip, $event, $complete): void {
+            $next = $job([$ip->data, $event->getDefer()]);
+            $next($complete);
+        }, $this->ipPool->addIp($ip));
     }
 
     public function pool(PoolEvent $event): void

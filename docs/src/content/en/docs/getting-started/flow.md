@@ -29,6 +29,16 @@ A `Flow` can process one or many `Ips` which has its application for asynchronou
 
 This is the standard Flow implementation that support asynchronous `Ip` processing.
 
+### Error values
+
+Flow drivers historically convert exceptions raised by a job into a
+`Flow\Exception\RuntimeException` **value**. When the step has an `errorJob`, it
+receives that value. Without an `errorJob`, the value is pushed to the next step
+as a normal result; `await()` does not automatically throw it. Consumers that
+want exception-style job-error propagation must detect and handle the value
+explicitly. Callback, listener and runtime failures remain infrastructure
+exceptions. This behavior is preserved for backward compatibility.
+
 ## FlowDecorator
 
 This is useful for implementing the [decorator design pattern](https://en.wikipedia.org/wiki/Decorator_pattern).

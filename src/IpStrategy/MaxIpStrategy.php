@@ -87,6 +87,14 @@ class MaxIpStrategy implements IpStrategyInterface
     public function pop(PopEvent $event): void
     {
         $this->dispatcher->dispatch($event, Event::POP);
+    }
+
+    public function release(): void
+    {
+        if (0 === $this->processing) {
+            return;
+        }
+
         $this->processing--;
     }
 

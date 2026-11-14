@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Flow\Test\IpStrategy;
 
+use Flow\Event;
 use Flow\Event\PopEvent;
 use Flow\Event\PullEvent;
 use Flow\Event\PushEvent;
@@ -11,6 +12,7 @@ use Flow\Ip;
 use Flow\IpStrategy\MaxIpStrategy;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class MaxIpStrategyTest extends TestCase
 {
@@ -39,6 +41,7 @@ class MaxIpStrategyTest extends TestCase
         $ips[] = $pullEvent->getIps()[0] ?? null;
         self::assertNull($ips[2]);
 
+        $strategy->release();
         $strategy->pop(new PopEvent($ips[$doneIndex]));
 
         $pullEvent = new PullEvent();
@@ -56,5 +59,32 @@ class MaxIpStrategyTest extends TestCase
             [0],
             [1],
         ];
+    }
+
+    public function testReleaseAndObservablePopAreIndependent(): void
+    {
+        $innerDispatcher = new EventDispatcher();
+        $pops = 0;
+        $innerDispatcher->addListener(Event::POP, static function () use (&$pops): void {
+            $pops++;
+        });
+        $strategy = new MaxIpStrategy(1, null, $innerDispatcher);
+        $strategy->push(new PushEvent(new Ip('first')));
+        $strategy->push(new PushEvent(new Ip('second')));
+
+        $firstPull = new PullEvent();
+        $strategy->pull($firstPull);
+        $first = $firstPull->getIps()[0];
+
+        $strategy->release();
+        $strategy->release();
+        self::assertSame(0, $pops);
+
+        $secondPull = new PullEvent();
+        $strategy->pull($secondPull);
+        self::assertSame('second', $secondPull->getIps()[0]->data);
+
+        $strategy->pop(new PopEvent($first));
+        self::assertSame(1, $pops);
     }
 }

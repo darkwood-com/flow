@@ -8,7 +8,10 @@ use Flow\AsyncHandlerInterface;
 use Flow\Event;
 use Flow\Event\AsyncEvent;
 use Flow\Event\PoolEvent;
+use Flow\Ip;
 
+use function array_map;
+use function array_shift;
 use function count;
 
 /**
@@ -48,27 +51,46 @@ final class BatchAsyncHandler implements AsyncHandlerInterface
 
     public function async(AsyncEvent $event): void
     {
-        $this->jobs[] = [$event];
+        $this->jobs[] = $event;
 
         if (!$this->shouldFlush()) {
             return;
         }
 
-        $jobs = $this->jobs;
-        $this->jobs = [];
-
-        foreach ($jobs as [$event]) {
-            $this->asyncHandler->async($event);
-        }
+        $this->flush();
     }
 
     public function pool(PoolEvent $event): void
     {
         $this->asyncHandler->pool($event);
+
+        if ([] === $this->jobs) {
+            return;
+        }
+
+        if ([] === $event->getIps()) {
+            $this->flush();
+            $this->asyncHandler->pool($event);
+
+            return;
+        }
+
+        $event->addIps(array_map(
+            static fn (AsyncEvent $job): Ip => $job->getIp(),
+            $this->jobs,
+        ));
     }
 
     private function shouldFlush(): bool
     {
         return $this->batchSize <= count($this->jobs);
+    }
+
+    private function flush(): void
+    {
+        while ([] !== $this->jobs) {
+            $event = array_shift($this->jobs);
+            $this->asyncHandler->async($event);
+        }
     }
 }

@@ -6,6 +6,7 @@ namespace Flow\Test\AsyncHandler;
 
 use Flow\AsyncHandler\BatchAsyncHandler;
 use Flow\Event\AsyncEvent;
+use Flow\Event\PoolEvent;
 use Flow\Ip;
 use PHPUnit\Framework\TestCase;
 
@@ -55,5 +56,27 @@ class BatchAsyncHandlerTest extends TestCase
         $asyncHandler->async($event2);
         assertSame(8, $result1);
         assertSame(16, $result2);
+    }
+
+    public function testPoolFlushesAnIncompleteBatch(): void
+    {
+        $result = null;
+        $handler = new BatchAsyncHandler(2);
+        $handler->async(new AsyncEvent(
+            static fn ($job) => static fn ($data) => $job($data),
+            static fn ($job) => $job,
+            static fn ($data) => static function ($next) use ($data): void {
+                $next($data * 2);
+            },
+            new Ip(4),
+            static function ($data) use (&$result): void {
+                $result = $data;
+            },
+        ));
+
+        self::assertNull($result);
+        $handler->pool(new PoolEvent());
+
+        self::assertSame(8, $result);
     }
 }

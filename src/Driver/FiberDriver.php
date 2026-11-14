@@ -10,16 +10,13 @@ use Closure;
 use Fiber;
 use Flow\DriverInterface;
 use Flow\Event;
-use Flow\Event\AsyncEvent;
-use Flow\Event\PopEvent;
 use Flow\Event\PullEvent;
-use Flow\Event\PushEvent;
 use Flow\Exception\RuntimeException;
 use Flow\Ip;
 use Flow\JobInterface;
+use InvalidArgumentException;
 use Throwable;
 
-use function array_key_exists;
 use function count;
 
 /**
@@ -36,6 +33,8 @@ class FiberDriver implements DriverInterface
      * @var array<mixed>
      */
     private array $ticks = [];
+
+    private int $nextTickId = 0;
 
     public function async(Closure|JobInterface $callback): Closure
     {
@@ -64,13 +63,16 @@ class FiberDriver implements DriverInterface
             }
         });
 
-        $fiber->start();
-
-        return $fiber->resume();
+        return $fiber->start();
     }
 
     public function await(array &$stream): void
     {
+        $hasFailure = $stream['hasFailure'] ?? static fn (): bool => false;
+        $reportFailure = $stream['reportFailure'] ?? static function (Throwable $exception): never {
+            throw $exception;
+        };
+
         $async = function ($isTick) use (&$fiberDatas) {
             return function (Closure|JobInterface $job) use (&$fiberDatas, $isTick) {
                 return function (mixed $data) use (&$fiberDatas, $isTick, $job) {
@@ -130,71 +132,115 @@ class FiberDriver implements DriverInterface
             };
         };
 
-        $tick = 0;
         $fiberDatas = [];
         do {
-            foreach ($this->ticks as [
+            $now = $this->monotonicTime();
+            foreach ($this->ticks as $id => [
                 'interval' => $interval,
+                'nextRun' => $nextRun,
                 'callback' => $callback,
             ]) {
-                if ($tick % $interval === 0) {
-                    $ip = new Ip();
-                    $async(true)($callback)($ip->data);
+                if ($hasFailure() || $now < $nextRun) {
+                    continue;
                 }
+
+                do {
+                    $nextRun += $interval;
+                } while ($nextRun <= $now);
+                $this->ticks[$id]['nextRun'] = $nextRun;
+
+                $ip = new Ip();
+                $async(true)($callback)($ip->data);
             }
 
-            foreach ($stream['dispatchers'] as $index => $dispatcher) {
-                $nextIps = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIps();
-                foreach ($nextIps as $nextIp) {
-                    $stream['dispatchers'][$index]->dispatch(new AsyncEvent(static function (Closure|JobInterface $job) use ($async) {
-                        return $async(false)($job);
-                    }, static function (Closure|JobInterface $job) use ($defer) {
-                        return $defer(false)($job);
-                    }, $stream['fnFlows'][$index]['job'], $nextIp, static function ($data) use (&$stream, $index, $nextIp): void {
-                        if ($data instanceof RuntimeException && array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
-                            $stream['fnFlows'][$index]['errorJob']($data);
-                        } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
-                            $ip = new Ip($data);
-                            $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), Event::PUSH);
-                        }
+            if (!$hasFailure()) {
+                foreach ($stream['dispatchers'] as $index => $dispatcher) {
+                    try {
+                        $nextIps = $dispatcher->dispatch(new PullEvent(), Event::PULL)->getIps();
+                    } catch (Throwable $exception) {
+                        $reportFailure($exception);
 
-                        $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
-                    }), Event::ASYNC);
+                        break;
+                    }
+
+                    foreach ($nextIps as $nextIp) {
+                        $event = $this->createAsyncEvent($stream, static function (Closure|JobInterface $job) use ($async) {
+                            return $async(false)($job);
+                        }, static function (Closure|JobInterface $job) use ($defer) {
+                            return $defer(false)($job);
+                        }, $stream['fnFlows'][$index]['job'], $nextIp, $index);
+                        $this->dispatchAsyncEvent($stream['dispatchers'][$index], $event);
+                    }
                 }
             }
 
             foreach ($fiberDatas as $i => $fiberData) { // @phpstan-ignore-line see https://github.com/phpstan/phpstan/issues/11468
-                if (!$fiberData['fiber']->isTerminated() and $fiberData['fiber']->isSuspended()) {
-                    $fiberData['fiber']->resume();
-                } else {
-                    $data = $fiberData['fiber']->getReturn();
-                    $fiberData['next']($data);
+                try {
+                    if (!$fiberData['fiber']->isTerminated() and $fiberData['fiber']->isSuspended()) {
+                        $fiberData['fiber']->resume();
+                    } else {
+                        $data = $fiberData['fiber']->getReturn();
+                        $fiberData['next']($data);
+                        unset($fiberDatas[$i]);
+                    }
+                } catch (Throwable $exception) {
+                    $reportFailure($exception);
                     unset($fiberDatas[$i]);
                 }
             }
 
-            $tick++;
+            if ($hasFailure()) {
+                if (!$this->hasPendingFibers($fiberDatas)) {
+                    break;
+                }
+
+                continue;
+            }
         } while ($this->countIps($stream['dispatchers']) > 0 or count($this->ticks) > 0);
     }
 
     public function delay(float $seconds): void
     {
-        $date = time();
-        do {
+        $deadline = $this->monotonicTime() + $seconds;
+        while ($this->monotonicTime() < $deadline) {
             Fiber::suspend();
-        } while (time() - $date < $seconds);
+        }
     }
 
-    public function tick($interval, Closure $callback): Closure
+    public function tick(float $interval, Closure $callback): Closure
     {
-        $i = count($this->ticks) - 1;
+        if ($interval <= 0) {
+            throw new InvalidArgumentException('The timer interval must be greater than zero.');
+        }
+
+        $i = $this->nextTickId++;
         $this->ticks[$i] = [
             'interval' => $interval,
+            'nextRun' => $this->monotonicTime() + $interval,
             'callback' => $callback,
         ];
+        $cancelled = false;
 
-        return function () use ($i): void {
+        return function () use ($i, &$cancelled): void {
+            if ($cancelled) {
+                return;
+            }
+
+            $cancelled = true;
             unset($this->ticks[$i]);
         };
+    }
+
+    private function monotonicTime(): float
+    {
+        return hrtime(true) / 1_000_000_000;
+    }
+
+    /**
+     * @param array<mixed> $fiberDatas
+     */
+    private function hasPendingFibers(array $fiberDatas): bool
+    {
+        return [] !== $fiberDatas;
     }
 }

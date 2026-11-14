@@ -61,6 +61,17 @@ $flow($ip);
 $flow->await();
 ```
 
+## Error semantics
+
+For backward compatibility, exceptions thrown by a job are resolved by the
+driver as `Flow\Exception\RuntimeException` values. If a step defines an
+`errorJob`, that job receives the value. Otherwise the value continues to the
+next step like any other result; `await()` does not throw it automatically.
+Callback, listener and runtime failures remain infrastructure exceptions.
+Completion paths release their Flow-owned IP state before `await()` propagates
+the failure. This historical job-error contract is intentionally unchanged in
+the current release.
+
 ## Examples
 
 A working script is available in the bundled `examples` directory

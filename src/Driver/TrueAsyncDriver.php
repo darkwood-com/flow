@@ -9,17 +9,12 @@ use Async\FutureState;
 use Closure;
 use Flow\DriverInterface;
 use Flow\Event;
-use Flow\Event\AsyncEvent;
-use Flow\Event\PopEvent;
 use Flow\Event\PullEvent;
-use Flow\Event\PushEvent;
 use Flow\Exception\RuntimeException;
-use Flow\Ip;
 use Flow\JobInterface;
 use RuntimeException as NativeRuntimeException;
 use Throwable;
 
-use function array_key_exists;
 use function extension_loaded;
 use function function_exists;
 use function round;
@@ -122,16 +117,8 @@ final class TrueAsyncDriver implements DriverInterface
                 foreach ($nextIps as $nextIp) {
                     $job = $stream['fnFlows'][$index]['job'];
 
-                    $stream['dispatchers'][$index]->dispatch(new AsyncEvent($async, $defer, $job, $nextIp, static function ($data) use (&$stream, $index, $nextIp): void {
-                        if ($data instanceof RuntimeException && array_key_exists($index, $stream['fnFlows']) && $stream['fnFlows'][$index]['errorJob'] !== null) {
-                            $stream['fnFlows'][$index]['errorJob']($data);
-                        } elseif (array_key_exists($index + 1, $stream['fnFlows'])) {
-                            $ip = new Ip($data);
-                            $stream['dispatchers'][$index + 1]->dispatch(new PushEvent($ip), Event::PUSH);
-                        }
-
-                        $stream['dispatchers'][$index]->dispatch(new PopEvent($nextIp), Event::POP);
-                    }), Event::ASYNC);
+                    $event = $this->createAsyncEvent($stream, $async, $defer, $job, $nextIp, $index);
+                    $this->dispatchAsyncEvent($stream['dispatchers'][$index], $event);
                 }
             }
 
