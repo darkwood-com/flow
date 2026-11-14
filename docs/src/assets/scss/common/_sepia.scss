@@ -2,7 +2,7 @@
 
 // Source: https://material.io/design/color/sepia-theme.html
 
-$body-bg-sepia: #F1E7D0;
+$body-bg-sepia: #f1e7d0;
 $body-overlay-sepia: sepiaen($body-bg-sepia, 2.5%);
 
 /*
@@ -12,7 +12,7 @@ $border-sepia: #ded0bf;
 $body-color-sepia: #876944;
 $dots-sepia: sepiaen($body-color-sepia, 50%);
 
-$link-color-sepia: #0066CC;
+$link-color-sepia: #06c;
 $button-color-sepia: $link-color-sepia;
 $focus-color-sepia: lighten($link-color-sepia, 2.5%);
 
@@ -84,7 +84,7 @@ body.data-sepia-mode .dropdown-menu {
 
 body.data-sepia-mode .navbar,
 body.data-sepia-mode .doks-subnavbar {
-  background-color: #F1E7D0;
+  background-color: #f1e7d0;
   border-bottom: 1px solid $border-sepia;
 }
 
