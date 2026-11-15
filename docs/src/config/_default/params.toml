@@ -33,7 +33,7 @@ schemaImageWidth = 1280
 schemaImageHeight = 640
 schemaTwitter = "https://twitter.com/darkwood_com"
 schemaLinkedIn = ""
-schemaGitHub = "https://github.com/darkwood-com/flow"
+schemaGitHub = "https://github.com/darkwood-com/darkwood-php-component-flow"
 schemaSection = "blog"
 
 ## Sitelinks Search Box
@@ -62,7 +62,7 @@ alertDismissable = true
 alertText = "Introducing the Doks child theme, several DX + UX updates, and more! <a class=\"alert-link stretched-link\" href=\"https://getdoks.org/blog/doks-v0.2/\">Check out Doks v0.2</a>"
 
 # Edit Page
-docsRepo = "https://github.com/darkwood-com/flow"
+docsRepo = "https://github.com/darkwood-com/darkwood-php-component-flow"
 editPage = true
 
 [options]

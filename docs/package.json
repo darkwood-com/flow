@@ -2,9 +2,9 @@
   "name": "@darkwood-com/flow",
   "description": "Flow",
   "bugs": {
-    "url": "https://github.com/darkwood-com/flow"
+    "url": "https://github.com/darkwood-com/darkwood-php-component-flow"
   },
-  "homepage": "https://github.com/darkwood-com/flow/tree/8.1#readme",
+  "homepage": "https://github.com/darkwood-com/darkwood-php-component-flow/tree/8.1#readme",
   "keywords": [
     "flow"
   ],
@@ -15,7 +15,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/darkwood-com/flow.git"
+    "url": "https://github.com/darkwood-com/darkwood-php-component-flow.git"
   },
   "publishConfig": {
     "access": "public"

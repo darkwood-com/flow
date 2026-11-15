@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/darkwood-com/flow">
+  <a href="https://github.com/darkwood-com/darkwood-php-component-flow">
     <img src="docs/src/images/logo.png" width="auto" height="128px" alt="Flow">
   </a>
 </p>
