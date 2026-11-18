@@ -1,5 +1,5 @@
 {
-	"require": {
+    "require": {
         "php": ">=8.5",
         "symfony/config": "^8.1",
         "symfony/dependency-injection": "^8.1",
@@ -11,7 +11,7 @@
         "amphp/amp": "^3.1",
         "doctrine/dbal": "^4.3",
         "openswoole/ide-helper": "^26.2.0",
-        "phpstan/phpstan": "^2.1 <2.1.56",
+        "phpstan/phpstan": "^2.3",
         "react/async": "^4.3",
         "spatie/async": "^1.8",
         "symfony/doctrine-messenger": "^8.1",

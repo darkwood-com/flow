@@ -1,8 +1,8 @@
 {
-	"require": {
+    "require": {
         "php": ">=8.5",
         "symfony/event-dispatcher": "^8.1",
-		"symfony/messenger": "^8.1"
+        "symfony/messenger": "^8.1"
     },
     "require-dev": {
         "amphp/amp": "^3.1",

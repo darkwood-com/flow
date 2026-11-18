@@ -456,7 +456,7 @@ final class StreamSelectDriver implements DriverInterface
         }
         $seconds = (int) $slice;
         $microseconds = (int) (($slice - $seconds) * 1_000_000);
-        if ($seconds === 0 && $microseconds === 0) {
+        if ($microseconds === 0) {
             $microseconds = 1;
         }
 

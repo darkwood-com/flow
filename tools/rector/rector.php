@@ -21,19 +21,17 @@ return static function (RectorConfig $rectorConfig): void {
         SetList::CODING_STYLE,
         LevelSetList::UP_TO_PHP_85,
         DoctrineSetList::DOCTRINE_CODE_QUALITY,
-        SymfonySetList::SYMFONY_81,
+        SymfonySetList::COMPOSER_BASED,
         SymfonySetList::SYMFONY_CODE_QUALITY,
         SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
         DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
         SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
-        TwigSetList::TWIG_24,
+        TwigSetList::COMPOSER_BASED,
     ]);
 
     $rectorConfig->bootstrapFiles([__DIR__ . '/../../vendor/autoload.php']);
 
     $rectorConfig->paths([
-        __DIR__ . '/../../config',
-        __DIR__ . '/../../public',
         __DIR__ . '/../../src',
         __DIR__ . '/../../tests',
         // __DIR__ . '/../../tools',
