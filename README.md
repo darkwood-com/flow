@@ -88,3 +88,12 @@ A working script is available in the bundled `examples` directory
 ## License
 
 Flow is released under the MIT License.
+
+## Shared PHP development environment
+
+In the Darkwood monorepo, the existing Castor `flow:tools:env` task opens the
+canonical Navi shell through its native Nix file entry point. It uses the Navi
+environment lock and does not snapshot the application or start local services.
+The standalone package retains its previous external shell fallback when the
+monorepo Navi directory is unavailable. This development integration adds no
+Navi runtime dependency and leaves Flow's Composer files and drivers unchanged.
