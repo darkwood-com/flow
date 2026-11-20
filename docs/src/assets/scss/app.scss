@@ -33,3 +33,91 @@
 @import "layouts/pages";
 @import "layouts/posts";
 @import "layouts/sidebar";
+
+/* Darkwood roles adapted to the existing documentation mode controls. */
+:root {
+  color-scheme: light;
+  --dw-font-sans: Jost, system-ui, sans-serif;
+  --dw-font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --dw-text: #000000;
+  --dw-background: #ffffff;
+  --dw-surface: #ffffff;
+  --dw-input: #ffffff;
+  --dw-border: #eff2f7;
+  --dw-primary: #007bff;
+  --dw-primary-hover: #0056b3;
+  --dw-on-primary: #ffffff;
+  --dw-muted: #6c757d;
+  --dw-subtle: #f8f9fa;
+  --dw-success: #198754;
+  --dw-warning: #997300;
+  --dw-danger: #dc3545;
+  --dw-info: #0b7285;
+  --dw-navbar: rgba(255, 255, 255, .88);
+  --dw-shadow: rgba(18, 38, 63, .08);
+  --dw-radius-sm: .25rem;
+  --dw-radius: .375rem;
+  --dw-radius-lg: .5rem;
+  --dw-space-1: .25rem;
+  --dw-space-2: .5rem;
+  --dw-space-3: 1rem;
+  --dw-space-4: 1.5rem;
+  --dw-space-5: 2rem;
+  --dw-space-6: 3rem;
+  --dw-space-7: 5rem;
+  --dw-container: 1140px;
+  --dw-header-height: 60px;
+  --dw-transition: .2s ease;
+}
+
+body.data-dark-mode {
+  color-scheme: dark;
+  --dw-text: #ebf4f1;
+  --dw-background: #091a28;
+  --dw-surface: #0b1e2e;
+  --dw-input: #0e2233;
+  --dw-border: #0f2b3d;
+  --dw-primary: #0d7fe8;
+  --dw-primary-hover: #5ca8ee;
+  --dw-muted: #9bb0bd;
+  --dw-subtle: #0e2233;
+  --dw-success: #4fc48a;
+  --dw-warning: #d3ad55;
+  --dw-danger: #ff7b85;
+  --dw-info: #67c7d5;
+  --dw-navbar: rgba(9, 26, 40, .88);
+  --dw-shadow: rgba(0, 0, 0, .22);
+}
+
+body.data-sepia-mode {
+  color-scheme: light;
+  --dw-text: #433422;
+  --dw-background: #f1e7d0;
+  --dw-surface: #f1e7d0;
+  --dw-input: #eadec2;
+  --dw-border: #ded0bf;
+  --dw-primary: #0066cc;
+  --dw-primary-hover: #004080;
+  --dw-muted: #765f42;
+  --dw-subtle: #eadec2;
+  --dw-success: #087f5b;
+  --dw-warning: #856400;
+  --dw-danger: #9f2030;
+  --dw-info: #176b78;
+  --dw-navbar: rgba(241, 231, 208, .88);
+  --dw-shadow: rgba(67, 52, 34, .1);
+}
+
+:where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--dw-primary) 48%, transparent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
+
+body,body.data-dark-mode,body.data-sepia-mode{color:var(--dw-text);background:var(--dw-background);font-family:var(--dw-font-sans)}
+body a:not(.btn),body.data-dark-mode a:not(.btn),body.data-sepia-mode a:not(.btn){color:var(--dw-primary-hover)}
+code,pre{font-family:var(--dw-font-mono)}
+.form-control,.form-select{color:var(--dw-text);background-color:var(--dw-input);border-color:var(--dw-border)}
