@@ -1,6 +1,6 @@
 {
     "require": {
-        "php": ">=8.5",
+        "php": "^8.6",
         "symfony/config": "^8.1",
         "symfony/dependency-injection": "^8.1",
         "symfony/event-dispatcher": "^8.1",
@@ -26,11 +26,6 @@
         "psr-4": {
             "Flow\\Examples\\": "../../examples",
             "Flow\\Test\\": "../../tests"
-        }
-    },
-    "config": {
-        "platform": {
-            "ext-openswoole": "26.2.0"
         }
     }
 }

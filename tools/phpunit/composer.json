@@ -1,6 +1,6 @@
 {
     "require": {
-        "php": ">=8.5",
+        "php": "^8.6",
         "symfony/event-dispatcher": "^8.1",
         "symfony/messenger": "^8.1"
     },

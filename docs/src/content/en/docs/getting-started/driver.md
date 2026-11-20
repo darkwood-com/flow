@@ -64,11 +64,9 @@ More documentation can be found [https://github.com/spatie/async](https://github
 
 ## Swoole Driver
 
-To use Swoole Driver, you have to add the extension with your current running PHP
-
-```bash
-pecl install openswoole-22.0.0
-```
+Enable OpenSwoole in the Navi development shell via
+`composer env -- --with-open-swoole` when Castor is already available.
+This driver requires the extension at runtime.
 
 More documentation can be found [https://openswoole.com](https://openswoole.com)
 
@@ -101,7 +99,44 @@ yield $driver->waitDelay(0.05);
 
 `stream_set_blocking()` + `stream_select()` are the long-standing PHP async I/O primitives. The Driver only multiplexes readiness — HTTP, hashing, and persistence stay in Jobs. Pair with `MaxIpStrategy($n)` so at most `$n` IPs (and their stream waits) are in flight at a stage.
 
-`FiberDriver` remains the default. Future PHP stream polling improvements (epoll/kqueue) may replace the mux without changing the wait-token API.
+## Poll Driver
+
+`Flow\Driver\PollDriver` uses PHP 8.6's [native polling API](https://www.php.net/releases/8.6/en.php).
+Replace `new StreamSelectDriver()` with `new PollDriver()` for jobs using the
+wait tokens above on supported descriptors, such as local stream sockets. PHP
+selects the backend by default, or callers can pass an `Io\Poll\Backend`.
+
+- `true` reports readiness. A readable stream may be at EOF.
+- `false` reports a wait timeout. Public timeouts remain in seconds, and
+  `null` means no deadline. The driver hands PHP a `Time\Duration` for bounded waits.
+- `tick()` schedules callbacks at positive, finite intervals in seconds,
+  including fractions, and returns a cancellation callback.
+- Registration and polling failures propagate from `await()`. A failed polling
+  batch releases the affected IPs. Scheduler interruption retries the wait against
+  the original deadline.
+- The poll context releases registrations before jobs resume. The caller
+  owns the underlying streams and closes them, typically in `finally`.
+- For a memory stream or a wrapper without an OS descriptor, check backend
+  support before switching from another driver.
+
+PHP's buffered bytes are considered for read readiness. `FiberDriver` remains
+the default. The ReactPHP, AMPHP, OpenSwoole, Parallel and TrueAsync drivers
+still serve their existing execution models.
+
+### Structured stream errors
+
+Configure streams you own with `StreamErrorMode::Exception` to inspect
+`StreamException::getErrors()` and the `StreamErrorCode` enum in job code.
+A job exception remains a Flow job-error value with the original exception
+available through `getPrevious()`. Driver and listener failures still
+propagate from `await()`. For an unsupported descriptor, the native poller
+can throw `Io\Poll\InvalidHandleException` while PHP records
+`StreamErrorCode::CastNotSupported` when the stream context enables
+`StreamErrorStore::All`. Read `stream_last_errors()` immediately after the
+failure. Flow leaves the caller's stream contexts and error settings intact.
+
+Run `php examples/flow-poll.php` for local sockets, timeout and structured error
+handling.
 
 ## TrueAsync Driver
 
